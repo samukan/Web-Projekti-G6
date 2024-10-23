@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ruokalista</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Navigaatiopalkki -->
+    <div class="navbar">
+      <a href="index.html">Etusivu</a>
+      <a href="menu.html">Ruokalista</a>
+      <a href="#" id="login-btn">Kirjaudu sisään</a>
+      <a href="#" id="cart-btn">Ostoskori</a>
+    </div>
+
+    <!-- Ruokalista -->
+    <div class="ruokalista">
+      <div class="ruoka-item">
+        <p>Kana kebab</p>
+        <p>Hinta</p>
+      </div>
+      <!-- Lisää ruoka-itemeitä tarpeen mukaan -->
+    </div>
+
+    <!-- Alapalkki (footer) -->
+    <div class="footer">
+      <p>Yhteystiedot | Lisää linkkejä | Lisää linkkejä | Lisää linkkejä</p>
+    </div>
+
+    <!-- Kirjaudu sisään -modaali -->
+    <div id="login-modal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="close-login">&times;</span>
+        <h2>Kirjaudu sisään</h2>
+        <form>
+          <label for="email">Sähköposti:</label><br />
+          <input type="email" id="email" name="email" /><br />
+          <label for="password">Salasana:</label><br />
+          <input type="password" id="password" name="password" /><br /><br />
+          <button type="submit">Kirjaudu sisään</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Ostoskori -modaali -->
+    <div id="cart-modal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="close-cart">&times;</span>
+        <h2>Ostoskori</h2>
+        <p>Ostoskorisi on tyhjä.</p>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+  </body>
+</html>
