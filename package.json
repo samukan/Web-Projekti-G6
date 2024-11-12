@@ -1,0 +1,44 @@
+{
+  "name": "projekti-g6-back-end",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build:backend": "tsc",
+    "build:frontend": "tsc -p tsconfig.frontend.json",
+    "build": "npm run build:backend && npm run build:frontend",
+    "start": "node dist/server.js",
+    "dev": "concurrently \"tsc -p tsconfig.frontend.json -w\" \"nodemon src/server.ts\"",
+    "lint": "eslint . --ext .ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.11.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.14.0",
+    "@types/bcrypt": "^5.0.2",
+    "@types/bootstrap": "^5.2.10",
+    "@types/express": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/node": "^22.9.0",
+    "@typescript-eslint/eslint-plugin": "^8.14.0",
+    "@typescript-eslint/parser": "^8.14.0",
+    "concurrently": "^9.1.0",
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-import-resolver-typescript": "^3.6.3",
+    "eslint-plugin-import": "^2.31.0",
+    "globals": "^15.12.0",
+    "nodemon": "^3.1.7",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.14.0"
+  }
+}

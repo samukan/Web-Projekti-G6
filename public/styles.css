@@ -1,0 +1,350 @@
+/* === Root Variables === */
+:root {
+  --bg-color: #f8f9fa;
+  --text-color: #212529;
+  --nav-bg-color: #ffffff;
+  --footer-bg-color: #e9ecef;
+  --card-bg-color: #ffffff;
+  --border-color: #dee2e6;
+  --link-color: #212529;
+  --link-hover-color: #0d6efd;
+  --accent-color: #0d6efd;
+}
+
+body.dark-theme {
+  --bg-color: #121212;
+  --text-color: #ffffff;
+  --nav-bg-color: #1e1e1e;
+  --footer-bg-color: #1e1e1e;
+  --card-bg-color: #2c2c2c;
+  --border-color: #343a40;
+  --link-color: #ffffff;
+  --link-hover-color: #0d6efd;
+  --accent-color: #0d6efd;
+}
+
+/* === Base Styling === */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* === Navigaatiopalkki === */
+#main-navbar {
+  background-color: var(--nav-bg-color) !important;
+  transition: background-color 0.3s ease;
+}
+
+.navbar .nav-link,
+.navbar .navbar-brand,
+.navbar .navbar-text {
+  color: var(--link-color) !important;
+  transition: color 0.3s ease;
+}
+
+.navbar .nav-link:hover,
+.navbar .navbar-brand:hover {
+  color: var(--link-hover-color) !important;
+}
+
+.navbar .nav-link.active {
+  color: var(--accent-color) !important;
+}
+
+.navbar .navbar-toggler {
+  border-color: var(--text-color);
+}
+
+.navbar .navbar-toggler-icon {
+  background-image: none;
+  position: relative;
+  width: 1.5em;
+  height: 1.5em;
+}
+
+.navbar .navbar-toggler-icon::before,
+.navbar .navbar-toggler-icon::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 25%;
+  width: 50%;
+  height: 2px;
+  background-color: var(--text-color);
+  transition: background-color 0.3s ease;
+}
+
+.navbar .navbar-toggler-icon::before {
+  transform: translateY(-5px);
+}
+
+.navbar .navbar-toggler-icon::after {
+  transform: translateY(3px);
+}
+
+/* Teemakytkimen värit */
+#theme-toggle {
+  border: none;
+  background: none;
+  color: var(--link-color);
+}
+
+#theme-toggle:hover {
+  color: var(--link-hover-color);
+}
+
+/* === Hero Banner === */
+.hero-banner {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  position: relative;
+}
+
+.hero-banner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.hero-banner-content {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-banner h1,
+.hero-banner p {
+  color: #ffffff;
+}
+
+/* Carousel item backgrounds */
+.carousel-item:nth-child(1) .hero-banner {
+  background-image: url("media/banner1.jpg");
+}
+
+.carousel-item:nth-child(2) .hero-banner {
+  background-image: url("media/banner2.jpg");
+}
+
+.carousel-item:nth-child(3) .hero-banner {
+  background-image: url("media/banner3.jpg");
+}
+
+/* Responsiiviset taustakuvat */
+@media (min-width: 768px) {
+  .carousel-item:nth-child(1) .hero-banner {
+    background-image: url("media/banner4.jpg");
+  }
+
+  .carousel-item:nth-child(2) .hero-banner {
+    background-image: url("media/banner5.jpg");
+  }
+
+  .carousel-item:nth-child(3) .hero-banner {
+    background-image: url("media/banner6.jpg");
+  }
+}
+
+/* Sosiaalisen median ikonit */
+.social-icons a {
+  color: #fff;
+  margin: 0 10px;
+  font-size: 1.5rem;
+}
+
+.social-icons a:hover {
+  color: var(--accent-color);
+}
+
+/* === Footer === */
+.footer {
+  background-color: var(--footer-bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.footer a {
+  color: var(--link-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer a:hover {
+  color: var(--link-hover-color);
+}
+
+/* === Card Styling === */
+.card {
+  background-color: var(--card-bg-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.card .card-header,
+.card .card-title,
+.card .card-text {
+  color: var(--text-color);
+}
+
+.card .btn {
+  background-color: var(--accent-color);
+  color: #ffffff;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.card .btn:hover {
+  background-color: #0056b3;
+}
+
+/* === Modaalien värit === */
+.modal-content {
+  background-color: var(--nav-bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.modal-content input,
+.modal-content textarea {
+  background-color: var(--card-bg-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+
+.modal-content input::placeholder,
+.modal-content textarea::placeholder {
+  color: var(--text-color);
+}
+
+/* === Form Input Styling === */
+form label {
+  color: var(--text-color);
+}
+
+form .form-control {
+  background-color: var(--card-bg-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+
+/* === Table Styling === */
+.table {
+  color: var(--text-color);
+}
+
+.table thead {
+  background-color: var(--nav-bg-color);
+}
+
+.table tbody tr {
+  background-color: var(--card-bg-color);
+}
+
+.table tbody tr:nth-child(even) {
+  background-color: var(--bg-color);
+}
+
+.table-bordered > :not(caption) > * > * {
+  border-color: var(--border-color);
+}
+
+/* Table hover effect */
+.table-hover tbody tr:hover {
+  background-color: var(--border-color);
+}
+
+/* === Button colors in dark theme === */
+body.dark-theme .btn-primary,
+body.dark-theme .btn-success,
+body.dark-theme .btn-secondary {
+  background-color: var(--accent-color);
+  color: #ffffff;
+  border: none;
+}
+
+body.dark-theme .btn-primary:hover,
+body.dark-theme .btn-success:hover,
+body.dark-theme .btn-secondary:hover {
+  background-color: #0056b3;
+}
+
+/* === Additional Styling for Footer Links === */
+.footer .list-unstyled li a {
+  color: var(--link-color);
+}
+
+.footer .list-unstyled li a:hover {
+  color: var(--link-hover-color);
+}
+
+/* === Alert Styling in Hero Banner === */
+.hero-banner .alert {
+  background-color: var(--accent-color);
+  color: #ffffff;
+}
+
+/* === Navbar Toggler Icon Hover Effect === */
+.navbar .navbar-toggler:hover .navbar-toggler-icon::before,
+.navbar .navbar-toggler:hover .navbar-toggler-icon::after {
+  background-color: var(--accent-color);
+}
+
+/* === Dropdown Menu Styling (jos käytät) === */
+.dropdown-menu {
+  background-color: var(--nav-bg-color);
+  color: var(--text-color);
+}
+
+.dropdown-item {
+  color: var(--text-color);
+}
+
+.dropdown-item:hover {
+  background-color: var(--accent-color);
+  color: #ffffff;
+}
+
+/* === Form Placeholder Text Color === */
+::placeholder {
+  color: var(--text-color);
+}
+
+/* === Input Focus State === */
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--accent-color);
+  box-shadow: none;
+}
+
+/* === Adjusted Button Styling === */
+.btn-outline-secondary {
+  color: var(--link-color);
+  border-color: var(--link-color);
+}
+
+.btn-outline-secondary:hover {
+  color: #ffffff;
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+/* === Responsive Styling === */
+@media (max-width: 767px) {
+  .hero-banner h1 {
+    font-size: 2rem;
+  }
+  .hero-banner p {
+    font-size: 1rem;
+  }
+}
