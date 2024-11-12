@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ruokalista</title>
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css"
+    />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <!-- Oma CSS -->
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Navigaatiopalkki -->
+    <nav class="navbar navbar-expand-lg" id="main-navbar">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Ravintola</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+          aria-expanded="false"
+          aria-label="Valikko"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Etusivu</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="menu.html"
+                >Ruokalista</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="contact.html">Ota yhteyttä</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="#"
+                data-bs-toggle="modal"
+                data-bs-target="#cartModal"
+                ><i class="fas fa-shopping-cart"></i> Ostoskori</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="#"
+                data-bs-toggle="modal"
+                data-bs-target="#loginModal"
+                ><i class="fas fa-user"></i> Kirjaudu sisään</a
+              >
+            </li>
+            <li class="nav-item">
+              <button class="btn btn-outline-secondary" id="theme-toggle">
+                <i class="fas fa-moon"></i>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Ruokalista -->
+    <div class="container my-5">
+      <h2 class="text-center mb-4">Ruokalista</h2>
+      <div class="row row-cols-1 row-cols-md-4 g-4">
+        <!-- Tuote 1 -->
+        <div class="col">
+          <div class="card h-100 text-center shadow-sm">
+            <img
+              src="https://via.placeholder.com/150"
+              class="card-img-top"
+              alt="Kana kebab"
+            />
+            <div class="card-body">
+              <h5 class="card-title">Kana kebab</h5>
+              <p class="card-text">Hinta: 8,90€</p>
+            </div>
+            <div class="card-footer">
+              <button
+                class="btn btn-success w-100 add-to-cart"
+                data-product="Kana kebab"
+                data-price="8.90"
+              >
+                Lisää ostoskoriin
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Tuote 2 -->
+        <div class="col">
+          <div class="card h-100 text-center shadow-sm">
+            <img
+              src="https://via.placeholder.com/150"
+              class="card-img-top"
+              alt="Naudanliha kebab"
+            />
+            <div class="card-body">
+              <h5 class="card-title">Naudanliha kebab</h5>
+              <p class="card-text">Hinta: 9,50€</p>
+            </div>
+            <div class="card-footer">
+              <button
+                class="btn btn-success w-100 add-to-cart"
+                data-product="Naudanliha kebab"
+                data-price="9.50"
+              >
+                Lisää ostoskoriin
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Tuote 3 -->
+        <div class="col">
+          <div class="card h-100 text-center shadow-sm">
+            <img
+              src="https://via.placeholder.com/150"
+              class="card-img-top"
+              alt="Falafel"
+            />
+            <div class="card-body">
+              <h5 class="card-title">Falafel</h5>
+              <p class="card-text">Hinta: 7,90€</p>
+            </div>
+            <div class="card-footer">
+              <button
+                class="btn btn-success w-100 add-to-cart"
+                data-product="Falafel"
+                data-price="7.90"
+              >
+                Lisää ostoskoriin
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Tuote 4 -->
+        <div class="col">
+          <div class="card h-100 text-center shadow-sm">
+            <img
+              src="https://via.placeholder.com/150"
+              class="card-img-top"
+              alt="Kasvis kebab"
+            />
+            <div class="card-body">
+              <h5 class="card-title">Kasvis kebab</h5>
+              <p class="card-text">Hinta: 7,50€</p>
+            </div>
+            <div class="card-footer">
+              <button
+                class="btn btn-success w-100 add-to-cart"
+                data-product="Kasvis kebab"
+                data-price="7.50"
+              >
+                Lisää ostoskoriin
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Voit lisätä lisää tuotteita tarpeen mukaan -->
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer text-center text-lg-start">
+      <div class="container p-4">
+        <div class="row">
+          <!-- Yhteystiedot -->
+          <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+            <h5 class="text-uppercase">Yhteystiedot</h5>
+            <p>
+              Osoite: Esimerkkikatu 1, 00100 Helsinki<br />
+              Puhelin: 012 345 6789<br />
+              Sähköposti: info@ravintola.fi
+            </p>
+          </div>
+          <!-- Linkit -->
+          <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+            <h5 class="text-uppercase">Linkit</h5>
+            <ul class="list-unstyled mb-0">
+              <li>
+                <a href="index.html" class="text-dark">Etusivu</a>
+              </li>
+              <li>
+                <a href="menu.html" class="text-dark">Ruokalista</a>
+              </li>
+              <li>
+                <a href="contact.html" class="text-dark">Ota yhteyttä</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- Copyright -->
+      <div class="text-center p-3 bg-dark text-white">
+        © 2024 Ravintola. Kaikki oikeudet pidätetään.
+      </div>
+    </footer>
+
+    <!-- Kirjaudu sisään -modaali -->
+    <div
+      class="modal fade"
+      id="loginModal"
+      tabindex="-1"
+      aria-labelledby="loginModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="loginModalLabel">Kirjaudu sisään</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Sulje"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="login-form">
+              <div class="mb-3">
+                <label for="email" class="form-label">Sähköposti:</label>
+                <input type="email" class="form-control" id="email" required />
+              </div>
+              <div class="mb-3">
+                <label for="password" class="form-label">Salasana:</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="password"
+                  required
+                />
+              </div>
+              <button type="submit" class="btn btn-primary">
+                Kirjaudu sisään
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ostoskori -modaali -->
+    <div
+      class="modal fade"
+      id="cartModal"
+      tabindex="-1"
+      aria-labelledby="cartModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="cartModalLabel">Ostoskori</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Sulje"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div id="cart-items">
+              <p>Ostoskorisi on tyhjä.</p>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Jatka ostoksia
+            </button>
+            <button type="button" class="btn btn-primary">
+              Siirry kassalle
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="../public-dist/scripts/script.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tilaukset - Admin Paneeli</title>
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css"
+    />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <!-- Oma CSS -->
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <!-- Navigointipalkki -->
+    <nav class="navbar navbar-expand-lg" id="main-navbar">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Admin Paneeli</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#adminNavbar"
+          aria-controls="adminNavbar"
+          aria-expanded="false"
+          aria-label="Valikko"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="adminNavbar">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="menuAdmin.html">Ruokalista</a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                aria-current="page"
+                href="tilaukset.html"
+                >Tilaukset</a
+              >
+            </li>
+            <!-- Lisää muita valikkokohtia tarpeen mukaan -->
+          </ul>
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <button class="btn btn-outline-secondary" id="theme-toggle">
+                <i class="fas fa-moon"></i>
+              </button>
+            </li>
+            <li class="nav-item">
+              <span class="navbar-text">Kirjautuneena: Admin</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Pääsisältö -->
+    <div class="container mt-5">
+      <h1 class="mb-4">Tilaukset</h1>
+
+      <!-- Suodattimet -->
+      <div class="mb-3">
+        <button class="btn btn-primary me-2" id="show-active">
+          Aktiiviset tilaukset
+        </button>
+        <button class="btn btn-secondary" id="show-archived">
+          Arkistoidut tilaukset
+        </button>
+      </div>
+
+      <!-- Tilaukset taulukkona -->
+      <div class="card">
+        <div class="card-header">
+          <h2 id="order-table-title">Aktiiviset tilaukset</h2>
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered table-hover" id="orders-table">
+            <thead>
+              <tr>
+                <th>Tilausnumero</th>
+                <th>Asiakas</th>
+                <th>Päivämäärä</th>
+                <th>Status</th>
+                <th>Toiminnot</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Tilausrivit tulevat tähän JavaScriptin avulla -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tilausmodal -->
+    <div
+      class="modal fade"
+      id="orderModal"
+      tabindex="-1"
+      aria-labelledby="orderModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="orderModalLabel">
+              Tilaus #<span id="modal-order-id"></span>
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Sulje"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <!-- Tilaustiedot tulevat tähän JavaScriptin avulla -->
+            <div id="order-details">
+              <!-- Esimerkki tilaustiedoista -->
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Sulje
+            </button>
+            <button
+              type="button"
+              class="btn btn-success"
+              id="archive-order-btn"
+            >
+              Arkistoi tilaus
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS ja Popper.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <!-- Oma JavaScript-tiedosto -->
+    <script src="../public-dist/scripts/tilaukset.js"></script>
+    <!-- Teemakytkimen JavaScript -->
+    <script src="../public-dist/scripts/script.js"></script>
+  </body>
+</html>
