@@ -1,7 +1,7 @@
 "use strict";
 // tilaukset.ts
 // Esimerkkidata tilauksille
-var orders = [
+let orders = [
     {
         id: 1001,
         customer: 'Matti Meikäläinen',
@@ -25,21 +25,21 @@ var orders = [
         total: 7.0,
     },
 ];
-var activeOrders = [];
-var archivedOrders = [];
+let activeOrders = [];
+let archivedOrders = [];
 function updateOrderLists() {
-    activeOrders = orders.filter(function (order) { return order.status === 'Aktiivinen'; });
-    archivedOrders = orders.filter(function (order) { return order.status === 'Arkistoitu'; });
+    activeOrders = orders.filter((order) => order.status === 'Aktiivinen');
+    archivedOrders = orders.filter((order) => order.status === 'Arkistoitu');
 }
 updateOrderLists();
-var currentView = 'Aktiivinen';
+let currentView = 'Aktiivinen';
 // DOM-elementit
-var ordersTableBody = document.querySelector('#orders-table tbody');
-var orderTableTitle = document.getElementById('order-table-title');
-var showActiveBtn = document.getElementById('show-active');
-var showArchivedBtn = document.getElementById('show-archived');
+const ordersTableBody = document.querySelector('#orders-table tbody');
+const orderTableTitle = document.getElementById('order-table-title');
+const showActiveBtn = document.getElementById('show-active');
+const showArchivedBtn = document.getElementById('show-archived');
 // Näytä aktiiviset tilaukset
-showActiveBtn.addEventListener('click', function () {
+showActiveBtn.addEventListener('click', () => {
     currentView = 'Aktiivinen';
     renderOrdersTable();
     orderTableTitle.textContent = 'Aktiiviset tilaukset';
@@ -47,7 +47,7 @@ showActiveBtn.addEventListener('click', function () {
     showArchivedBtn.classList.replace('btn-primary', 'btn-secondary');
 });
 // Näytä arkistoidut tilaukset
-showArchivedBtn.addEventListener('click', function () {
+showArchivedBtn.addEventListener('click', () => {
     currentView = 'Arkistoitu';
     renderOrdersTable();
     orderTableTitle.textContent = 'Arkistoidut tilaukset';
@@ -57,31 +57,46 @@ showArchivedBtn.addEventListener('click', function () {
 // Renderöi tilaukset taulukkoon
 function renderOrdersTable() {
     ordersTableBody.innerHTML = '';
-    var ordersToRender = currentView === 'Aktiivinen' ? activeOrders : archivedOrders;
-    ordersToRender.forEach(function (order) {
-        var row = document.createElement('tr');
-        row.innerHTML = "\n        <td>".concat(order.id, "</td>\n        <td>").concat(order.customer, "</td>\n        <td>").concat(order.date, "</td>\n        <td>").concat(order.status, "</td>\n        <td>\n          <button class=\"btn btn-sm btn-primary\" data-bs-toggle=\"modal\" data-bs-target=\"#orderModal\" onclick=\"viewOrder(").concat(order.id, ")\">N\u00E4yt\u00E4</button>\n        </td>\n      ");
+    const ordersToRender = currentView === 'Aktiivinen' ? activeOrders : archivedOrders;
+    ordersToRender.forEach((order) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+        <td>${order.id}</td>
+        <td>${order.customer}</td>
+        <td>${order.date}</td>
+        <td>${order.status}</td>
+        <td>
+          <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#orderModal" onclick="viewOrder(${order.id})">Näytä</button>
+        </td>
+      `;
         ordersTableBody.appendChild(row);
     });
 }
 // Näytä tilauksen tiedot modalissa
 function viewOrder(orderId) {
-    var order = orders.find(function (o) { return o.id === orderId; });
+    const order = orders.find((o) => o.id === orderId);
     if (!order)
         return;
     document.getElementById('modal-order-id').textContent =
         order.id.toString();
-    var orderDetails = document.getElementById('order-details');
-    orderDetails.innerHTML = "\n      <p><strong>Asiakas:</strong> ".concat(order.customer, "</p>\n      <p><strong>P\u00E4iv\u00E4m\u00E4\u00E4r\u00E4:</strong> ").concat(order.date, "</p>\n      <p><strong>Status:</strong> ").concat(order.status, "</p>\n      <h5>Tuotteet:</h5>\n      <ul>\n        ").concat(order.items
-        .map(function (item) {
-        return "<li>".concat(item.quantity, " x ").concat(item.name, " - ").concat(item.price.toFixed(2), "\u20AC</li>");
-    })
-        .join(''), "\n      </ul>\n      <p><strong>Yhteens\u00E4:</strong> ").concat(order.total.toFixed(2), "\u20AC</p>\n    ");
+    const orderDetails = document.getElementById('order-details');
+    orderDetails.innerHTML = `
+      <p><strong>Asiakas:</strong> ${order.customer}</p>
+      <p><strong>Päivämäärä:</strong> ${order.date}</p>
+      <p><strong>Status:</strong> ${order.status}</p>
+      <h5>Tuotteet:</h5>
+      <ul>
+        ${order.items
+        .map((item) => `<li>${item.quantity} x ${item.name} - ${item.price.toFixed(2)}€</li>`)
+        .join('')}
+      </ul>
+      <p><strong>Yhteensä:</strong> ${order.total.toFixed(2)}€</p>
+    `;
     // Näytä tai piilota Arkistoi-painike
-    var archiveBtn = document.getElementById('archive-order-btn');
+    const archiveBtn = document.getElementById('archive-order-btn');
     if (order.status === 'Aktiivinen') {
         archiveBtn.style.display = 'inline-block';
-        archiveBtn.onclick = function () { return archiveOrder(orderId); };
+        archiveBtn.onclick = () => archiveOrder(orderId);
     }
     else {
         archiveBtn.style.display = 'none';
@@ -90,15 +105,15 @@ function viewOrder(orderId) {
 // Arkistoi tilaus
 function archiveOrder(orderId) {
     if (confirm('Haluatko varmasti arkistoida tämän tilauksen?')) {
-        var order = orders.find(function (o) { return o.id === orderId; });
+        const order = orders.find((o) => o.id === orderId);
         if (order) {
             order.status = 'Arkistoitu';
             updateOrderLists();
             renderOrdersTable();
             // Sulje modal
-            var orderModalElement = document.getElementById('orderModal');
+            const orderModalElement = document.getElementById('orderModal');
             if (orderModalElement) {
-                var orderModal = window.bootstrap.Modal.getInstance(orderModalElement);
+                const orderModal = window.bootstrap.Modal.getInstance(orderModalElement);
                 if (orderModal) {
                     orderModal.hide();
                 }

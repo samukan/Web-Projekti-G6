@@ -1,14 +1,14 @@
 "use strict";
 // menuAdmin.ts
 // Alustava tuotelista
-var products = [];
+let products = [];
 // Viittaukset DOM-elementteihin
-var addProductForm = document.getElementById('add-product-form');
-var productTableBody = document.querySelector('#product-table tbody');
+const addProductForm = document.getElementById('add-product-form');
+const productTableBody = document.querySelector('#product-table tbody');
 // Lisää uuden tuotteen
-addProductForm.addEventListener('submit', function (e) {
+addProductForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    var product = {
+    const product = {
         name: document.getElementById('product-name').value,
         description: document.getElementById('product-description').value,
         price: parseFloat(document.getElementById('product-price').value),
@@ -23,11 +23,23 @@ addProductForm.addEventListener('submit', function (e) {
 // Renderöi tuotelista taulukkoon
 function renderProductTable() {
     productTableBody.innerHTML = '';
-    products.forEach(function (product, index) {
-        var row = document.createElement('tr');
-        row.innerHTML = "\n        <td>".concat(product.name, "</td>\n        <td>").concat(product.description, "</td>\n        <td>").concat(product.price.toFixed(2), "</td>\n        <td>").concat(product.category, "</td>\n        <td>\n          ").concat(product.image
-            ? "<img src=\"".concat(product.image, "\" alt=\"").concat(product.name, "\" width=\"50\">")
-            : 'Ei kuvaa', "\n        </td>\n        <td>\n          <button class=\"btn btn-sm btn-warning me-2\" onclick=\"editProduct(").concat(index, ")\">Muokkaa</button>\n          <button class=\"btn btn-sm btn-danger\" onclick=\"deleteProduct(").concat(index, ")\">Poista</button>\n        </td>\n      ");
+    products.forEach((product, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+        <td>${product.name}</td>
+        <td>${product.description}</td>
+        <td>${product.price.toFixed(2)}</td>
+        <td>${product.category}</td>
+        <td>
+          ${product.image
+            ? `<img src="${product.image}" alt="${product.name}" width="50">`
+            : 'Ei kuvaa'}
+        </td>
+        <td>
+          <button class="btn btn-sm btn-warning me-2" onclick="editProduct(${index})">Muokkaa</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteProduct(${index})">Poista</button>
+        </td>
+      `;
         productTableBody.appendChild(row);
     });
 }
@@ -40,7 +52,7 @@ function deleteProduct(index) {
 }
 // Muokkaa tuotetta
 function editProduct(index) {
-    var product = products[index];
+    const product = products[index];
     // Täytä lomake tuotteen tiedoilla
     document.getElementById('product-name').value =
         product.name;
