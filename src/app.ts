@@ -1,6 +1,8 @@
 import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
+import adminRoutes from './routes/adminRoutes';
+import menuRoutes from './routes/menuRoutes';
 
 // Importoi reitit ja muut tarvittavat moduulit
 // import authRoutes from './routes/authRoutes';
@@ -10,6 +12,9 @@ import bodyParser from 'body-parser';
 const app = express();
 
 app.use(bodyParser.json());
+
+app.use('/admin', adminRoutes);
+app.use('/api', menuRoutes);
 
 // Palvellaan staattisia tiedostoja public-kansiosta
 app.use(express.static(path.join(__dirname, '../public')));

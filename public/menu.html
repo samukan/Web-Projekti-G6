@@ -17,7 +17,7 @@
       referrerpolicy="no-referrer"
     />
     <!-- Oma CSS -->
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
     <!-- Navigaatiopalkki -->
@@ -81,100 +81,8 @@
     <!-- Ruokalista -->
     <div class="container my-5">
       <h2 class="text-center mb-4">Ruokalista</h2>
-      <div class="row row-cols-1 row-cols-md-4 g-4">
-        <!-- Tuote 1 -->
-        <div class="col">
-          <div class="card h-100 text-center shadow-sm">
-            <img
-              src="https://via.placeholder.com/150"
-              class="card-img-top"
-              alt="Kana kebab"
-            />
-            <div class="card-body">
-              <h5 class="card-title">Kana kebab</h5>
-              <p class="card-text">Hinta: 8,90€</p>
-            </div>
-            <div class="card-footer">
-              <button
-                class="btn btn-success w-100 add-to-cart"
-                data-product="Kana kebab"
-                data-price="8.90"
-              >
-                Lisää ostoskoriin
-              </button>
-            </div>
-          </div>
-        </div>
-        <!-- Tuote 2 -->
-        <div class="col">
-          <div class="card h-100 text-center shadow-sm">
-            <img
-              src="https://via.placeholder.com/150"
-              class="card-img-top"
-              alt="Naudanliha kebab"
-            />
-            <div class="card-body">
-              <h5 class="card-title">Naudanliha kebab</h5>
-              <p class="card-text">Hinta: 9,50€</p>
-            </div>
-            <div class="card-footer">
-              <button
-                class="btn btn-success w-100 add-to-cart"
-                data-product="Naudanliha kebab"
-                data-price="9.50"
-              >
-                Lisää ostoskoriin
-              </button>
-            </div>
-          </div>
-        </div>
-        <!-- Tuote 3 -->
-        <div class="col">
-          <div class="card h-100 text-center shadow-sm">
-            <img
-              src="https://via.placeholder.com/150"
-              class="card-img-top"
-              alt="Falafel"
-            />
-            <div class="card-body">
-              <h5 class="card-title">Falafel</h5>
-              <p class="card-text">Hinta: 7,90€</p>
-            </div>
-            <div class="card-footer">
-              <button
-                class="btn btn-success w-100 add-to-cart"
-                data-product="Falafel"
-                data-price="7.90"
-              >
-                Lisää ostoskoriin
-              </button>
-            </div>
-          </div>
-        </div>
-        <!-- Tuote 4 -->
-        <div class="col">
-          <div class="card h-100 text-center shadow-sm">
-            <img
-              src="https://via.placeholder.com/150"
-              class="card-img-top"
-              alt="Kasvis kebab"
-            />
-            <div class="card-body">
-              <h5 class="card-title">Kasvis kebab</h5>
-              <p class="card-text">Hinta: 7,50€</p>
-            </div>
-            <div class="card-footer">
-              <button
-                class="btn btn-success w-100 add-to-cart"
-                data-product="Kasvis kebab"
-                data-price="7.50"
-              >
-                Lisää ostoskoriin
-              </button>
-            </div>
-          </div>
-        </div>
-        <!-- Voit lisätä lisää tuotteita tarpeen mukaan -->
+      <div id="menu-container">
+        <!-- Ruokalista ladataan tähän JavaScriptin avulla -->
       </div>
     </div>
 
@@ -224,35 +132,128 @@
     >
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="loginModalLabel">Kirjaudu sisään</h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Sulje"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <form id="login-form">
+          <form id="login-form">
+            <div class="modal-header">
+              <h5 class="modal-title" id="loginModalLabel">Kirjaudu sisään</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Sulje"
+              ></button>
+            </div>
+            <div class="modal-body">
               <div class="mb-3">
-                <label for="email" class="form-label">Sähköposti:</label>
-                <input type="email" class="form-control" id="email" required />
-              </div>
-              <div class="mb-3">
-                <label for="password" class="form-label">Salasana:</label>
+                <label for="login-email" class="form-label">Sähköposti</label>
                 <input
-                  type="password"
+                  type="email"
                   class="form-control"
-                  id="password"
+                  id="login-email"
                   required
                 />
               </div>
-              <button type="submit" class="btn btn-primary">
-                Kirjaudu sisään
+              <div class="mb-3">
+                <label for="login-password" class="form-label">Salasana</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="login-password"
+                  required
+                />
+              </div>
+              <p>
+                Ei tiliä?
+                <a
+                  href="#"
+                  data-bs-toggle="modal"
+                  data-bs-target="#registerModal"
+                  >Rekisteröidy tästä</a
+                >
+              </p>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Sulje
               </button>
-            </form>
-          </div>
+              <button type="submit" class="btn btn-primary">Kirjaudu</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rekisteröidy -modaali -->
+    <div
+      class="modal fade"
+      id="registerModal"
+      tabindex="-1"
+      aria-labelledby="registerModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form id="register-form">
+            <div class="modal-header">
+              <h5 class="modal-title" id="registerModalLabel">Rekisteröidy</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Sulje"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="register-email" class="form-label"
+                  >Sähköposti</label
+                >
+                <input
+                  type="email"
+                  class="form-control"
+                  id="register-email"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="register-password" class="form-label"
+                  >Salasana</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="register-password"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="register-password-confirm" class="form-label"
+                  >Vahvista salasana</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="register-password-confirm"
+                  required
+                />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Sulje
+              </button>
+              <button type="submit" class="btn btn-primary">
+                Rekisteröidy
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -298,8 +299,11 @@
     </div>
 
     <!-- JavaScript -->
-    <script src="../public-dist/scripts/script.js"></script>
     <!-- Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <!-- Oma JavaScript -->
+    <script type="module" src="/scripts/cart.js"></script>
+    <script type="module" src="/scripts/script.js"></script>
+    <script type="module" src="/scripts/menu.js"></script>
   </body>
 </html>

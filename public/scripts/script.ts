@@ -1,5 +1,7 @@
 // script.ts
 
+import {setupAddToCartButtons, updateCartModal} from './cart.js';
+
 // Teemakytkin
 const themeToggleBtn = document.getElementById(
   'theme-toggle'
@@ -21,76 +23,16 @@ if (themeToggleBtn) {
   });
 }
 
-// Ostoskoriin lisääminen (vain jos sivulla on ostoskori)
-if (document.querySelectorAll('.add-to-cart').length > 0) {
-  interface CartItem {
-    product: string;
-    price: number;
-    quantity: number;
+// Kun sivu latautuu
+document.addEventListener('DOMContentLoaded', () => {
+  // Päivitä ostoskori
+  updateCartModal();
+
+  // Aseta "Lisää ostoskoriin" -napit, jos niitä on sivulla
+  if (document.querySelectorAll('.add-to-cart').length > 0) {
+    setupAddToCartButtons();
   }
-
-  let cart: CartItem[] = [];
-
-  function setupAddToCartButtons(): void {
-    const addToCartButtons = document.querySelectorAll('.add-to-cart');
-
-    addToCartButtons.forEach((button) => {
-      button.addEventListener('click', () => {
-        const product = (button as HTMLElement).getAttribute('data-product');
-        const priceAttr = (button as HTMLElement).getAttribute('data-price');
-
-        if (product && priceAttr) {
-          const price = parseFloat(priceAttr);
-
-          const item = cart.find((item) => item.product === product);
-
-          if (item) {
-            item.quantity += 1;
-          } else {
-            cart.push({product, price, quantity: 1});
-          }
-
-          updateCartModal();
-        }
-      });
-    });
-  }
-
-  function updateCartModal(): void {
-    const cartItemsContainer = document.getElementById(
-      'cart-items'
-    ) as HTMLElement;
-    cartItemsContainer.innerHTML = '';
-
-    if (cart.length === 0) {
-      cartItemsContainer.innerHTML = '<p>Ostoskorisi on tyhjä.</p>';
-      return;
-    }
-
-    const list = document.createElement('ul');
-    list.classList.add('list-group');
-
-    cart.forEach((item) => {
-      const listItem = document.createElement('li');
-      listItem.classList.add(
-        'list-group-item',
-        'd-flex',
-        'justify-content-between',
-        'align-items-center'
-      );
-      listItem.textContent = `${item.product} x ${item.quantity}`;
-      const priceSpan = document.createElement('span');
-      priceSpan.classList.add('badge', 'bg-primary', 'rounded-pill');
-      priceSpan.textContent = `${(item.price * item.quantity).toFixed(2)}€`;
-      listItem.appendChild(priceSpan);
-      list.appendChild(listItem);
-    });
-
-    cartItemsContainer.appendChild(list);
-  }
-
-  setupAddToCartButtons();
-}
+});
 
 // Kirjautumislomakkeen käsittely (vain jos sivulla on kirjautumislomake)
 const loginForm = document.getElementById(
