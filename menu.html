@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ruokalista</title>
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    integrity="sha512-pHlfNANt/qk5iUDq8md6hUMfZ/d5L+L... (lyhennetty)
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- Navigaatiopalkki -->
+    <div class="navbar">
+      <div class="nav-left">
+        <a href="index.html">Etusivu</a>
+        <a href="menu.html">Ruokalista</a>
+      </div>
+      <div class="nav-right">
+        <!-- Ostoskori-ikoni -->
+        <a href="#" id="cart-btn" aria-label="Ostoskori"
+          ><i class="fas fa-shopping-cart"></i>
+          <span class="tooltip-text">Ostoskori</span>
+        </a>
+        <!-- Kirjaudu sisään -ikoni -->
+        <a href="#" id="login-btn" aria-label="Kirjaudu sisään"
+          ><i class="fas fa-user"></i>
+          <span class="tooltip-text">Kirjaudu sisään</span>
+        </a>
+        <!-- Teema-kytkin -->
+        <div class="theme-slider-wrapper">
+          <div class="theme-slider">
+            <input type="checkbox" id="theme-toggle" class="slider" />
+            <label for="theme-toggle" class="slider-label">
+              <span class="slider-ball"></span>
+            </label>
+          </div>
+          <i class="fas fa-moon theme-icon"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ruokalista -->
+    <div class="ruokalista">
+      <!-- Tuotteet -->
+      <div class="tuote-lista">
+        <div class="tuote">
+          <img src="https://via.placeholder.com/150" alt="Kana kebab" />
+          <h3>Kana kebab</h3>
+          <p>Hinta: 8,90€</p>
+          <button class="lisaa-ostoskoriin">Lisää ostoskoriin</button>
+        </div>
+        <div class="tuote">
+          <img src="https://via.placeholder.com/150" alt="Naudanliha kebab" />
+          <h3>Naudanliha kebab</h3>
+          <p>Hinta: 9,50€</p>
+          <button class="lisaa-ostoskoriin">Lisää ostoskoriin</button>
+        </div>
+        <div class="tuote">
+          <img src="https://via.placeholder.com/150" alt="Falafel" />
+          <h3>Falafel</h3>
+          <p>Hinta: 7,90€</p>
+          <button class="lisaa-ostoskoriin">Lisää ostoskoriin</button>
+        </div>
+        <!-- Lisää tuotteita tarpeen mukaan -->
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>Yhteystiedot | Lisää linkkejä | Lisää linkkejä | Lisää linkkejä</p>
+    </div>
+
+    <!-- Kirjaudu sisään -modaali -->
+    <div id="login-modal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="close-login">&times;</span>
+        <h2>Kirjaudu sisään</h2>
+        <form>
+          <label for="email">Sähköposti:</label><br />
+          <input type="email" id="email" name="email" /><br />
+          <label for="password">Salasana:</label><br />
+          <input type="password" id="password" name="password" /><br /><br />
+          <button type="submit">Kirjaudu sisään</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Ostoskori -modaali -->
+    <div id="cart-modal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="close-cart">&times;</span>
+        <h2>Ostoskori</h2>
+        <p>Ostoskorisi on tyhjä.</p>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
