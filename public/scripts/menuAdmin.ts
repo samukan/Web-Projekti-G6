@@ -1,4 +1,5 @@
 // menuAdmin.ts
+// Tää on vaan väliaikainen ratkaisu, jotta saadaan jotain toimivaa aikaiseksi
 
 // Tuote-tyypin määrittely
 interface Product {
@@ -9,7 +10,7 @@ interface Product {
   image: string;
 }
 
-// Alustava tuotelista
+// Alustava tuotelista (Tähän joku back-end toiminnallisuus jossain vaiheessa?)
 let products: Product[] = [];
 
 // Viittaukset DOM-elementteihin
@@ -101,6 +102,6 @@ function editProduct(index: number): void {
   renderProductTable();
 }
 
-// Tee funktiot globaaleiksi, jotta ne ovat käytettävissä onclick-attribuuteissa
+// Tekee tuotteista globaalin muuttujan, jotta niitä voidaan käyttää muualla
 (window as any).deleteProduct = deleteProduct;
 (window as any).editProduct = editProduct;
