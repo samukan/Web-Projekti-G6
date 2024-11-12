@@ -1,4 +1,5 @@
 // public/scripts/register.ts
+
 import * as bootstrap from 'bootstrap';
 
 const registerForm = document.getElementById(
@@ -35,7 +36,7 @@ if (registerForm) {
 
       if (response.ok) {
         alert('Rekisteröityminen onnistui! Voit nyt kirjautua sisään.');
-        // Suljetaan rekisteröitymismodaali ja avataan kirjautumismodaali
+        // Sulkee rekisteröitymismodaalin ja avaa kirjautumismodaalin
         const registerModal = bootstrap.Modal.getInstance(
           document.getElementById('registerModal')!
         );

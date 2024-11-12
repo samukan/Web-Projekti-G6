@@ -37,7 +37,7 @@ export const registerUser = async (
       return;
     }
 
-    // Hashataan salasana
+    // Hashataan salasana (Tämä ei oikeiin toimi toistaiseksi)
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Tallennetaan käyttäjä tietokantaan

@@ -21,7 +21,7 @@ async function fetchPopularProducts() {
     const response = await fetch('/api/menu');
     const menuItems: MenuItem[] = await response.json();
 
-    // Suodatetaan suositut tuotteet
+    // Suodatetaan suositut tuotteet (En tiedä miten tämä toimii, ei varmaan toimi)
     const popularItems = menuItems.filter((item) => item.popular);
 
     displayPopularProducts(popularItems);
@@ -123,7 +123,7 @@ function displayPopularProducts(popularItems: MenuItem[]) {
 
   suositutTuotteetContainer.innerHTML = carouselHtml;
 
-  // Lisää event listenerit "Lisää ostoskoriin" -nappeihin
+  // Lisää event listenerit
   setupAddToCartButtons();
 }
 

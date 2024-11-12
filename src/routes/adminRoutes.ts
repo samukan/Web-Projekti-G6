@@ -1,3 +1,5 @@
+// src/routes/adminRoutes.ts
+
 import {Router} from 'express';
 import path from 'path';
 import {authenticateUser, authorizeAdmin} from '../middleware/authMiddleware';

@@ -1,5 +1,6 @@
-import { Request, Response } from "express";
-import pool from "../utils/db";
+// src/controllers/orderController.ts
+
+import {Request, Response} from 'express';
 
 export const placeOrder = async (req: Request, res: Response) => {
   // Tilauksen tekeminen ja tallentaminen tietokantaan

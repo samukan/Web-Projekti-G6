@@ -8,7 +8,7 @@ interface CartItem {
 
 let cart: CartItem[] = [];
 
-// Alusta ostoskori localStoragesta, jos se on olemassa
+// Alustaa ostoskorin localStoragesta
 const storedCart = localStorage.getItem('cart');
 if (storedCart) {
   cart = JSON.parse(storedCart);
@@ -76,5 +76,5 @@ export function updateCartModal(): void {
   cartItemsContainer.appendChild(list);
 }
 
-// Exportataan ostoskori, jos sitä tarvitaan muualla
+// Exportataan ostoskori, jotta se on käytettävissä muissa tiedostoissa
 export {cart};

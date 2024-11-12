@@ -5,20 +5,19 @@ export default {
     es6: true,
     commonjs: true,
   },
-  parser: "@typescript-eslint/parser",
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2018,
-    sourceType: "module",
-    project: "./tsconfig.json",
+    sourceType: 'module',
+    project: './tsconfig.json',
   },
-  plugins: ["@typescript-eslint"],
-  extends: ["airbnb-base", "plugin:@typescript-eslint/recommended"],
+  plugins: ['@typescript-eslint'],
+  extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended'],
   rules: {
-    "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
-    // Muita sääntöjä tarvittaessa
+    '@typescript-eslint/no-unused-vars': ['warn', {argsIgnorePattern: '^_'}],
   },
   settings: {
-    "import/resolver": {
+    'import/resolver': {
       typescript: {},
     },
   },

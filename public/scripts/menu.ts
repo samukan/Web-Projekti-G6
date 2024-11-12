@@ -65,7 +65,7 @@ function displayMenu(menuItems: MenuItem[]) {
       </div>
     `;
 
-  // Lisää event listenerit "Lisää ostoskoriin" -nappeihin
+  // Lisää event listenerit
   setupAddToCartButtons();
 }
 

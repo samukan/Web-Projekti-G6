@@ -25,12 +25,11 @@ if (loginForm) {
       if (response.ok) {
         localStorage.setItem('token', data.token);
         alert('Kirjautuminen onnistui!');
-        // Suljetaan modaali
         const loginModal = bootstrap.Modal.getInstance(
           document.getElementById('loginModal')!
         );
         loginModal.hide();
-        // Päivitetään sivu tai uudelleenohjataan
+        // Päivitetään sivu tai uudelleenohjataan (esim. location.href = '/')
         // location.reload();
       } else {
         alert(data.message || 'Kirjautuminen epäonnistui.');

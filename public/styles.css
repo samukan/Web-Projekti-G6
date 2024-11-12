@@ -68,7 +68,7 @@ body {
 
 .navbar .navbar-toggler-icon::before,
 .navbar .navbar-toggler-icon::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 50%;
   left: 25%;
@@ -107,7 +107,7 @@ body {
 }
 
 .hero-banner::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
@@ -128,33 +128,33 @@ body {
 
 /* Carousel item backgrounds */
 .carousel-item:nth-child(1) .hero-banner {
-  background-image: url("media/banner1.jpg");
+  background-image: url('media/banner1.jpg');
 }
 
 .carousel-item:nth-child(2) .hero-banner {
-  background-image: url("media/banner2.jpg");
+  background-image: url('media/banner2.jpg');
 }
 
 .carousel-item:nth-child(3) .hero-banner {
-  background-image: url("media/banner3.jpg");
+  background-image: url('media/banner3.jpg');
 }
 
 /* Responsiiviset taustakuvat */
 @media (min-width: 768px) {
   .carousel-item:nth-child(1) .hero-banner {
-    background-image: url("media/banner4.jpg");
+    background-image: url('media/banner4.jpg');
   }
 
   .carousel-item:nth-child(2) .hero-banner {
-    background-image: url("media/banner5.jpg");
+    background-image: url('media/banner5.jpg');
   }
 
   .carousel-item:nth-child(3) .hero-banner {
-    background-image: url("media/banner6.jpg");
+    background-image: url('media/banner6.jpg');
   }
 }
 
-/* Sosiaalisen median ikonit */
+/* Sosiaalisen median ikonit (En tiedä mitä me näillä tehään mut näyttää hienolta ehkä?) */
 .social-icons a {
   color: #fff;
   margin: 0 10px;
@@ -258,7 +258,6 @@ form .form-control {
   border-color: var(--border-color);
 }
 
-/* Table hover effect */
 .table-hover tbody tr:hover {
   background-color: var(--border-color);
 }

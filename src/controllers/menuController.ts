@@ -1,15 +1,17 @@
-import { Request, Response } from "express";
-import fs from "fs";
-import path from "path";
+// src/controllers/menuController.ts
 
-const menuFilePath = path.join(__dirname, "../../data/menu.json");
+import {Request, Response} from 'express';
+import fs from 'fs';
+import path from 'path';
+
+const menuFilePath = path.join(__dirname, '../../data/menu.json');
 
 export const getMenu = (req: Request, res: Response) => {
-  fs.readFile(menuFilePath, "utf8", (err, data) => {
+  fs.readFile(menuFilePath, 'utf8', (err, data) => {
     if (err) {
       return res
         .status(500)
-        .json({ message: "Ruokalistan lataaminen epäonnistui" });
+        .json({message: 'Ruokalistan lataaminen epäonnistui'});
     }
     const menu = JSON.parse(data);
     res.status(200).json(menu);
