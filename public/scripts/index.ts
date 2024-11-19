@@ -1,7 +1,9 @@
 // public/scripts/index.ts
+// Tämä file hoitaa suositut tuotteet ja niiden näyttämisen.
 
-import {setupAddToCartButtons} from './cart.js';
+import {setupAddToCartButtons} from './cart.js'; // Ostoskori-setup
 
+// Menu-itemit. Koska ei me voida vaan käsitellä tuotteita ilman dataa.
 interface MenuItem {
   id: number;
   name: string;
@@ -12,16 +14,17 @@ interface MenuItem {
   popular: boolean;
 }
 
+// Tässä on paikka, mihin suositut tuotteet maagisesti ilmestyy.
 const suositutTuotteetContainer = document.getElementById(
   'suositut-tuotteet-container'
 );
 
 async function fetchPopularProducts() {
   try {
-    const response = await fetch('/api/menu');
+    const response = await fetch('/api/menu'); // Pyydetään menu backendilta.
     const menuItems: MenuItem[] = await response.json();
 
-    // Suodatetaan suositut tuotteet (En tiedä miten tämä toimii, ei varmaan toimi)
+    // Suodatetaan suositut tuotteet. Tää oikeesti vaan hakee tuotteet ei tässä oo mitään järjestystä vielä.
     const popularItems = menuItems.filter((item) => item.popular);
 
     displayPopularProducts(popularItems);
@@ -123,7 +126,7 @@ function displayPopularProducts(popularItems: MenuItem[]) {
 
   suositutTuotteetContainer.innerHTML = carouselHtml;
 
-  // Lisää event listenerit
+  // Lisää napit tuotteisiin
   setupAddToCartButtons();
 }
 

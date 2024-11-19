@@ -1,4 +1,5 @@
 // public/scripts/cart.ts
+// Tää on se file missä on ostoskorin toiminnallisuus.
 
 interface CartItem {
   product: string;

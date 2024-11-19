@@ -1,12 +1,14 @@
 // src/middleware/authMiddleware.ts
+// Tää file tarkastaa onko käyttäjä kirjautunut sisään ja onko hänellä oikeus tehdä tiettyjä asioita.
 
 import {Request, Response, NextFunction} from 'express';
 import jwt from 'jsonwebtoken';
 
 interface AuthRequest extends Request {
-  user?: {userId: number; role: number};
+  user?: {userId: number; role: number}; // Käyttäjän ID ja rooli napataan JWT:stä
 }
 
+// Tarkistaa, onko käyttäjä kirjautunut sisään
 export const authenticateUser = (
   req: AuthRequest,
   res: Response,
@@ -40,6 +42,6 @@ export const authorizeAdmin = (
   if (req.user && req.user.role === 1) {
     next(); // Käyttäjä on admin
   } else {
-    res.status(403).json({message: 'Ei oikeuksia admin-sivuille'});
+    res.status(403).json({message: 'Ei oikeuksia admin-sivuille'}); // Ei admin? Ei asiaa tänne.
   }
 };

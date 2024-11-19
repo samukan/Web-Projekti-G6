@@ -1,4 +1,5 @@
 // src/app.ts
+//  Sovelluksen pää, määrittelee asetuksia ja käynnistää palvelimen.
 
 import express from 'express';
 import path from 'path';
@@ -9,29 +10,29 @@ import authRoutes from './routes/authRoutes';
 
 const app = express();
 
-// Parse incoming JSON requests
+// Parse inc JSON
 app.use(bodyParser.json());
 
-// Serve frontend assets
+// Julkiset tiedosto, esim css kuvat yms.
 app.use(express.static(path.join(__dirname, '../public')));
 
-// Serve compiled frontend scripts
+// frontend puolen scriptit
 app.use(
   '/scripts',
   express.static(path.join(__dirname, '../public-dist/scripts'))
 );
 
-// API routes
+// API reitit
 app.use('/admin', adminRoutes);
 app.use('/api', menuRoutes);
 app.use('/api/auth', authRoutes);
 
-// Fallback for unhandled requests (404)
+// Jos ei löydy mitään (404)
 app.use((req, res, next) => {
   res.status(404).send('Page not found');
 });
 
-// Error handling middleware
+// Errori käsittelijä
 app.use(
   (
     err: any,

@@ -1,13 +1,17 @@
 // public/scripts/script.ts
+// En tiiä mitä tällä tiedostolla enää tekää ku toiminallisuus jaettu useampaan tiedostoon. Tässä on kuitenkin teemakytkin ja ostoskorin päivitys.
 
+// kukaan ei jaksa koodata kaikkea samassa tiedostossa joten import
 declare const bootstrap: any;
 import {setupAddToCartButtons, updateCartModal} from './cart.js';
 
-// Teemakytkin
+// Teemakytkin, TÄÄ ON TÄRKEE. EI SAA RIKKOA.
 const themeToggleBtn = document.getElementById(
   'theme-toggle'
 ) as HTMLButtonElement | null;
+
 if (themeToggleBtn) {
+  // Tarkistetaan tallennettu teema localStoragesta
   const currentTheme = localStorage.getItem('theme');
 
   if (currentTheme === 'dark') {

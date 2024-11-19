@@ -1,4 +1,5 @@
 // src/routes/menuRoutes.ts
+// Tässä filessä ruokalistan tarjoilu
 
 import {Router} from 'express';
 import path from 'path';
@@ -6,8 +7,9 @@ import fs from 'fs';
 
 const router = Router();
 
+// Lähetetään ruokalista frontille
 router.get('/menu', (req, res) => {
-  const menuPath = path.join(__dirname, '../../data/menu.json');
+  const menuPath = path.join(__dirname, '../../data/menu.json'); // Ruokalistan sijainti projektissa
 
   fs.readFile(menuPath, 'utf8', (err, data) => {
     if (err) {

@@ -1,4 +1,5 @@
 // src/controllers/orderController.ts
+// Tää nyt ei vielä tee mitään. Tähän tulee toiminnallisuus tilausten hallintaan (Ehkä tehään frontin puolelle?)
 
 import {Request, Response} from 'express';
 

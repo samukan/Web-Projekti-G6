@@ -1,4 +1,5 @@
 // public/scripts/checkAuth.ts
+// Tää file tarkistaa, että käyttäjä on kirjautunut sisään ja että on oikeudet adminsivulle. Tän pitäis olla back-end puolella, mutta nyt se on front-endissä.
 
 export function checkAuth() {
   const token = localStorage.getItem('token');

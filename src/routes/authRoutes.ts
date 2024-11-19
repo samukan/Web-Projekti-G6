@@ -1,4 +1,5 @@
 // src/routes/authRoutes.ts
+// Tää reititysfile on admin tyypeille
 
 import {Router} from 'express';
 import {login} from '../controllers/authController';

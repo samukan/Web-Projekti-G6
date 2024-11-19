@@ -1,7 +1,10 @@
 // public/scripts/menu.ts
+// jos nimestä ei tajuu nii tää file laittaa menun näkyviin.
 
+// Tuodaan ostoskorin toiminnallisuus mukaan
 import {setupAddToCartButtons} from './cart.js';
 
+// Menu-itemit. Koska ei me voida vaan käsitellä tuotteita ilman dataa.
 interface MenuItem {
   id: number;
   name: string;
@@ -11,8 +14,10 @@ interface MenuItem {
   image: string;
 }
 
+// Tähän se ruoka lista ilmestyy
 const menuContainer = document.getElementById('menu-container');
 
+// Hakee ruokalistan backendilta
 async function fetchMenu() {
   try {
     const response = await fetch('/api/menu');
@@ -26,10 +31,11 @@ async function fetchMenu() {
   }
 }
 
+// Renderöi menu ruudulle
 function displayMenu(menuItems: MenuItem[]) {
   if (!menuContainer) return;
 
-  let html = '';
+  let html = ''; // Kerää HTML
 
   menuItems.forEach((item) => {
     html += `

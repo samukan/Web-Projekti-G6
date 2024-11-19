@@ -1,11 +1,14 @@
 // src/controllers/menuController.ts
+// Tää file hallitsee kaiken ruokalistaan liittyvän datan.
 
 import {Request, Response} from 'express';
 import fs from 'fs';
 import path from 'path';
 
+// Ruokalistan sijainti projektissa.
 const menuFilePath = path.join(__dirname, '../../data/menu.json');
 
+//  Hakee ruokalistan ja lähettää sen frontille.
 export const getMenu = (req: Request, res: Response) => {
   fs.readFile(menuFilePath, 'utf8', (err, data) => {
     if (err) {

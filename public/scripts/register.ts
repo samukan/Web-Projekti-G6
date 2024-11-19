@@ -1,5 +1,7 @@
 // public/scripts/register.ts
+// Tää file hoitaa rekisteröitymisen sitkun saadaan se toimimaan.
 
+// Boostrapin magiaa
 import * as bootstrap from 'bootstrap';
 
 const registerForm = document.getElementById(

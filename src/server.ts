@@ -1,8 +1,10 @@
 // src/server.ts
-import app from "./app";
-import dotenv from "dotenv";
+// Tää käynnistää bileet
 
-dotenv.config();
+import app from './app';
+import dotenv from 'dotenv';
+
+dotenv.config(); // Lataa env
 
 const PORT = process.env.PORT || 3000;
 
