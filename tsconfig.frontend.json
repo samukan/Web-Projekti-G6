@@ -1,15 +1,16 @@
 {
   "compilerOptions": {
-    "target": "ES6",
-    "module": "ES6",
-    "moduleResolution": "classic",
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Node",
     "outDir": "public-dist/scripts",
     "rootDir": "public/scripts",
     "strict": true,
     "esModuleInterop": true,
     "sourceMap": true,
     "allowSyntheticDefaultImports": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "skipLibCheck": true
   },
   "include": ["public/scripts/**/*.ts"],
   "exclude": ["node_modules"]

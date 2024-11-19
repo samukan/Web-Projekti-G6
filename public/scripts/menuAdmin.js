@@ -72,4 +72,3 @@ function editProduct(index) {
 // Tekee tuotteista globaalin muuttujan, jotta niitä voidaan käyttää muualla
 window.deleteProduct = deleteProduct;
 window.editProduct = editProduct;
-//# sourceMappingURL=menuAdmin.js.map

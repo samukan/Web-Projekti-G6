@@ -1,5 +1,6 @@
-// script.ts
+// public/scripts/script.ts
 
+declare const bootstrap: any;
 import {setupAddToCartButtons, updateCartModal} from './cart.js';
 
 // Teemakytkin
@@ -33,15 +34,3 @@ document.addEventListener('DOMContentLoaded', () => {
     setupAddToCartButtons();
   }
 });
-
-// Kirjautumislomakkeen käsittely (vain jos sivulla on kirjautumislomake)
-const loginForm = document.getElementById(
-  'login-form'
-) as HTMLFormElement | null;
-
-if (loginForm) {
-  loginForm.addEventListener('submit', (e: Event) => {
-    e.preventDefault();
-    alert('Kirjautuminen ei ole käytettävissä.');
-  });
-}

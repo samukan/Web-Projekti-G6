@@ -6,15 +6,12 @@ import {
   getOrders,
   updateOrderStatus,
 } from '../controllers/orderController';
-import {
-  authenticateUser,
-  authenticateAdmin,
-} from '../middleware/authMiddleware';
+import {authenticateUser, authorizeAdmin} from '../middleware/authMiddleware';
 
 const router = Router();
 
 router.post('/', authenticateUser, placeOrder);
-router.get('/', authenticateAdmin, getOrders);
-router.put('/:id/status', authenticateAdmin, updateOrderStatus);
+router.get('/', authorizeAdmin, getOrders);
+router.put('/:id/status', authorizeAdmin, updateOrderStatus);
 
 export default router;

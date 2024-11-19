@@ -1,11 +1,17 @@
+"use strict";
 // public/scripts/cart.ts
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.cart = void 0;
+exports.setupAddToCartButtons = setupAddToCartButtons;
+exports.updateCartModal = updateCartModal;
 let cart = [];
+exports.cart = cart;
 // Alustaa ostoskorin localStoragesta
 const storedCart = localStorage.getItem('cart');
 if (storedCart) {
-    cart = JSON.parse(storedCart);
+    exports.cart = cart = JSON.parse(storedCart);
 }
-export function setupAddToCartButtons() {
+function setupAddToCartButtons() {
     const addToCartButtons = document.querySelectorAll('.add-to-cart');
     addToCartButtons.forEach((button) => {
         button.addEventListener('click', () => {
@@ -27,7 +33,7 @@ export function setupAddToCartButtons() {
         });
     });
 }
-export function updateCartModal() {
+function updateCartModal() {
     const cartItemsContainer = document.getElementById('cart-items');
     if (!cartItemsContainer)
         return;
@@ -50,6 +56,3 @@ export function updateCartModal() {
     });
     cartItemsContainer.appendChild(list);
 }
-// Exportataan ostoskori, jotta se on käytettävissä muissa tiedostoissa
-export { cart };
-//# sourceMappingURL=cart.js.map

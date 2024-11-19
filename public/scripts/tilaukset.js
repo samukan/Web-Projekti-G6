@@ -1,5 +1,5 @@
 "use strict";
-// public/scripts/tilaukset.ts
+// tilaukset.ts
 // Tällä sivulla on esimerkki tilausten hallintasovelluksesta, jossa voidaan tarkastella ja arkistoida tilauksia. Tälle joku back-end toiminnallisuus olisi hyvä lisätä,
 // jotta tilauksia voitaisiin myös lisätä ja muokata.
 // Esimerkkidata tilauksille
@@ -127,4 +127,3 @@ function archiveOrder(orderId) {
 window.viewOrder = viewOrder;
 window.archiveOrder = archiveOrder;
 renderOrdersTable();
-//# sourceMappingURL=tilaukset.js.map

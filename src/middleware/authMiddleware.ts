@@ -4,7 +4,7 @@ import {Request, Response, NextFunction} from 'express';
 import jwt from 'jsonwebtoken';
 
 interface AuthRequest extends Request {
-  user?: {userId: number; role: string};
+  user?: {userId: number; role: number};
 }
 
 export const authenticateUser = (
@@ -20,25 +20,26 @@ export const authenticateUser = (
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
         userId: number;
-        role: string;
+        role: number;
       };
-      req.user = decoded;
+      req.user = decoded; // Lisää käyttäjätiedot pyyntöön
       next();
     } catch (error) {
-      res.status(401).json({message: 'Virheellinen token'});
+      res.status(401).json({message: 'Virheellinen tai vanhentunut token'});
     }
   } else {
     res.status(401).json({message: 'Token puuttuu'});
   }
 };
+
 export const authorizeAdmin = (
   req: AuthRequest,
   res: Response,
   next: NextFunction
 ): void => {
-  if (req.user && req.user.role === 'admin') {
-    next();
+  if (req.user && req.user.role === 1) {
+    next(); // Käyttäjä on admin
   } else {
-    res.status(403).json({message: 'Ei käyttöoikeutta'});
+    res.status(403).json({message: 'Ei oikeuksia admin-sivuille'});
   }
 };

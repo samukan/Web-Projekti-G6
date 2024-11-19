@@ -1,5 +1,7 @@
+"use strict";
 // public/scripts/menu.ts
-import { setupAddToCartButtons } from './cart.js';
+Object.defineProperty(exports, "__esModule", { value: true });
+const cart_js_1 = require("./cart.js");
 const menuContainer = document.getElementById('menu-container');
 async function fetchMenu() {
     try {
@@ -51,7 +53,6 @@ function displayMenu(menuItems) {
       </div>
     `;
     // Lisää event listenerit
-    setupAddToCartButtons();
+    (0, cart_js_1.setupAddToCartButtons)();
 }
 fetchMenu();
-//# sourceMappingURL=menu.js.map

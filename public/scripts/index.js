@@ -1,5 +1,7 @@
+"use strict";
 // public/scripts/index.ts
-import { setupAddToCartButtons } from './cart.js';
+Object.defineProperty(exports, "__esModule", { value: true });
+const cart_js_1 = require("./cart.js");
 const suositutTuotteetContainer = document.getElementById('suositut-tuotteet-container');
 async function fetchPopularProducts() {
     try {
@@ -98,7 +100,6 @@ function displayPopularProducts(popularItems) {
   `;
     suositutTuotteetContainer.innerHTML = carouselHtml;
     // Lisää event listenerit
-    setupAddToCartButtons();
+    (0, cart_js_1.setupAddToCartButtons)();
 }
 fetchPopularProducts();
-//# sourceMappingURL=index.js.map

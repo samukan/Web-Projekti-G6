@@ -1,4 +1,4 @@
-// script.ts
+// public/scripts/script.ts
 import { setupAddToCartButtons, updateCartModal } from './cart.js';
 // Teemakytkin
 const themeToggleBtn = document.getElementById('theme-toggle');
@@ -25,12 +25,4 @@ document.addEventListener('DOMContentLoaded', () => {
         setupAddToCartButtons();
     }
 });
-// Kirjautumislomakkeen käsittely (vain jos sivulla on kirjautumislomake)
-const loginForm = document.getElementById('login-form');
-if (loginForm) {
-    loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        alert('Kirjautuminen ei ole käytettävissä.');
-    });
-}
 //# sourceMappingURL=script.js.map
