@@ -1,3 +1,6 @@
+// Tämän skriptin avulla Hashataan käyttäjien salasanat tietokannassa.
+// Käyttö tapahtuu ajamalla komento "node hashPasswords.js" terminaalissa.
+
 const bcrypt = require('bcrypt');
 const mysql = require('mysql2/promise');
 require('dotenv').config();
