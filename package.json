@@ -7,7 +7,7 @@
     "build:frontend": "tsc -p tsconfig.frontend.json",
     "build": "npm run build:backend && npm run build:frontend",
     "start": "node dist/server.js",
-    "dev": "concurrently \"tsc -p tsconfig.frontend.json -w\" \"nodemon src/server.ts\"",
+    "dev": "concurrently \"tsc -p tsconfig.frontend.json -w\" \"tsc -p tsconfig.backend.json -w & nodemon dist/server.js\"",
     "lint": "eslint . --ext .ts"
   },
   "keywords": [],
