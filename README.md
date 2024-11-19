@@ -18,6 +18,8 @@ Korvaa your-database-user, your-database-password ja your-secret-key omilla arvo
 source path/to/create-database.sql;
 ```
 
+create-user.sql tiedostossa esimerkki käyttäjän luomisesta.
+
 ## Riippuvuuksien asentaminen
 
 ```bash
@@ -31,7 +33,7 @@ npm run build
 npm start
 ```
 
-## hashPasswords.js skriptin avulla Hashataan käyttäjien salasanat tietokannassa.
+## hashPasswords.js skriptin avulla Hashataan käyttäjien salasanat tietokannassa
 
 ```bash
 node hashPasswords.js
