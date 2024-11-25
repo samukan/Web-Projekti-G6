@@ -36,17 +36,19 @@
         <div class="collapse navbar-collapse" id="adminNavbar">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link" href="menuAdmin.html">Ruokalista</a>
+              <a class="nav-link" href="menuAdmin.html">Ruokalistan hallinta</a>
             </li>
             <li class="nav-item">
               <a
                 class="nav-link active"
                 aria-current="page"
                 href="tilaukset.html"
-                >Tilaukset</a
+                >Tilausten hallinta</a
               >
             </li>
-            <!-- Lisää muita valikkokohtia tarpeen mukaan -->
+            <li class="nav-item">
+              <a class="nav-link" href="../index.html">Takaisin etusivulle</a>
+            </li>
           </ul>
           <ul class="navbar-nav">
             <li class="nav-item">
@@ -56,6 +58,11 @@
             </li>
             <li class="nav-item">
               <span class="navbar-text">Kirjautuneena: Admin</span>
+            </li>
+            <li class="nav-item">
+              <a id="logout-button" class="nav-link" role="button">
+                <i class="fas fa-sign-out-alt"></i> Kirjaudu ulos
+              </a>
             </li>
           </ul>
         </div>
@@ -93,7 +100,7 @@
               </tr>
             </thead>
             <tbody>
-              <!-- Tilausrivit tulevat tähän JavaScriptin avulla -->
+              <!-- Tilausrivit tulee tähän JS puolelta-->
             </tbody>
           </table>
         </div>
@@ -124,7 +131,7 @@
           <div class="modal-body">
             <!-- Tilaustiedot tulee tähän -->
             <div id="order-details">
-              <!-- Tilaustiedot latautuvat tähän -->
+              <!-- Tilaustiedot latautuu tähän -->
             </div>
           </div>
           <div class="modal-footer">
@@ -140,7 +147,7 @@
               class="btn btn-success"
               id="archive-order-btn"
             >
-              Arkistoi tilaus
+              Merkitse tilaus valmiiiksi
             </button>
           </div>
         </div>
@@ -154,12 +161,5 @@
     <script type="module" src="/scripts/script.js"></script>
     <script type="module" src="/scripts/checkAuth.js"></script>
     <script type="module" src="/scripts/logout.js"></script>
-    <script type="module">
-      import {checkAuth} from './scripts/checkAuth.js';
-
-      document.addEventListener('DOMContentLoaded', () => {
-        checkAuth(); // Tarkistaa kirjautumisen ja roolin
-      });
-    </script>
   </body>
 </html>

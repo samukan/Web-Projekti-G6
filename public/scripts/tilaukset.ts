@@ -213,7 +213,7 @@ async function archiveOrder(orderId: number): Promise<void> {
   }
 }
 
-// Tapahtumankuuntelija modalin näyttämiseen ja tilauksen katseluun
+// Modalin näyttämiseen ja tilauksen katseluun
 document.addEventListener('click', function (event) {
   const target = event.target as HTMLElement;
   if (target.matches('button[data-bs-toggle="modal"]')) {
