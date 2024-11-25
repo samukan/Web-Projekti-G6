@@ -16,7 +16,7 @@ export const placeOrder = async (
       return;
     }
 
-    // Aloitetaan transaktio
+    // Käynnistää transaktion
     const connection = await pool.getConnection();
     try {
       await connection.beginTransaction();
@@ -75,7 +75,7 @@ export const getOrders = async (
        ORDER BY o.order_date DESC`
     );
 
-    // Muokataan dataa helpommin käsiteltävään muotoon
+    // Tää muokkaa datan helpommin käsiteltävään muotoon.
     const formattedOrders = (orders as any[]).map((order) => {
       return {
         order_id: order.order_id,
@@ -92,7 +92,7 @@ export const getOrders = async (
     next(error);
   }
 };
-
+// Tää päivittää tilauksen statuksen
 export const updateOrderStatus = async (
   req: Request,
   res: Response,
