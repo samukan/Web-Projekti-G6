@@ -1,7 +1,12 @@
 // public/scripts/script.ts
 
 declare const bootstrap: any;
-import {setupAddToCartButtons, updateCartModal, clearCart} from './cart.js';
+import {
+  setupAddToCartButtons,
+  updateCartModal,
+  updateCartCount,
+  clearCart,
+} from './cart.js';
 
 // Teemakytkin
 const themeToggleBtn = document.getElementById(
@@ -28,6 +33,7 @@ if (themeToggleBtn) {
 document.addEventListener('DOMContentLoaded', () => {
   // Päivitä ostoskori
   updateCartModal();
+  updateCartCount();
 
   // Aseta "Lisää ostoskoriin" -napit, jos niitä on sivulla
   if (document.querySelectorAll('.add-to-cart').length > 0) {

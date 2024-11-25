@@ -14,6 +14,7 @@ if (storedCart) {
   cart = JSON.parse(storedCart);
 }
 
+// Lisää ostoskori-napit
 export function setupAddToCartButtons(): void {
   const addToCartButtons = document.querySelectorAll('.add-to-cart');
 
@@ -37,11 +38,13 @@ export function setupAddToCartButtons(): void {
         localStorage.setItem('cart', JSON.stringify(cart));
 
         updateCartModal();
+        updateCartCount();
       }
     });
   });
 }
 
+// Päivitä ostoskorin sisältö modaalissa
 export function updateCartModal(): void {
   const cartItemsContainer = document.getElementById(
     'cart-items'
@@ -52,6 +55,7 @@ export function updateCartModal(): void {
 
   cartItemsContainer.innerHTML = '';
 
+  // Jos ostoskori on tyhjä niin tämä näkyy käyttäjälle
   if (cart.length === 0) {
     cartItemsContainer.innerHTML = '<p>Ostoskorisi on tyhjä.</p>';
     if (totalContainer) totalContainer.textContent = 'Yhteensä: 0.00€';
@@ -61,6 +65,7 @@ export function updateCartModal(): void {
   const list = document.createElement('ul');
   list.classList.add('list-group');
 
+  // Luo lista tuotteista
   cart.forEach((item) => {
     const listItem = document.createElement('li');
     listItem.classList.add(
@@ -121,6 +126,7 @@ function updateQuantity(productName: string, delta: number): void {
     } else {
       localStorage.setItem('cart', JSON.stringify(cart));
       updateCartModal();
+      updateCartCount();
     }
   }
 }
@@ -130,6 +136,7 @@ function removeItemFromCart(productName: string): void {
   cart = cart.filter((item) => item.product !== productName);
   localStorage.setItem('cart', JSON.stringify(cart));
   updateCartModal();
+  updateCartCount();
 }
 
 // Tyhjennä ostoskori
@@ -137,6 +144,7 @@ export function clearCart(): void {
   cart = [];
   localStorage.removeItem('cart');
   updateCartModal();
+  updateCartCount();
 }
 
 // Laske kokonaishinta
@@ -144,5 +152,20 @@ function calculateTotal(): number {
   return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 }
 
-// Exportataan ostoskori, jotta se on käytettävissä muissa tiedostoissa
+export function updateCartCount(): void {
+  const cartCountElement = document.getElementById('cart-count') as HTMLElement;
+  if (!cartCountElement) return;
+
+  const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  if (totalQuantity > 0) {
+    cartCountElement.textContent = totalQuantity.toString();
+    cartCountElement.style.display = 'inline-block';
+  } else {
+    cartCountElement.textContent = '';
+    cartCountElement.style.display = 'none';
+  }
+}
+
+// Exporttaa ostoskori
 export {cart};

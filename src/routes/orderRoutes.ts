@@ -10,8 +10,11 @@ import {authenticateUser, authorizeAdmin} from '../middleware/authMiddleware';
 
 const router = Router();
 
-router.post('/', authenticateUser, placeOrder);
-router.get('/', authorizeAdmin, getOrders);
-router.put('/:id/status', authorizeAdmin, updateOrderStatus);
+// Julkinen reitti tilauksen tekemiseen
+router.post('/', placeOrder);
+
+// Admin-reitit tilauksien hallintaan
+router.get('/', authenticateUser, authorizeAdmin, getOrders);
+router.put('/:id/status', authenticateUser, authorizeAdmin, updateOrderStatus);
 
 export default router;

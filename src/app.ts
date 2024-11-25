@@ -1,4 +1,5 @@
 // src/app.ts
+// Sovelluksen sydän – tänne kaikki reitit ja middlewaret
 
 import express from 'express';
 import path from 'path';
@@ -6,32 +7,34 @@ import bodyParser from 'body-parser';
 import adminRoutes from './routes/adminRoutes';
 import menuRoutes from './routes/menuRoutes';
 import authRoutes from './routes/authRoutes';
+import orderRoutes from './routes/orderRoutes';
 
 const app = express();
 
-// Parse incoming JSON requests
+// Tulkitsee sisääntulevan JSONin
 app.use(bodyParser.json());
 
-// Serve frontend assets
+// Staattiset frontend-tiedostot
 app.use(express.static(path.join(__dirname, '../public')));
 
-// Serve compiled frontend scripts
+// käännetyt JS/TS-tiedostot
 app.use(
   '/scripts',
   express.static(path.join(__dirname, '../public-dist/scripts'))
 );
 
-// API routes
+// reitit (API ja sivustot)
 app.use('/admin', adminRoutes);
 app.use('/api', menuRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/orders', orderRoutes);
 
-// Fallback for unhandled requests (404)
+// tuntemattomat pyynnöt saavat 404-virheen
 app.use((req, res, next) => {
   res.status(404).send('Page not found');
 });
 
-// Error handling middleware
+// Virheenkäsittelijä – jos kaikki muu menee pieleen.
 app.use(
   (
     err: any,

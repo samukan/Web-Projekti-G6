@@ -58,12 +58,23 @@
           <ul class="navbar-nav">
             <li class="nav-item">
               <a
-                class="nav-link"
+                class="nav-link position-relative"
                 href="#"
                 data-bs-toggle="modal"
                 data-bs-target="#cartModal"
-                ><i class="fas fa-shopping-cart"></i> Ostoskori</a
               >
+                <!-- Badge-elementti -->
+                <span
+                  id="cart-count"
+                  class="position-absolute top-0 start-0 badge rounded-pill bg-danger"
+                  style="transform: translate(-50%, -30%)"
+                >
+                  0
+                  <span class="visually-hidden">tuotteita ostoskorissa</span>
+                </span>
+                <!-- Ostoskorin kuvake ja teksti -->
+                <i class="fas fa-shopping-cart"></i> Ostoskori
+              </a>
             </li>
             <li class="nav-item">
               <a
@@ -404,7 +415,12 @@
             >
               Jatka ostoksia
             </button>
-            <button type="button" class="btn btn-primary">
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-dismiss="modal"
+              onclick="window.location.href='checkout.html';"
+            >
               Siirry kassalle
             </button>
           </div>
