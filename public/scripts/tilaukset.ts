@@ -50,7 +50,7 @@ showArchivedBtn.addEventListener('click', () => {
   showArchivedBtn.classList.replace('btn-secondary', 'btn-primary');
 });
 
-// Hae tilaukset back-endiltä
+// Hae tilaukset back-endiltä, Tässä myös samalla sisäänkirjautumisen tarkistus.
 async function fetchOrders(): Promise<void> {
   try {
     const response = await fetch('/api/orders', {
