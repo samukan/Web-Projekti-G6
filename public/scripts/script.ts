@@ -1,7 +1,7 @@
 // public/scripts/script.ts
 
 declare const bootstrap: any;
-import {setupAddToCartButtons, updateCartModal} from './cart.js';
+import {setupAddToCartButtons, updateCartModal, clearCart} from './cart.js';
 
 // Teemakytkin
 const themeToggleBtn = document.getElementById(
@@ -32,5 +32,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // Aseta "Lisää ostoskoriin" -napit, jos niitä on sivulla
   if (document.querySelectorAll('.add-to-cart').length > 0) {
     setupAddToCartButtons();
+  }
+
+  // Liitä tapahtumakuuntelija 'Tyhjennä ostoskori' -painikkeelle
+  const clearCartButton = document.getElementById('clear-cart');
+  if (clearCartButton) {
+    clearCartButton.addEventListener('click', () => {
+      clearCart();
+    });
   }
 });
