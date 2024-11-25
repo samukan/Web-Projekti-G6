@@ -1,4 +1,5 @@
 // public/scripts/register.ts
+// Tälle back-end puoli vielä kesken.
 
 import * as bootstrap from 'bootstrap';
 

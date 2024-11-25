@@ -1,4 +1,5 @@
 // public/scripts/menu.ts
+// Tää tiedosto hakee menu-tiedot back-endiltä ja näyttää ne käyttäjälle.
 
 import {setupAddToCartButtons} from './cart.js';
 

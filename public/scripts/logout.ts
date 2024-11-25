@@ -1,4 +1,5 @@
 // public/scripts/logout.ts
+// Kirjaudu ulos funktio täällä.
 
 document.addEventListener('DOMContentLoaded', () => {
   const logoutButton = document.querySelector('#logout-button');

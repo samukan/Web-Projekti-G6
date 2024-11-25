@@ -89,7 +89,7 @@ function handleOrderSubmission(): void {
       return;
     }
 
-    // Pyytää käyttäjältä nimi
+    // Pyytää käyttäjältä nimen, Tää nimi menee tilaukselle.
     const customerName = prompt('Anna nimesi:');
     if (!customerName) {
       alert('Nimi on pakollinen.');

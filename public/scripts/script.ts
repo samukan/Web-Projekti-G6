@@ -1,7 +1,7 @@
 // public/scripts/script.ts
 
 // Bootstrap jutut on vähän mystisiä, joten ne pitää vaan hyväksyä näin.
-declare const bootstrap: any;
+declare const bootstrap: any; // Jos tän poistaa niin tulee erroria tai ehkä ei
 import {
   setupAddToCartButtons,
   updateCartModal,

@@ -1,4 +1,6 @@
 // public/scripts/tilaukset.ts
+// Tilaukset-sivun toiminnallisuus
+// Modalit ja napit: Jos ei tapahdu mitään, tarkista token – tai käyttäjä. 😅
 
 interface OrderItem {
   product: string;
@@ -14,10 +16,11 @@ interface Order {
   items: OrderItem[];
 }
 
+// Tilaukset ja niiden tilalistat
 let orders: Order[] = [];
 let activeOrders: Order[] = [];
 let archivedOrders: Order[] = [];
-let currentView: string = 'Aktiivinen';
+let currentView: string = 'Aktiivinen'; // Oletuksena aktiivinen tila
 
 // DOM-elementit
 const ordersTableBody = document.querySelector(
@@ -55,7 +58,7 @@ async function fetchOrders(): Promise<void> {
   try {
     const response = await fetch('/api/orders', {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${localStorage.getItem('token')}`, // Tarvitaan token tilausten hakemiseen
       },
     });
 
@@ -67,7 +70,7 @@ async function fetchOrders(): Promise<void> {
     } else {
       if (response.status === 401) {
         alert('Sinun täytyy kirjautua sisään nähdäksesi tilaukset.');
-        window.location.href = 'login.html'; // Ohjaa kirjautumissivulle
+        window.location.href = 'login.html'; // Ohjaa kirjautumissivulle jos ei tokenia
       } else {
         const errorData = await response.json();
         alert('Virhe tilauksia haettaessa: ' + errorData.message);
@@ -224,7 +227,7 @@ document.addEventListener('click', function (event) {
   }
 });
 
-// Käynnistä sovellus
+// Käynnistä sovellus, Lataa tilaukset
 document.addEventListener('DOMContentLoaded', () => {
   fetchOrders();
 });
