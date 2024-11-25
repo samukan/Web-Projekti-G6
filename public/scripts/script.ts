@@ -1,5 +1,6 @@
 // public/scripts/script.ts
 
+// Bootstrap jutut on vähän mystisiä, joten ne pitää vaan hyväksyä näin.
 declare const bootstrap: any;
 import {
   setupAddToCartButtons,

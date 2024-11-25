@@ -1,8 +1,9 @@
 // public/scripts/login.ts
 
+// Bootstrap jutut on vähän mystisiä, joten ne pitää vaan hyväksyä näin.
 declare const bootstrap: any;
 
-// Kirjautumislomakkeen käsittely
+// Hakee login form elementin ja liittää siihen tapahtumakuuntelijan
 const loginForm = document.getElementById(
   'login-form'
 ) as HTMLFormElement | null;
@@ -24,6 +25,7 @@ if (loginForm) {
     }
 
     try {
+      // Lähetetään kirjautumistiedot backendille ja rukoillaan että kaikki menee hyvin
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -33,6 +35,7 @@ if (loginForm) {
       const data = await response.json();
 
       if (response.ok) {
+        // Tallenna token paikallisesti
         localStorage.setItem('token', data.token);
         alert('Kirjautuminen onnistui!');
 
@@ -42,11 +45,12 @@ if (loginForm) {
           loginModal?.hide();
         }
 
+        // Tarkistetaan käyttäjän rooli
         const tokenPayload = JSON.parse(atob(data.token.split('.')[1])); // Decode JWT payload
         if (tokenPayload.role === 1) {
           window.location.href = '/menuAdmin.html';
         } else {
-          window.location.href = '/menu.html';
+          window.location.href = '/menu.html'; // Ohjaa käyttäjä tänne, Ehkä login.html sivulle?
         }
       } else {
         alert(data.message || 'Kirjautuminen epäonnistui.');
