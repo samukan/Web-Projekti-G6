@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS OrderItems;
 DROP TABLE IF EXISTS Orders;
 DROP TABLE IF EXISTS Users;
 DROP TABLE IF EXISTS Roles;
+DROP TABLE IF EXISTS MenuItems;
 
 -- 1.2 Pudottaa olemassa olevan tietokannan ja luo sen uudelleen
 DROP DATABASE IF EXISTS ravintola_db;
@@ -39,11 +40,10 @@ CREATE TABLE Users (
 -- 2.3 Luo Orders-taulu
 CREATE TABLE Orders (
   order_id INT NOT NULL AUTO_INCREMENT,
-  customer_name VARCHAR(255) NOT NULL, -- Lisätty customer_name
-  order_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Lisätty order_date
+  customer_name VARCHAR(255) NOT NULL,
+  order_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   status VARCHAR(50) DEFAULT 'Aktiivinen',
   PRIMARY KEY (order_id)
-  -- Poistettu user_id, koska sovelluskoodisi ei käytä sitä
 );
 
 -- 2.4 Luo OrderItems-taulu
@@ -55,7 +55,17 @@ CREATE TABLE OrderItems (
   price DECIMAL(10,2) NOT NULL,
   PRIMARY KEY (order_item_id),
   FOREIGN KEY (order_id) REFERENCES Orders(order_id) ON DELETE CASCADE
-  -- Poistettu product_id, koska sovelluskoodisi ei käytä sitä
+);
+
+-- 2.5 Luo MenuItems-taulu
+CREATE TABLE MenuItems (
+  item_id INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  description TEXT,
+  price DECIMAL(10,2) NOT NULL,
+  category VARCHAR(100),
+  image_url VARCHAR(255),
+  PRIMARY KEY (item_id)
 );
 
 -- **********************************************
@@ -103,6 +113,32 @@ VALUES
   (@order_id2, 'Kana Kebab', 8.90, 1),
   (@order_id2, 'Coca Cola', 2.50, 1),
   (@order_id2, 'Vesi', 0.00, 1);
+
+-- Tilauksen 3 lisääminen (esimerkki)
+INSERT INTO Orders (customer_name, order_date, status)
+VALUES
+  ('Laura Esimerkki', NOW(), 'Aktiivinen');
+
+-- Hakee tilauksen 3 order_id
+SET @order_id3 = LAST_INSERT_ID();
+
+-- Tilauksen 3 tuotteiden lisääminen
+INSERT INTO OrderItems (order_id, product_name, price, quantity)
+VALUES
+  (@order_id3, 'Falafel', 7.90, 1),
+  (@order_id3, 'Vesi', 0.00, 1);
+
+-- 3.4 Lisää menu items
+
+INSERT INTO MenuItems (name, description, price, category, image_url)
+VALUES
+  ('Kana Kebab', 'Maukasta kanaa tuoreilla vihanneksilla ja kastikkeella.', 8.90, 'Kebabit', '/images/kana_kebab.jpg'),
+  ('Naudanliha Kebab', 'Herkullista naudanlihaa mausteisella kastikkeella.', 9.50, 'Kebabit', '/images/naudanliha_kebab.jpg'),
+  ('Falafel', 'Kasvisvaihtoehto kikherneistä valmistettuna.', 7.90, 'Kebabit', '/images/falafel.jpg'),
+  ('Kasvis Kebab', 'Maukasta kasvisproteiinia tuoreilla lisukkeilla.', 7.50, 'Kebabit', '/images/kasvis_kebab.jpg'),
+  ('Pizza Margherita', 'Perinteinen italialainen pizza tomaattikastikkeella ja mozzarellajuustolla.', 10.00, 'Pizzat', '/images/pizza_margherita.jpg'),
+  ('Spaghetti Bolognese', 'Klassinen italialainen pasta-annos naudanlihakastikkeella.', 11.50, 'Pastat', '/images/spaghetti_bolognese.jpg'),
+  ('Caesar Salaatti', 'Rapea salaatti kanan, krutonkien ja parmesaanin kera.', 9.00, 'Salaatit', '/images/caesar_salaatti.jpg');
 
 -- **********************************************
 -- OSIO 4: Käyttötapaukset ja esimerkit

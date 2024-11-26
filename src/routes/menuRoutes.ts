@@ -1,29 +1,26 @@
 // src/routes/menuRoutes.ts
 
 import {Router} from 'express';
-import path from 'path';
-import fs from 'fs';
+import {
+  getMenuItems,
+  getMenuItemById,
+  addMenuItem,
+  updateMenuItem,
+  deleteMenuItem,
+} from '../controllers/menuController';
+import {authenticateUser, authorizeAdmin} from '../middleware/authMiddleware';
 
 const router = Router();
 
-router.get('/menu', (req, res) => {
-  const menuPath = path.join(__dirname, '../../data/menu.json');
+// Reitti ruokalistan kohteiden hakemiseen (julkinen)
+router.get('/', getMenuItems);
 
-  fs.readFile(menuPath, 'utf8', (err, data) => {
-    if (err) {
-      console.error('Virhe luettaessa menu.json-tiedostoa:', err);
-      res.status(500).json({message: 'Virhe ladattaessa ruokalistaa'});
-      return;
-    }
+// Reitti yksittäisen tuotteen hakemiseen
+router.get('/:id', getMenuItemById);
 
-    try {
-      const menu = JSON.parse(data);
-      res.json(menu);
-    } catch (parseError) {
-      console.error('Virhe jäsennettäessä menu.json-tiedostoa:', parseError);
-      res.status(500).json({message: 'Virhe ladattaessa ruokalistaa'});
-    }
-  });
-});
+// Reitit ruokalistan kohteiden hallintaan (vain admin)
+router.post('/', authenticateUser, authorizeAdmin, addMenuItem);
+router.put('/:id', authenticateUser, authorizeAdmin, updateMenuItem);
+router.delete('/:id', authenticateUser, authorizeAdmin, deleteMenuItem);
 
 export default router;

@@ -2,7 +2,6 @@
 <html lang="fi">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ruokalistan Hallinta</title>
     <!-- Bootstrap CSS -->
     <link
@@ -114,6 +113,8 @@
                 <option value="Pizzat">Pizzat</option>
                 <option value="Kebabit">Kebabit</option>
                 <option value="Juomat">Juomat</option>
+                <option value="Pastat">Pastat</option>
+                <option value="Salaatit">Salaatit</option>
               </select>
             </div>
             <div class="mb-3">
@@ -157,12 +158,5 @@
     <script type="module" src="/scripts/script.js"></script>
     <script type="module" src="/scripts/checkAuth.js"></script>
     <script type="module" src="/scripts/logout.js"></script>
-    <script type="module">
-      import {checkAuth} from './scripts/checkAuth.js';
-
-      document.addEventListener('DOMContentLoaded', () => {
-        checkAuth(); // Tarkistaa kirjautumisen ja roolin
-      });
-    </script>
   </body>
 </html>

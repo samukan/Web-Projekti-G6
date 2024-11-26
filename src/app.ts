@@ -8,6 +8,9 @@ import adminRoutes from './routes/adminRoutes';
 import menuRoutes from './routes/menuRoutes';
 import authRoutes from './routes/authRoutes';
 import orderRoutes from './routes/orderRoutes';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 
@@ -25,13 +28,13 @@ app.use(
 
 // reitit (API ja sivustot)
 app.use('/admin', adminRoutes);
-app.use('/api', menuRoutes);
+app.use('/api/menu', menuRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);
 
 // tuntemattomat pyynnöt saavat 404-virheen
 app.use((req, res, next) => {
-  res.status(404).send('Page not found');
+  res.status(404).json({message: 'Page not found'});
 });
 
 // Virheenkäsittelijä – jos kaikki muu menee pieleen.
@@ -43,7 +46,7 @@ app.use(
     next: express.NextFunction
   ) => {
     console.error(err.stack);
-    res.status(500).send('Something went wrong!');
+    res.status(500).json({message: 'Something went wrong!'});
   }
 );
 

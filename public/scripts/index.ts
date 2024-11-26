@@ -2,14 +2,15 @@
 
 import {setupAddToCartButtons} from './cart.js';
 
+// Ruokalistan kohteen rajapinta koska meidän täytyy tietää mitä backend haluaa
 interface MenuItem {
-  id: number;
+  item_id: number;
   name: string;
   description: string;
   price: number;
   category: string;
-  image: string;
-  popular: boolean;
+  image_url: string;
+  popular: boolean; // Onko tämä tuote niin suosittu, että se saa hitti-ilmiön?
 }
 
 const suositutTuotteetContainer = document.getElementById(
@@ -18,7 +19,12 @@ const suositutTuotteetContainer = document.getElementById(
 
 async function fetchPopularProducts() {
   try {
+    // Yritetään hakea ruokalista backendistä ja rukoillaan että serveri herää
     const response = await fetch('/api/menu');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
     const menuItems: MenuItem[] = await response.json();
 
     // Suodatetaan suositut tuotteet.
@@ -35,7 +41,7 @@ async function fetchPopularProducts() {
 }
 
 function displayPopularProducts(popularItems: MenuItem[]) {
-  if (!suositutTuotteetContainer) return;
+  if (!suositutTuotteetContainer) return; // Jos kenttiä ei lyödy niin tästä tulee surullinen
 
   const itemsPerSlide = 4; // Tuotteiden määrä per slaidi
   const slides: MenuItem[][] = [];
@@ -53,23 +59,28 @@ function displayPopularProducts(popularItems: MenuItem[]) {
     `;
 
     slideItems.forEach((item) => {
+      // Varmistetaan, että price on numero ennen toFixed-kutsua ettei tuu "Hinta: NaN€"
+      const price =
+        typeof item.price === 'string' ? parseFloat(item.price) : item.price;
+
       slideHtml += `
         <div class="col">
           <div class="card h-100 text-center shadow-sm">
             <img
-              src="${item.image}"
+              src="${item.image_url}"
               class="card-img-top"
               alt="${item.name}"
             />
             <div class="card-body">
               <h5 class="card-title">${item.name}</h5>
-              <p class="card-text">Hinta: ${item.price.toFixed(2)}€</p>
+              <p class="card-text">${item.description}</p>
+              <p class="card-text">Hinta: ${price.toFixed(2)}€</p>
             </div>
             <div class="card-footer">
               <button
                 class="btn btn-success w-100 add-to-cart"
                 data-product="${item.name}"
-                data-price="${item.price}"
+                data-price="${price}"
               >
                 Lisää ostoskoriin
               </button>
