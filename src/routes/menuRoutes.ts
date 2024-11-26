@@ -15,7 +15,7 @@ const router = Router();
 // Reitti ruokalistan kohteiden hakemiseen (julkinen)
 router.get('/', getMenuItems);
 
-// Reitti yksittäisen tuotteen hakemiseen
+// Reitti yksittäisen tuotteen hakemiseen (julkinen)
 router.get('/:id', getMenuItemById);
 
 // Reitit ruokalistan kohteiden hallintaan (vain admin)

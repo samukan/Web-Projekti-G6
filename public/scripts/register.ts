@@ -1,7 +1,6 @@
 // public/scripts/register.ts
-// Tälle back-end puoli vielä kesken.
 
-import * as bootstrap from 'bootstrap';
+declare const bootstrap: any;
 
 const registerForm = document.getElementById(
   'register-form'
@@ -12,15 +11,13 @@ if (registerForm) {
     e.preventDefault();
 
     const email = (
-      document.getElementById('register-email') as HTMLInputElement | null
+      document.getElementById('register-email') as HTMLInputElement
     )?.value;
     const password = (
-      document.getElementById('register-password') as HTMLInputElement | null
+      document.getElementById('register-password') as HTMLInputElement
     )?.value;
     const passwordConfirm = (
-      document.getElementById(
-        'register-password-confirm'
-      ) as HTMLInputElement | null
+      document.getElementById('register-password-confirm') as HTMLInputElement
     )?.value;
 
     if (!email || !password || !passwordConfirm) {
@@ -45,6 +42,7 @@ if (registerForm) {
       if (response.ok) {
         alert('Rekisteröityminen onnistui! Voit nyt kirjautua sisään.');
 
+        // Piilota rekisteröitymisikkuna
         const registerModalElement = document.getElementById('registerModal');
         if (registerModalElement) {
           const registerModal =
@@ -52,6 +50,7 @@ if (registerForm) {
           registerModal?.hide();
         }
 
+        // Näytä kirjautumisikkuna
         const loginModalElement = document.getElementById('loginModal');
         if (loginModalElement) {
           const loginModal = new bootstrap.Modal(loginModalElement);

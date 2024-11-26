@@ -2,20 +2,17 @@
 
 import {Router} from 'express';
 import path from 'path';
-import {authenticateUser, authorizeAdmin} from '../middleware/authMiddleware';
+// Poistetaan autentikointimiddlewaret
 
 const router = Router();
 
-// Tarkistetaan, että käyttäjä on kirjautunut
-router.use(authenticateUser);
-
-// Tarkistetaan, että käyttäjä on admin ennen admin-sivujen lataamista
-router.get('/menuAdmin', authorizeAdmin, (req, res) => {
-  res.sendFile(path.join(__dirname, '../../public/menuAdmin.html'));
+// Palvellaan admin-sivut ilman alustavaa autentikointia
+router.get('/menuAdmin', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../views/admin/menuAdmin.html'));
 });
 
-router.get('/tilaukset', authorizeAdmin, (req, res) => {
-  res.sendFile(path.join(__dirname, '../../public/tilaukset.html'));
+router.get('/tilaukset', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../views/admin/tilaukset.html'));
 });
 
 export default router;

@@ -1,14 +1,5 @@
 // public/scripts/menuAdmin.ts
 
-import {checkAuth} from './checkAuth.js';
-
-// Alustetaan autentikointi koska meillä ei ole vapaata lentoo
-document.addEventListener('DOMContentLoaded', () => {
-  checkAuth(); // Varmistaa, että käyttäjä on kirjautunut sisään ja on admin
-
-  fetchMenuItems(); // Haetaan menu ennen kuin admin pääsee tekemään taikojaan
-});
-
 // Ruokalistan kohteen rajapinta
 interface MenuItem {
   item_id: number;
@@ -17,6 +8,7 @@ interface MenuItem {
   price: number | string;
   category: string;
   image_url: string;
+  popular: boolean;
 }
 
 // Viittaukset DOM-elementteihin
@@ -27,12 +19,56 @@ const productTableBody = document.querySelector(
   '#product-table tbody'
 ) as HTMLTableSectionElement;
 
+// Funktio autentikoinnin tarkistamiseen
+async function checkAuthentication(): Promise<void> {
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    alert('Sinun täytyy kirjautua sisään päästäksesi tälle sivulle.');
+    window.location.href = '/login.html';
+    return;
+  }
+
+  try {
+    const response = await fetch('/api/auth/verify', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Token ei kelpaa');
+    }
+
+    const data = await response.json();
+
+    if (!data.isAdmin) {
+      alert('Sinulla ei ole oikeuksia tälle sivulle.');
+      window.location.href = '/';
+    } else {
+      // Käyttäjä on autentikoitu ja on admin, jatka sivun latausta
+      fetchMenuItems();
+    }
+  } catch (error) {
+    console.error('Autentikointivirhe:', error);
+    alert('Autentikointi epäonnistui. Kirjaudu uudelleen.');
+    window.location.href = '/login.html';
+  }
+}
+
+// Alustetaan kun sivu latautuu
+document.addEventListener('DOMContentLoaded', () => {
+  checkAuthentication();
+});
+
 // Lisää uuden tuotteen
 addProductForm.addEventListener('submit', addProductHandler);
 
-// Käsittelee uuden tuotteen lisäämisen koska kebab ei lisää itse itseään
+// Käsittelee uuden tuotteen lisäämisen
 async function addProductHandler(e: Event): Promise<void> {
-  e.preventDefault(); // Tää estää sen ettei lomake päivitä sivua
+  e.preventDefault();
 
   const name = (document.getElementById('product-name') as HTMLInputElement)
     .value;
@@ -48,23 +84,37 @@ async function addProductHandler(e: Event): Promise<void> {
   const image_url = (
     document.getElementById('product-image') as HTMLInputElement
   ).value;
+  const popular = (
+    document.getElementById('product-popular') as HTMLInputElement
+  ).checked;
 
   try {
-    // Lähetetään POST-pyyntö backendille
     const response = await fetch('/api/menu', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`, // Pitää tarkastaa token jossain välissä niin se on nyt tässä
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
-      body: JSON.stringify({name, description, price, category, image_url}),
+      body: JSON.stringify({
+        name,
+        description,
+        price,
+        category,
+        image_url,
+        popular,
+      }),
     });
 
     if (response.ok) {
       alert('Ruokalistan kohde lisätty!');
       addProductForm.reset();
-      fetchMenuItems(); // Päivitä taulukko uusilla tiedoilla
+      fetchMenuItems();
     } else {
+      if (response.status === 401 || response.status === 403) {
+        alert('Autentikointi epäonnistui. Kirjaudu uudelleen.');
+        window.location.href = '/login.html';
+        return;
+      }
       const errorData = await response.json();
       alert('Virhe lisättäessä ruokalistan kohdetta: ' + errorData.message);
     }
@@ -79,7 +129,7 @@ async function fetchMenuItems(): Promise<void> {
   try {
     const response = await fetch('/api/menu', {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`, // Pitää tarkastaa token jossain välissä niin se on nyt tässä
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     });
 
@@ -87,6 +137,11 @@ async function fetchMenuItems(): Promise<void> {
       const menuItems: MenuItem[] = await response.json();
       renderProductTable(menuItems);
     } else {
+      if (response.status === 401 || response.status === 403) {
+        alert('Autentikointi epäonnistui. Kirjaudu uudelleen.');
+        window.location.href = '/login.html';
+        return;
+      }
       const errorData = await response.json();
       alert('Virhe haettaessa ruokalistan kohteita: ' + errorData.message);
     }

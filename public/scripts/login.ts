@@ -48,7 +48,7 @@ if (loginForm) {
         // Tarkistetaan käyttäjän rooli
         const tokenPayload = JSON.parse(atob(data.token.split('.')[1])); // Decode JWT payload
         if (tokenPayload.role === 1) {
-          window.location.href = '/menuAdmin.html';
+          window.location.href = '/admin/menuAdmin';
         } else {
           window.location.href = '/menu.html'; // Ohjaa käyttäjä tänne, Ehkä login.html sivulle?
         }

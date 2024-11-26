@@ -68,9 +68,11 @@ async function fetchOrders(): Promise<void> {
       updateOrderLists();
       renderOrdersTable();
     } else {
-      if (response.status === 401) {
-        alert('Sinun täytyy kirjautua sisään nähdäksesi tilaukset.');
-        window.location.href = 'login.html'; // Ohjaa kirjautumissivulle jos ei tokenia
+      if (response.status === 401 || response.status === 403) {
+        alert(
+          'Sinun täytyy kirjautua sisään Admin tunniksilla nähdäksesi tilaukset.'
+        );
+        window.location.href = '/login.html'; // Ohjaa kirjautumissivulle jos ei tokenia
       } else {
         const errorData = await response.json();
         alert('Virhe tilauksia haettaessa: ' + errorData.message);

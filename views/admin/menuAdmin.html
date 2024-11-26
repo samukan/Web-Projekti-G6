@@ -35,15 +35,12 @@
         <div class="collapse navbar-collapse" id="adminNavbar">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a
-                class="nav-link active"
-                aria-current="page"
-                href="menuAdmin.html"
+              <a class="nav-link active" aria-current="page" href="menuAdmin"
                 >Ruokalistan hallinta</a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="tilaukset.html">Tilausten hallinta</a>
+              <a class="nav-link" href="tilaukset">Tilausten hallinta</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="../index.html">Takaisin etusivulle</a>
@@ -121,6 +118,16 @@
               <label for="product-image" class="form-label">Kuvan URL</label>
               <input type="text" class="form-control" id="product-image" />
             </div>
+            <div class="mb-3 form-check">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="product-popular"
+              />
+              <label class="form-check-label" for="product-popular"
+                >Suosittu tuote</label
+              >
+            </div>
             <button type="submit" class="btn btn-primary">Lisää tuote</button>
           </form>
         </div>
@@ -140,6 +147,7 @@
                 <th>Hinta (€)</th>
                 <th>Kategoria</th>
                 <th>Kuva</th>
+                <th>Suosittu</th>
                 <th>Toiminnot</th>
               </tr>
             </thead>
