@@ -1,5 +1,5 @@
 // public/scripts/logout.ts
-// Tää on se file missä sanotaan "moi moi" tokenille
+// Kirjaudu ulos funktio täällä.
 
 document.addEventListener('DOMContentLoaded', () => {
   const logoutButton = document.querySelector('#logout-button');

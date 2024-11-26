@@ -24,7 +24,7 @@ async function fetchPopularProducts() {
     const response = await fetch('/api/menu'); // Pyydetään menu backendilta.
     const menuItems: MenuItem[] = await response.json();
 
-    // Suodatetaan suositut tuotteet. Tää oikeesti vaan hakee tuotteet ei tässä oo mitään järjestystä vielä.
+    // Suodatetaan suositut tuotteet.
     const popularItems = menuItems.filter((item) => item.popular);
 
     displayPopularProducts(popularItems);

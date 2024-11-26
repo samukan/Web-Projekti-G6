@@ -1,5 +1,7 @@
 // src/middleware/authMiddleware.ts
-// Tää file tarkastaa onko käyttäjä kirjautunut sisään ja onko hänellä oikeus tehdä tiettyjä asioita.
+// Tässä tiedostossa on toteutettu kaksi middlewarea, authenticateUser ja authorizeAdmin. authenticateUser tarkistaa,
+// että pyynnön mukana tulee token ja että token on validi. authorizeAdmin tarkistaa, että käyttäjällä on admin-oikeudet.
+// Jos käyttäjällä ei ole oikeuksia, palautetaan statuskoodi joka frontendissä käsitellään ja käyttäjä heitetään ulos.
 
 import {Request, Response, NextFunction} from 'express';
 import jwt from 'jsonwebtoken';

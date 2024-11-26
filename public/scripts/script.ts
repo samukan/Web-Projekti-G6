@@ -1,9 +1,14 @@
 // public/scripts/script.ts
 // En tiiä mitä tällä tiedostolla enää tekää ku toiminallisuus jaettu useampaan tiedostoon. Tässä on kuitenkin teemakytkin ja ostoskorin päivitys.
 
-// kukaan ei jaksa koodata kaikkea samassa tiedostossa joten import
-declare const bootstrap: any;
-import {setupAddToCartButtons, updateCartModal} from './cart.js';
+// Bootstrap jutut on vähän mystisiä, joten ne pitää vaan hyväksyä näin.
+declare const bootstrap: any; // Jos tän poistaa niin tulee erroria tai ehkä ei
+import {
+  setupAddToCartButtons,
+  updateCartModal,
+  updateCartCount,
+  clearCart,
+} from './cart.js';
 
 // Teemakytkin, TÄÄ ON TÄRKEE. EI SAA RIKKOA.
 const themeToggleBtn = document.getElementById(
@@ -32,9 +37,18 @@ if (themeToggleBtn) {
 document.addEventListener('DOMContentLoaded', () => {
   // Päivitä ostoskori
   updateCartModal();
+  updateCartCount();
 
   // Aseta "Lisää ostoskoriin" -napit, jos niitä on sivulla
   if (document.querySelectorAll('.add-to-cart').length > 0) {
     setupAddToCartButtons();
+  }
+
+  // Liitä tapahtumakuuntelija 'Tyhjennä ostoskori' -painikkeelle
+  const clearCartButton = document.getElementById('clear-cart');
+  if (clearCartButton) {
+    clearCartButton.addEventListener('click', () => {
+      clearCart();
+    });
   }
 });

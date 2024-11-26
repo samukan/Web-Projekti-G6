@@ -2,9 +2,9 @@
 // Tää file on vastuussa kirjautumisesta ja kirjautumisen tarkistamisesta.
 
 // Bootstrap jutut on vähän mystisiä, joten ne pitää vaan hyväksyä näin.
-declare const bootstrap: any;
+declare const bootstrap: any; // Jos tän poistaa niin tulee erroria tai ehkä ei
 
-// Haetaan login-form
+// Hakee login form elementin ja liittää siihen tapahtumakuuntelijan
 const loginForm = document.getElementById(
   'login-form'
 ) as HTMLFormElement | null;
@@ -28,7 +28,7 @@ if (loginForm) {
     }
 
     try {
-      // Lähetetään kirjautumistiedot backendille ja rukoillaan
+      // Lähetetään kirjautumistiedot backendille ja rukoillaan että kaikki menee hyvin
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -54,7 +54,7 @@ if (loginForm) {
         if (tokenPayload.role === 1) {
           window.location.href = '/menuAdmin.html'; // Admin-sivulle
         } else {
-          window.location.href = '/menu.html'; // Perus käyttäjät vaikka tänne?!
+          window.location.href = '/menu.html'; // Ohjaa käyttäjä tänne, Ehkä login.html sivulle?
         }
       } else {
         alert(data.message || 'Kirjautuminen epäonnistui.');

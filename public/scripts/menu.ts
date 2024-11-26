@@ -1,5 +1,5 @@
 // public/scripts/menu.ts
-// jos nimestä ei tajuu nii tää file laittaa menun näkyviin.
+// Tää tiedosto hakee menu-tiedot back-endiltä ja näyttää ne käyttäjälle.
 
 // Tuodaan ostoskorin toiminnallisuus mukaan
 import {setupAddToCartButtons} from './cart.js';

@@ -1,5 +1,5 @@
 // public/scripts/register.ts
-// Tää file hoitaa rekisteröitymisen sitkun saadaan se toimimaan.
+// Tälle back-end puoli vielä kesken.
 
 // Boostrapin magiaa
 import * as bootstrap from 'bootstrap';
