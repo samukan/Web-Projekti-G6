@@ -21,7 +21,7 @@ async function fetchPopularProducts() {
     const response = await fetch('/api/menu');
     const menuItems: MenuItem[] = await response.json();
 
-    // Suodatetaan suositut tuotteet. Tässä tapauksessa kaikki tuotteet vaan tähän kun niitä on niin vähän.
+    // Suodatetaan suositut tuotteet.
     const popularItems = menuItems.filter((item) => item.popular);
 
     displayPopularProducts(popularItems);
