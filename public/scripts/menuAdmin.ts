@@ -151,7 +151,7 @@ async function fetchMenuItems(): Promise<void> {
   }
 }
 
-// Renderöi tuotelista taulukkoon – taikatemppuja koodilla
+// Renderöi tuotelista taulukkoon
 function renderProductTable(menuItems: MenuItem[]): void {
   productTableBody.innerHTML = '';
 
@@ -161,9 +161,7 @@ function renderProductTable(menuItems: MenuItem[]): void {
     row.innerHTML = `
       <td>${item.name}</td>
       <td>${item.description}</td>
-      <td>${Number(item.price).toFixed(
-        2
-      )}</td> <!-- Muutettu Number(item.price).toFixed(2) -->
+      <td>${Number(item.price).toFixed(2)}</td>
       <td>${item.category}</td>
       <td>
         ${
@@ -171,6 +169,14 @@ function renderProductTable(menuItems: MenuItem[]): void {
             ? `<img src="${item.image_url}" alt="${item.name}" width="50">`
             : 'Ei kuvaa'
         }
+      </td>
+      <td>
+        <!-- Lisätään Popular-painike -->
+        <button class="btn btn-sm ${
+          item.popular ? 'btn-success' : 'btn-secondary'
+        } toggle-popular-button" data-id="${item.item_id}">
+          ${item.popular ? 'Poista suosikeista' : 'Lisää suosikkeihin'}
+        </button>
       </td>
       <td>
         <button class="btn btn-sm btn-warning me-2 edit-button" data-id="${
@@ -185,9 +191,12 @@ function renderProductTable(menuItems: MenuItem[]): void {
     productTableBody.appendChild(row);
   });
 
-  // Lisää event listenerit muokkaus ja poistopainikkeille
+  // Lisää event listenerit muokkaus, poisto ja popular-painikkeille
   const editButtons = document.querySelectorAll('.edit-button');
   const deleteButtons = document.querySelectorAll('.delete-button');
+  const togglePopularButtons = document.querySelectorAll(
+    '.toggle-popular-button'
+  );
 
   editButtons.forEach((button) => {
     button.addEventListener('click', () => {
@@ -200,6 +209,13 @@ function renderProductTable(menuItems: MenuItem[]): void {
     button.addEventListener('click', () => {
       const id = button.getAttribute('data-id');
       deleteMenuItem(id);
+    });
+  });
+
+  togglePopularButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const id = button.getAttribute('data-id');
+      togglePopularStatus(id);
     });
   });
 }
@@ -258,12 +274,23 @@ async function editMenuItem(id: string | null): Promise<void> {
         item.category;
       (document.getElementById('product-image') as HTMLInputElement).value =
         item.image_url;
+      (document.getElementById('product-popular') as HTMLInputElement).checked =
+        item.popular;
 
       // Muuta lomakkeen toiminnallisuutta päivitykseen
       addProductForm.removeEventListener('submit', addProductHandler);
       const updateHandler = async (e: Event) => {
         e.preventDefault();
         await updateProductHandler(id);
+        // Palautetaan lomakkeen toiminnallisuus
+        addProductForm.removeEventListener('submit', updateHandler);
+        addProductForm.addEventListener('submit', addProductHandler);
+        // Palautetaan painikkeen teksti ja tyhjennetään lomake
+        const submitButton = addProductForm.querySelector(
+          'button[type="submit"]'
+        ) as HTMLButtonElement;
+        submitButton.textContent = 'Lisää tuote';
+        addProductForm.reset();
       };
       addProductForm.addEventListener('submit', updateHandler);
 
@@ -300,6 +327,9 @@ async function updateProductHandler(id: string | null): Promise<void> {
   const image_url = (
     document.getElementById('product-image') as HTMLInputElement
   ).value;
+  const popular = (
+    document.getElementById('product-popular') as HTMLInputElement
+  ).checked;
 
   try {
     const response = await fetch(`/api/menu/${id}`, {
@@ -308,22 +338,20 @@ async function updateProductHandler(id: string | null): Promise<void> {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
-      body: JSON.stringify({name, description, price, category, image_url}),
+      body: JSON.stringify({
+        name,
+        description,
+        price,
+        category,
+        image_url,
+        popular,
+      }),
     });
 
     if (response.ok) {
       alert('Ruokalistan kohteen tiedot päivitetty.');
       addProductForm.reset();
       fetchMenuItems();
-
-      addProductForm.removeEventListener('submit', updateProductHandler as any);
-      addProductForm.addEventListener('submit', addProductHandler);
-
-      // Palauttaa painikkeen tekstin
-      const submitButton = addProductForm.querySelector(
-        'button[type="submit"]'
-      ) as HTMLButtonElement;
-      submitButton.textContent = 'Lisää tuote';
     } else {
       const errorData = await response.json();
       alert('Virhe päivittäessä ruokalistan kohdetta: ' + errorData.message);
@@ -331,6 +359,50 @@ async function updateProductHandler(id: string | null): Promise<void> {
   } catch (error) {
     console.error('Virhe päivittäessä ruokalistan kohdetta:', error);
     alert('Virhe päivittäessä ruokalistan kohdetta.');
+  }
+}
+
+// Toggle popular status
+async function togglePopularStatus(id: string | null): Promise<void> {
+  if (!id) return;
+
+  try {
+    // Hae nykyinen tuotteen tiedot
+    const response = await fetch(`/api/menu/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+
+    if (response.ok) {
+      const item: MenuItem = await response.json();
+
+      // Vaihda popular status
+      const updatedItem = {...item, popular: !item.popular};
+
+      // Päivitä tuote backendiin
+      const updateResponse = await fetch(`/api/menu/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify(updatedItem),
+      });
+
+      if (updateResponse.ok) {
+        fetchMenuItems();
+      } else {
+        const errorData = await updateResponse.json();
+        alert('Virhe päivittäessä ruokalistan kohdetta: ' + errorData.message);
+      }
+    } else {
+      const errorData = await response.json();
+      alert('Virhe haettaessa ruokalistan kohdetta: ' + errorData.message);
+    }
+  } catch (error) {
+    console.error('Virhe popular-statuksen päivittämisessä:', error);
+    alert('Virhe popular-statuksen päivittämisessä.');
   }
 }
 
