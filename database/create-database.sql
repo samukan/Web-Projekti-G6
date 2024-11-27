@@ -52,11 +52,12 @@ CREATE TABLE Orders (
 CREATE TABLE OrderItems (
   order_item_id INT NOT NULL AUTO_INCREMENT,
   order_id INT NOT NULL,
-  product_name VARCHAR(255) NOT NULL,
+  item_id INT NOT NULL,
   quantity INT NOT NULL,
   price DECIMAL(10,2) NOT NULL,
   PRIMARY KEY (order_item_id),
-  FOREIGN KEY (order_id) REFERENCES Orders(order_id) ON DELETE CASCADE
+  FOREIGN KEY (order_id) REFERENCES Orders(order_id) ON DELETE CASCADE,
+  FOREIGN KEY (item_id) REFERENCES MenuItems(item_id)
 );
 
 -- 2.5 Luo MenuItems-taulu
@@ -79,22 +80,12 @@ CREATE TABLE MenuItems (
 INSERT INTO Roles (role_name) VALUES ('admin'), ('asiakas');
 
 -- 3.2 Lisää käyttäjiä (muista korvata 'hashedpasswordX' oikeilla hashatuilla salasanoilla)
--- Voit generoida hashatut salasanat käyttämällä bcrypt-kirjastoa
-
--- Esimerkki hashatun salasanan luomisesta Node.js:ssä:
--- const bcrypt = require('bcrypt');
--- bcrypt.hash('salasana', 10, (err, hash) => { console.log(hash); });
-
--- Oletetaan, että olet luonut hashatut salasanat ja ne ovat seuraavat:
--- 'adminpassword' -> '$2b$10$examplehashforadmin'
--- 'maijapassword' -> '$2b$10$examplehashformaija'
--- 'mattipassword' -> '$2b$10$examplehashformatti'
 
 INSERT INTO Users (role_id, email, password)
 VALUES
-  (1, 'admin@example.com', '$2b$10$examplehashforadmin'),
-  (2, 'maija@example.com', '$2b$10$examplehashformaija'),
-  (2, 'matti@example.com', '$2b$10$examplehashformatti');
+  (1, 'admin@example.com', 'hashedpassword1'),
+  (2, 'maija@example.com', 'hashedpassword2'),
+  (2, 'matti@example.com', 'hashedpassword3');
 
 -- 3.3 Lisää tilauksia
 
@@ -107,40 +98,12 @@ VALUES
 SET @order_id1 = LAST_INSERT_ID();
 
 -- Tilauksen 1 tuotteiden lisääminen
-INSERT INTO OrderItems (order_id, product_name, price, quantity)
+-- Oletetaan, että 'Pizza Margherita' on item_id 5
+INSERT INTO OrderItems (order_id, item_id, price, quantity)
 VALUES
-  (@order_id1, 'Pizza Margherita', 10.00, 1),
-  (@order_id1, 'Coca Cola', 2.50, 2),
-  (@order_id1, 'Tiramisu', 6.40, 1);
-
--- Tilauksen 2 lisääminen
-INSERT INTO Orders (user_id, customer_name, order_date, status)
-VALUES
-  (3, 'Matti Virtanen', NOW(), 'Aktiivinen');
-
--- Hakee tilauksen 2 order_id
-SET @order_id2 = LAST_INSERT_ID();
-
--- Tilauksen 2 tuotteiden lisääminen
-INSERT INTO OrderItems (order_id, product_name, price, quantity)
-VALUES
-  (@order_id2, 'Kana Kebab', 8.90, 1),
-  (@order_id2, 'Coca Cola', 2.50, 1),
-  (@order_id2, 'Vesi', 0.00, 1);
-
--- Tilauksen 3 lisääminen (esimerkki)
-INSERT INTO Orders (customer_name, order_date, status)
-VALUES
-  ('Laura Esimerkki', NOW(), 'Aktiivinen');
-
--- Hakee tilauksen 3 order_id
-SET @order_id3 = LAST_INSERT_ID();
-
--- Tilauksen 3 tuotteiden lisääminen
-INSERT INTO OrderItems (order_id, product_name, price, quantity)
-VALUES
-  (@order_id3, 'Falafel', 7.90, 1),
-  (@order_id3, 'Vesi', 0.00, 1);
+  (@order_id1, 5, 10.00, 1),
+  (@order_id1, 8, 2.50, 2),
+  (@order_id1, 9, 6.40, 1);
 
 -- 3.4 Lisää menu items
 
@@ -153,80 +116,5 @@ VALUES
   ('Pizza Margherita', 'Perinteinen italialainen pizza tomaattikastikkeella ja mozzarellajuustolla.', 10.00, 'Pizzat', '/images/pizza_margherita.jpg', 1),
   ('Spaghetti Bolognese', 'Klassinen italialainen pasta-annos naudanlihakastikkeella.', 11.50, 'Pastat', '/images/spaghetti_bolognese.jpg', 0),
   ('Caesar Salaatti', 'Rapea salaatti kanan, krutonkien ja parmesaanin kera.', 9.00, 'Salaatit', '/images/caesar_salaatti.jpg', 0);
-
--- **********************************************
--- OSIO 4: Käyttötapaukset ja esimerkit
--- **********************************************
-
--- *** Käyttötapaus 1: Admin haluaa nähdä kaikki aktiiviset tilaukset ***
-
--- Hakee kaikki aktiiviset tilaukset
-SELECT o.order_id, o.customer_name AS asiakas, o.order_date, o.status
-FROM Orders o
-WHERE o.status = 'Aktiivinen';
-
--- *** Käyttötapaus 2: Asiakas haluaa nähdä oman tilauksensa yksityiskohdat ***
-
--- Oletetaan, että Maija haluaa nähdä tilauksensa
-SELECT o.order_id, o.customer_name, o.order_date, o.status, oi.product_name, oi.price, oi.quantity
-FROM Orders o
-JOIN OrderItems oi ON o.order_id = oi.order_id
-WHERE o.customer_name = 'Maija Meikäläinen';
-
--- *** Käyttötapaus 3: Admin haluaa päivittää tilauksen statuksen "Arkistoitu" ***
-
--- Päivittää tilauksen 1 status "Arkistoitu" tilaan
-UPDATE Orders
-SET status = 'Arkistoitu'
-WHERE order_id = @order_id1;
-
--- *** Käyttötapaus 4: Admin haluaa poistaa tilauksen ***
-
--- Poistaa tilauksen 2 ja siihen liittyvät tilausrivit
-DELETE FROM Orders WHERE order_id = @order_id2;
-
--- *** Käyttötapaus 5: Admin haluaa lisätä uuden käyttäjän ***
-
--- Lisää uuden asiakkaan Laura
-INSERT INTO Users (role_id, email, password)
-VALUES
-  (2, 'laura@example.com', 'hashedpassword4');
-
--- *** Käyttötapaus 6: Admin haluaa päivittää käyttäjän sähköpostiosoitteen ***
-
--- Päivittää Maijan sähköpostiosoitteen
-UPDATE Users
-SET email = 'maija.uusi@example.com'
-WHERE email = 'maija@example.com';
-
--- *** Käyttötapaus 7: Admin haluaa nähdä kaikki käyttäjät ja heidän roolinsa ***
-
-SELECT u.user_id, u.email, r.role_name
-FROM Users u
-JOIN Roles r ON u.role_id = r.role_id;
-
--- *** Käyttötapaus 8: Hae tilauksen kokonaishinta ja tuotteiden määrä ***
-
--- Hakee tilauksen 1 tuotteiden summan ja määrän
-SELECT o.order_id, SUM(oi.price * oi.quantity) AS total_price, SUM(oi.quantity) AS total_items
-FROM Orders o
-JOIN OrderItems oi ON o.order_id = oi.order_id
-WHERE o.order_id = @order_id1
-GROUP BY o.order_id;
-
--- *** Käyttötapaus 9: Asiakas haluaa peruuttaa tilauksensa ***
-
--- Oletetaan, että Maija haluaa peruuttaa tilauksensa
--- Päivitetään tilauksen status "Peruutettu" tilaan
-UPDATE Orders
-SET status = 'Peruutettu'
-WHERE order_id = @order_id1 AND customer_name = 'Maija Meikäläinen';
-
--- *** Käyttötapaus 10: Admin haluaa hakea tilaukset tietyltä aikaväliltä ***
-
--- Hakee tilaukset viimeisen 7 päivän ajalta
-SELECT o.order_id, o.customer_name AS asiakas, o.order_date, o.status
-FROM Orders o
-WHERE o.order_date >= DATE_SUB(CURRENT_DATE, INTERVAL 7 DAY);
 
 -- Skriptin loppu
