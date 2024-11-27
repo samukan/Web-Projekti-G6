@@ -2,6 +2,8 @@
 // Tilaukset-sivun toiminnallisuus
 // Modalit ja napit: Jos ei tapahdu mitään, tarkista token – tai käyttäjä. 😅
 
+declare const bootstrap: any;
+
 interface OrderItem {
   product: string;
   quantity: number;

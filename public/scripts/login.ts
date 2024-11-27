@@ -1,7 +1,7 @@
 // public/scripts/login.ts
+// Hakee login form elementin ja liittää siihen tapahtumakuuntelijan
 
-// Bootstrap jutut on vähän mystisiä, joten ne pitää vaan hyväksyä näin.
-declare const bootstrap: any; // Jos tän poistaa niin tulee erroria tai ehkä ei
+declare const bootstrap: any;
 
 // Hakee login form elementin ja liittää siihen tapahtumakuuntelijan
 const loginForm = document.getElementById(
@@ -25,7 +25,7 @@ if (loginForm) {
     }
 
     try {
-      // Lähetetään kirjautumistiedot backendille ja rukoillaan että kaikki menee hyvin
+      // Lähetetään kirjautumistiedot backendille
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -41,8 +41,10 @@ if (loginForm) {
 
         const loginModalElement = document.getElementById('loginModal');
         if (loginModalElement) {
-          const loginModal = bootstrap.Modal.getInstance(loginModalElement);
-          loginModal?.hide();
+          const loginModal =
+            bootstrap.Modal.getInstance(loginModalElement) ||
+            new bootstrap.Modal(loginModalElement);
+          loginModal.hide();
         }
 
         // Tarkistetaan käyttäjän rooli
@@ -50,7 +52,7 @@ if (loginForm) {
         if (tokenPayload.role === 1) {
           window.location.href = '/admin/menuAdmin';
         } else {
-          window.location.href = '/menu.html'; // Ohjaa käyttäjä tänne, Ehkä login.html sivulle?
+          window.location.href = '/menu.html';
         }
       } else {
         alert(data.message || 'Kirjautuminen epäonnistui.');
@@ -86,3 +88,5 @@ export function checkAuth() {
     window.location.href = '/';
   }
 }
+
+export {};

@@ -3,13 +3,25 @@
 import {Request, Response, NextFunction} from 'express';
 import pool from '../utils/db';
 
+interface AuthenticatedRequest extends Request {
+  user?: {userId: number; role: number};
+}
+
 export const placeOrder = async (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
     const {customer, items} = req.body;
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      res
+        .status(401)
+        .json({message: 'Sinun täytyy kirjautua sisään tehdäksesi tilauksen.'});
+      return;
+    }
 
     if (!customer || !items || items.length === 0) {
       res.status(400).json({message: 'Virheelliset tilauksen tiedot'});
@@ -23,8 +35,8 @@ export const placeOrder = async (
 
       // Lisää tilaus Orders-tauluun ja asetetaan status 'Aktiivinen'
       const [orderResult] = await connection.query(
-        'INSERT INTO Orders (customer_name, order_date, status) VALUES (?, NOW(), ?)',
-        [customer, 'Aktiivinen']
+        'INSERT INTO Orders (user_id, customer_name, order_date, status) VALUES (?, ?, NOW(), ?)',
+        [userId, customer, 'Aktiivinen']
       );
 
       const orderId = (orderResult as any).insertId;
@@ -60,11 +72,17 @@ export const placeOrder = async (
 };
 
 export const getOrders = async (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
+    // Varmistetaan, että käyttäjä on admin
+    if (req.user?.role !== 1) {
+      res.status(403).json({message: 'Ei oikeuksia nähdä kaikkia tilauksia'});
+      return;
+    }
+
     // Haetaan tilaukset ja niiden tilausrivit
     const [orders] = await pool.query(
       `SELECT o.order_id, o.customer_name, o.order_date, o.status,
@@ -75,7 +93,7 @@ export const getOrders = async (
        ORDER BY o.order_date DESC`
     );
 
-    // Tää muokkaa datan helpommin käsiteltävään muotoon.
+    // Muokataan data helpommin käsiteltävään muotoon.
     const formattedOrders = (orders as any[]).map((order) => {
       return {
         order_id: order.order_id,
@@ -92,13 +110,20 @@ export const getOrders = async (
     next(error);
   }
 };
+
 // Tää päivittää tilauksen statuksen
 export const updateOrderStatus = async (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
+    // Varmistetaan, että käyttäjä on admin
+    if (req.user?.role !== 1) {
+      res.status(403).json({message: 'Ei oikeuksia päivittää tilausta'});
+      return;
+    }
+
     const orderId = req.params.id;
     const {status} = req.body;
 
@@ -121,6 +146,52 @@ export const updateOrderStatus = async (
     res.json({message: 'Tilauksen status päivitetty'});
   } catch (error) {
     console.error('Virhe tilauksen statuksen päivittämisessä:', error);
+    next(error);
+  }
+};
+
+// Uusi funktio asiakkaan omien tilausten hakemiseen
+export const getCustomerOrders = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const userId = req.user?.userId;
+
+    if (!userId) {
+      res.status(401).json({
+        message: 'Sinun täytyy kirjautua sisään nähdäksesi tilauksesi.',
+      });
+      return;
+    }
+
+    // Haetaan tilaukset ja niiden tilausrivit käyttäjälle
+    const [orders] = await pool.query(
+      `SELECT o.order_id, o.customer_name, o.order_date, o.status,
+              GROUP_CONCAT(JSON_OBJECT('product', oi.product_name, 'quantity', oi.quantity, 'price', oi.price)) AS items
+       FROM Orders o
+       JOIN OrderItems oi ON o.order_id = oi.order_id
+       WHERE o.user_id = ?
+       GROUP BY o.order_id
+       ORDER BY o.order_date DESC`,
+      [userId]
+    );
+
+    // Muokataan data helpommin käsiteltävään muotoon.
+    const formattedOrders = (orders as any[]).map((order) => {
+      return {
+        order_id: order.order_id,
+        customer_name: order.customer_name,
+        order_date: order.order_date,
+        status: order.status,
+        items: JSON.parse('[' + order.items + ']'),
+      };
+    });
+
+    res.json(formattedOrders);
+  } catch (error) {
+    console.error('Virhe tilauksia haettaessa:', error);
     next(error);
   }
 };

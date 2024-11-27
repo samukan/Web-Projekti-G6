@@ -46,14 +46,17 @@ if (registerForm) {
         const registerModalElement = document.getElementById('registerModal');
         if (registerModalElement) {
           const registerModal =
-            bootstrap.Modal.getInstance(registerModalElement);
-          registerModal?.hide();
+            bootstrap.Modal.getInstance(registerModalElement) ||
+            new bootstrap.Modal(registerModalElement);
+          registerModal.hide();
         }
 
         // Näytä kirjautumisikkuna
         const loginModalElement = document.getElementById('loginModal');
         if (loginModalElement) {
-          const loginModal = new bootstrap.Modal(loginModalElement);
+          const loginModal =
+            bootstrap.Modal.getInstance(loginModalElement) ||
+            new bootstrap.Modal(loginModalElement);
           loginModal.show();
         }
       } else {
@@ -65,3 +68,5 @@ if (registerForm) {
     }
   });
 }
+
+export {};

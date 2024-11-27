@@ -40,7 +40,7 @@ CREATE TABLE Users (
 -- 2.3 Luo Orders-taulu
 CREATE TABLE Orders (
   order_id INT NOT NULL AUTO_INCREMENT,
-  user_id INT,
+  user_id INT NOT NULL,
   customer_name VARCHAR(255) NOT NULL,
   order_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   status VARCHAR(50) DEFAULT 'Aktiivinen',

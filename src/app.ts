@@ -22,6 +22,11 @@ app.use('/api/menu', menuRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);
 
+// Palvellaan myOrders.html
+app.get('/myOrders', (req, res) => {
+  res.sendFile(path.join(__dirname, '../views/myOrders.html'));
+});
+
 // Staattiset frontend-tiedostot
 app.use(express.static(path.join(__dirname, '../public')));
 

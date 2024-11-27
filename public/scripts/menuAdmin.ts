@@ -333,3 +333,5 @@ async function updateProductHandler(id: string | null): Promise<void> {
     alert('Virhe päivittäessä ruokalistan kohdetta.');
   }
 }
+
+export {};

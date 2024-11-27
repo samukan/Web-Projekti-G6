@@ -1,18 +1,43 @@
 // public/scripts/checkout.ts
 // Ostoskori-yhteenveto ja tilauksen käsittely
 
+import {updateCartCount, cart} from './cart.js';
+
 interface CartItem {
   product: string;
   price: number;
   quantity: number;
 }
 
-let cart: CartItem[] = [];
+// Funktio autentikoinnin tarkistamiseen
+async function checkAuthentication(): Promise<void> {
+  const token = localStorage.getItem('token');
 
-// Lataa ostoskori localStoragesta
-const storedCart = localStorage.getItem('cart');
-if (storedCart) {
-  cart = JSON.parse(storedCart);
+  if (!token) {
+    alert('Sinun täytyy kirjautua sisään tehdäksesi tilauksen.');
+    window.location.href = '/login.html';
+    return;
+  }
+
+  try {
+    const response = await fetch('/api/auth/verify', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Token ei kelpaa');
+    }
+
+    // Käyttäjä on autentikoitu, voit jatkaa
+  } catch (error) {
+    console.error('Autentikointivirhe:', error);
+    alert('Autentikointi epäonnistui. Kirjaudu uudelleen.');
+    window.location.href = '/login.html';
+  }
 }
 
 // Ostoskorin yhteenveto
@@ -96,11 +121,16 @@ function handleOrderSubmission(): void {
       return;
     }
 
+    const token = localStorage.getItem('token');
+
     // Lähetä tilaus back-endille
     try {
       const response = await fetch('/api/orders', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({customer: customerName, items: cart}),
       });
 
@@ -108,13 +138,18 @@ function handleOrderSubmission(): void {
         alert('Tilaus lähetetty!');
         // Tyhjennetään ostoskori
         localStorage.removeItem('cart');
-        cart = [];
+        cart.length = 0; // Tyhjentää taulukon sisällön
         // Päivitetään sivu
         displayCartSummary();
         // Päivitetään ostoskorin määrä navigaatiossa
         updateCartCount();
       } else {
         const errorData = await response.json();
+        if (response.status === 401 || response.status === 403) {
+          alert('Sinun täytyy kirjautua sisään tehdäksesi tilauksen.');
+          window.location.href = '/login.html';
+          return;
+        }
         alert('Virhe tilauksen lähettämisessä: ' + errorData.message);
       }
     } catch (error) {
@@ -124,24 +159,12 @@ function handleOrderSubmission(): void {
   });
 }
 
-// Päivittää ostoskorin navissa
-function updateCartCount(): void {
-  const cartCountElement = document.getElementById('cart-count') as HTMLElement;
-  if (!cartCountElement) return;
-
-  const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-  if (totalQuantity > 0) {
-    cartCountElement.textContent = totalQuantity.toString();
-    cartCountElement.style.display = 'inline-block';
-  } else {
-    cartCountElement.textContent = '';
-    cartCountElement.style.display = 'none';
-  }
-}
 // Käynnistä kaikki, kun sivu latautuu
 document.addEventListener('DOMContentLoaded', () => {
+  checkAuthentication();
   displayCartSummary();
   handleOrderSubmission();
   updateCartCount();
 });
+
+export {};

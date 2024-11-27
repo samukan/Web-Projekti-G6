@@ -41,7 +41,7 @@ async function fetchPopularProducts() {
 }
 
 function displayPopularProducts(popularItems: MenuItem[]) {
-  if (!suositutTuotteetContainer) return; // Jos kenttiä ei lyödy niin tästä tulee surullinen
+  if (!suositutTuotteetContainer) return; // Jos kenttiä ei löydy niin tästä tulee surullinen
 
   const itemsPerSlide = 4; // Tuotteiden määrä per slaidi
   const slides: MenuItem[][] = [];
@@ -139,3 +139,5 @@ function displayPopularProducts(popularItems: MenuItem[]) {
 }
 
 fetchPopularProducts();
+
+export {};
