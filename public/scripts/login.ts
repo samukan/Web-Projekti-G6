@@ -1,6 +1,6 @@
 // public/scripts/login.ts
 
-import {manageAdminLinks, manageAuthenticatedLinks} from './auth.js'; // Varmista polku oikein
+import {manageAdminLinks, manageAuthenticatedLinks, showToast} from './auth.js';
 
 // Tokenin purkaminen funktiota varten
 function parseJwt(token: string): any {
@@ -29,7 +29,7 @@ if (loginForm) {
     )?.value;
 
     if (!email || !password) {
-      alert('Täytä kaikki kentät.');
+      showToast('Täytä kaikki kentät.', 'warning'); // Korvattu alert
       return;
     }
 
@@ -46,7 +46,7 @@ if (loginForm) {
       if (response.ok) {
         // Tallenna token paikallisesti
         localStorage.setItem('token', data.token);
-        alert('Kirjautuminen onnistui!');
+        showToast('Kirjautuminen onnistui!', 'success'); // Korvattu alert
 
         const loginModalElement = document.getElementById('loginModal');
         if (loginModalElement) {
@@ -62,17 +62,19 @@ if (loginForm) {
 
         // Tarkistetaan käyttäjän rooli
         const tokenPayload = parseJwt(data.token); // Decode JWT payload
-        if (tokenPayload.role === 1) {
-          window.location.href = '/admin/menuAdmin'; // Ohjataan adminille
-        } else {
-          window.location.href = '/menu.html'; // Ohjataan asiakas-näkymään
-        }
+        setTimeout(() => {
+          if (tokenPayload.role === 1) {
+            window.location.href = '/admin/menuAdmin'; // Ohjataan adminille
+          } else {
+            window.location.href = '/menu.html'; // Ohjataan asiakas-näkymään
+          }
+        }, 1500); // Viive 1,5 sekuntia ennen uudelleenohjausta
       } else {
-        alert(data.message || 'Kirjautuminen epäonnistui.');
+        showToast(data.message || 'Kirjautuminen epäonnistui.', 'danger'); // Korvattu alert
       }
     } catch (error) {
       console.error('Palvelinvirhe:', error);
-      alert('Palvelinvirhe. Yritä myöhemmin uudelleen.');
+      showToast('Palvelinvirhe. Yritä myöhemmin uudelleen.', 'danger'); // Korvattu alert
     }
   });
 }
