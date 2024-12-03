@@ -74,15 +74,18 @@ export function manageAuthenticatedLinks(): void {
   const cartLink = document.getElementById('cart-link');
   const loginLink = document.getElementById('login-link');
   const registerLink = document.getElementById('register-link');
+  const myOrdersLink = document.querySelector('a[href="/myOrders"]');
 
   if (token) {
     if (logoutButton) logoutButton.style.display = 'block';
     if (cartLink) cartLink.style.display = 'block';
+    if (myOrdersLink) (myOrdersLink as HTMLElement).style.display = 'block';
     if (loginLink) loginLink.style.display = 'none';
     if (registerLink) registerLink.style.display = 'none';
   } else {
     if (logoutButton) logoutButton.style.display = 'none';
     if (cartLink) cartLink.style.display = 'none';
+    if (myOrdersLink) (myOrdersLink as HTMLElement).style.display = 'none';
     if (loginLink) loginLink.style.display = 'block';
     if (registerLink) registerLink.style.display = 'block';
   }

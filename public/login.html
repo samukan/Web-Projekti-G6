@@ -24,6 +24,106 @@
     >
   </li>
   <body>
+    <!-- Navigaatiopalkki -->
+    <nav class="navbar navbar-expand-lg" id="main-navbar">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Ravintola</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+          aria-expanded="false"
+          aria-label="Valikko"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="index.html"
+                >Etusivu</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="menu.html">Ruokalista</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="contact.html">Ota yhteyttä</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/myOrders" style="display: none"
+                >Omat tilaukset</a
+              >
+            </li>
+            <!-- Admin-linkit -->
+            <li class="nav-item" id="admin-menu-link" style="display: none">
+              <a class="nav-link" href="/admin/menuAdmin">Admin menu</a>
+            </li>
+            <li
+              class="nav-item"
+              id="admin-tilaukset-link"
+              style="display: none"
+            >
+              <a class="nav-link" href="/admin/tilaukset">Admin tilaukset</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav">
+            <li class="nav-item" id="cart-link" style="display: none">
+              <a
+                class="nav-link position-relative"
+                href="#"
+                data-bs-toggle="modal"
+                data-bs-target="#cartModal"
+              >
+                <!-- Badge-elementti -->
+                <span
+                  id="cart-count"
+                  class="position-absolute top-0 start-0 badge rounded-pill bg-danger"
+                  style="transform: translate(-50%, -30%)"
+                >
+                  0
+                  <span class="visually-hidden">tuotteita ostoskorissa</span>
+                </span>
+                <!-- Ostoskorin kuvake ja teksti -->
+                <i class="fas fa-shopping-cart"></i> Ostoskori
+              </a>
+            </li>
+            <li class="nav-item" id="login-link">
+              <a
+                class="nav-link"
+                href="#"
+                data-bs-toggle="modal"
+                data-bs-target="#loginModal"
+              >
+                <i class="fas fa-user"></i> Kirjaudu sisään
+              </a>
+            </li>
+            <li class="nav-item" id="register-link" style="display: none">
+              <a
+                class="nav-link"
+                href="#"
+                data-bs-toggle="modal"
+                data-bs-target="#registerModal"
+              >
+                Rekisteröidy
+              </a>
+            </li>
+            <li class="nav-item" id="logout-button" style="display: none">
+              <a class="nav-link" href="#" role="button">
+                <i class="fas fa-sign-out-alt"></i> Kirjaudu ulos
+              </a>
+            </li>
+            <li class="nav-item">
+              <button class="btn btn-outline-secondary" id="theme-toggle">
+                <i class="fas fa-moon"></i>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
     <!-- Kirjautumismodaali -->
     <div
       class="modal fade"
@@ -168,7 +268,11 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="/scripts/auth.js"></script>
+    <script type="module" src="/scripts/cart.js"></script>
     <script type="module" src="/scripts/script.js"></script>
+    <script type="module" src="/scripts/addToCart.js"></script>
     <script type="module" src="/scripts/login.js"></script>
+    <script type="module" src="/scripts/index.js"></script>
+    <script type="module" src="/scripts/register.js"></script>
   </body>
 </html>
