@@ -115,8 +115,14 @@
               </select>
             </div>
             <div class="mb-3">
-              <label for="product-image" class="form-label">Kuvan URL</label>
-              <input type="text" class="form-control" id="product-image" />
+              <label for="product-image" class="form-label">Kuva</label>
+              <input
+                type="file"
+                class="form-control"
+                id="product-image"
+                accept="image/*"
+                required
+              />
             </div>
             <div class="mb-3 form-check">
               <input

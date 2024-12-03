@@ -146,7 +146,7 @@ export const updateMenuItem = async (
         description,
         price,
         category,
-        image_url,
+        image_url || null, // Salli null-arvo, jos kuvaa ei päivitetä
         popular ? 1 : 0, // Muutetaan boolean arvo numeroksi
         id,
       ]

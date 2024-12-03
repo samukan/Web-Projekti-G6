@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 import adminRoutes from './routes/adminRoutes';
 import menuRoutes from './routes/menuRoutes';
 import authRoutes from './routes/authRoutes';
+import uploadRoute from './routes/uploadRoute';
 import orderRoutes from './routes/orderRoutes';
 import adminApiRoutes from './routes/adminApiRoutes';
 import dotenv from 'dotenv';
@@ -28,6 +29,9 @@ app.use('/api/admin', adminApiRoutes);
 app.use('/api/menu', menuRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);
+
+// Kuvien latausreitti
+app.use('/api/upload', uploadRoute);
 
 // Palvellaan myOrders.html ilman autentikointia
 app.get('/myOrders', (req, res) => {

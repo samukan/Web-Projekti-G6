@@ -82,18 +82,46 @@ async function addProductHandler(e: Event): Promise<void> {
   const category = (
     document.getElementById('product-category') as HTMLSelectElement
   ).value;
-  const image_url = (
-    document.getElementById('product-image') as HTMLInputElement
-  ).value;
   const popular = (
     document.getElementById('product-popular') as HTMLInputElement
   ).checked;
 
+  const imageInput = document.getElementById(
+    'product-image'
+  ) as HTMLInputElement;
+  if (!imageInput.files || imageInput.files.length === 0) {
+    alert('Valitse kuva ennen tuotteen lisäämistä.');
+    return;
+  }
+
   const token = localStorage.getItem('token');
+  if (!token) {
+    alert('Sinun täytyy kirjautua sisään lisätäksesi tuotteita.');
+    window.location.href = '/login.html';
+    return;
+  }
+
+  const file = imageInput.files[0];
+  const formData = new FormData();
+  formData.append('image', file);
 
   try {
+    // Upload the image
+    const uploadResponse = await fetch('/api/upload/upload', {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!uploadResponse.ok) {
+      const errorData = await uploadResponse.json();
+      alert('Virhe kuvan lataamisessa: ' + errorData.message);
+      return;
+    }
+
+    const {imageUrl} = await uploadResponse.json();
+
+    // Add the product with the uploaded image URL
     const response = await fetch('/api/admin/menu', {
-      // Käytä admin API -reitit
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -104,27 +132,22 @@ async function addProductHandler(e: Event): Promise<void> {
         description,
         price,
         category,
-        image_url,
+        image_url: imageUrl,
         popular,
       }),
     });
 
     if (response.ok) {
-      alert('Ruokalistan kohde lisätty!');
+      alert('Ruokalistan kohde lisätty onnistuneesti!');
       addProductForm.reset();
       fetchMenuItems();
     } else {
-      if (response.status === 401 || response.status === 403) {
-        alert('Autentikointi epäonnistui. Kirjaudu uudelleen.');
-        window.location.href = '/login.html';
-        return;
-      }
       const errorData = await response.json();
       alert('Virhe lisättäessä ruokalistan kohdetta: ' + errorData.message);
     }
   } catch (error) {
-    console.error('Virhe lisättäessä ruokalistan kohdetta:', error);
-    alert('Virhe lisättäessä ruokalistan kohdetta.');
+    console.error('Virhe lisättäessä tuotetta:', error);
+    alert('Tuntematon virhe lisättäessä tuotetta.');
   }
 }
 
