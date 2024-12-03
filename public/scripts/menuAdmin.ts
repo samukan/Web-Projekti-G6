@@ -36,6 +36,7 @@ async function checkAuthentication(): Promise<void> {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
+      body: JSON.stringify({}), // Varmistetaan, että body lähetetään oikein
     });
 
     if (!response.ok) {
@@ -88,12 +89,15 @@ async function addProductHandler(e: Event): Promise<void> {
     document.getElementById('product-popular') as HTMLInputElement
   ).checked;
 
+  const token = localStorage.getItem('token');
+
   try {
-    const response = await fetch('/api/menu', {
+    const response = await fetch('/api/admin/menu', {
+      // Käytä admin API -reitit
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         name,
@@ -126,10 +130,13 @@ async function addProductHandler(e: Event): Promise<void> {
 
 // Renderöi tuotelista taulukkoon
 async function fetchMenuItems(): Promise<void> {
+  const token = localStorage.getItem('token');
+
   try {
-    const response = await fetch('/api/menu', {
+    const response = await fetch('/api/admin/menu', {
+      // Käytä admin API -reitit
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -226,11 +233,14 @@ async function deleteMenuItem(id: string | null): Promise<void> {
 
   if (!confirm('Haluatko varmasti poistaa tämän tuotteen?')) return;
 
+  const token = localStorage.getItem('token');
+
   try {
-    const response = await fetch(`/api/menu/${id}`, {
+    const response = await fetch(`/api/admin/menu/${id}`, {
+      // Käytä admin API -reitit
       method: 'DELETE',
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -251,11 +261,14 @@ async function deleteMenuItem(id: string | null): Promise<void> {
 async function editMenuItem(id: string | null): Promise<void> {
   if (!id) return;
 
+  const token = localStorage.getItem('token');
+
   try {
     // Hae tuotteen tiedot yksittäisen id:n perusteella
-    const response = await fetch(`/api/menu/${id}`, {
+    const response = await fetch(`/api/admin/menu/${id}`, {
+      // Käytä admin API -reitit
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -331,12 +344,15 @@ async function updateProductHandler(id: string | null): Promise<void> {
     document.getElementById('product-popular') as HTMLInputElement
   ).checked;
 
+  const token = localStorage.getItem('token');
+
   try {
-    const response = await fetch(`/api/menu/${id}`, {
+    const response = await fetch(`/api/admin/menu/${id}`, {
+      // Käytä admin API -reitit
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         name,
@@ -366,11 +382,14 @@ async function updateProductHandler(id: string | null): Promise<void> {
 async function togglePopularStatus(id: string | null): Promise<void> {
   if (!id) return;
 
+  const token = localStorage.getItem('token');
+
   try {
     // Hae nykyinen tuotteen tiedot
-    const response = await fetch(`/api/menu/${id}`, {
+    const response = await fetch(`/api/admin/menu/${id}`, {
+      // Käytä admin API -reitit
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -381,11 +400,12 @@ async function togglePopularStatus(id: string | null): Promise<void> {
       const updatedItem = {...item, popular: !item.popular};
 
       // Päivitä tuote backendiin
-      const updateResponse = await fetch(`/api/menu/${id}`, {
+      const updateResponse = await fetch(`/api/admin/menu/${id}`, {
+        // Käytä admin API -reitit
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(updatedItem),
       });

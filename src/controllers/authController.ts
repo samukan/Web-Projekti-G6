@@ -3,7 +3,7 @@
 import {Request, Response, NextFunction} from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import db from '../utils/db';
+import pool from '../utils/db';
 import {RowDataPacket} from 'mysql2';
 
 // Käyttäjän tietokantarivi koska käyttäjillä on salaisuuksia
@@ -24,7 +24,7 @@ export const login = async (
     const {email, password} = req.body;
 
     // Hae käyttäjä sähköpostin perusteella
-    const [rows] = await db.query<UserRow[]>(
+    const [rows] = await pool.query<UserRow[]>(
       'SELECT user_id, role_id, email, password FROM Users WHERE email = ?',
       [email]
     );
@@ -44,7 +44,7 @@ export const login = async (
 
     // Generoi JWT
     const token = jwt.sign(
-      {userId: user.user_id, role: user.role_id},
+      {userId: user.user_id, role: user.role_id}, // Sisältää userId ja role
       process.env.JWT_SECRET as string,
       {expiresIn: '24h'}
     );
@@ -91,7 +91,7 @@ export const register = async (
     const {email, password} = req.body;
 
     // Tarkista, onko sähköposti jo käytössä
-    const [existingUsers] = await db.query<UserRow[]>(
+    const [existingUsers] = await pool.query<UserRow[]>(
       'SELECT email FROM Users WHERE email = ?',
       [email]
     );
@@ -105,7 +105,7 @@ export const register = async (
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Lisää uusi käyttäjä tietokantaan
-    await db.execute(
+    await pool.execute(
       'INSERT INTO Users (email, password, role_id) VALUES (?, ?, ?)',
       [email, hashedPassword, 2] // Oletetaan, että rooli 2 on 'asiakas'
     );

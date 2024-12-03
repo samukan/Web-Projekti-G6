@@ -4,6 +4,36 @@
 
 declare const bootstrap: any;
 
+// Hae tilaukset back-endiltä, Tässä myös samalla sisäänkirjautumisen tarkistus.
+async function fetchOrders(): Promise<void> {
+  try {
+    const response = await fetch('/api/orders', {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`, // Tarvitaan token tilausten hakemiseen
+      },
+    });
+
+    if (response.ok) {
+      const fetchedOrders = await response.json();
+      orders = fetchedOrders;
+      updateOrderLists();
+      renderOrdersTable();
+    } else {
+      if (response.status === 401 || response.status === 403) {
+        alert(
+          'Sinun täytyy kirjautua sisään Admin tunniksilla nähdäksesi tilaukset.'
+        );
+        window.location.href = '/login.html'; // Ohjaa kirjautumissivulle jos ei tokenia
+      } else {
+        const errorData = await response.json();
+        alert('Virhe tilauksia haettaessa: ' + errorData.message);
+      }
+    }
+  } catch (error) {
+    console.error('Virhe tilauksia haettaessa:', error);
+  }
+}
+
 interface OrderItem {
   product: string;
   quantity: number;
@@ -54,36 +84,6 @@ showArchivedBtn.addEventListener('click', () => {
   showActiveBtn.classList.replace('btn-primary', 'btn-secondary');
   showArchivedBtn.classList.replace('btn-secondary', 'btn-primary');
 });
-
-// Hae tilaukset back-endiltä, Tässä myös samalla sisäänkirjautumisen tarkistus.
-async function fetchOrders(): Promise<void> {
-  try {
-    const response = await fetch('/api/orders', {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`, // Tarvitaan token tilausten hakemiseen
-      },
-    });
-
-    if (response.ok) {
-      const fetchedOrders = await response.json();
-      orders = fetchedOrders;
-      updateOrderLists();
-      renderOrdersTable();
-    } else {
-      if (response.status === 401 || response.status === 403) {
-        alert(
-          'Sinun täytyy kirjautua sisään Admin tunniksilla nähdäksesi tilaukset.'
-        );
-        window.location.href = '/login.html'; // Ohjaa kirjautumissivulle jos ei tokenia
-      } else {
-        const errorData = await response.json();
-        alert('Virhe tilauksia haettaessa: ' + errorData.message);
-      }
-    }
-  } catch (error) {
-    console.error('Virhe tilauksia haettaessa:', error);
-  }
-}
 
 function updateOrderLists(): void {
   activeOrders = orders.filter((order) => order.status === 'Aktiivinen');

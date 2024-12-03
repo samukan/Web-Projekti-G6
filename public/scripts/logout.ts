@@ -1,14 +1,15 @@
 // public/scripts/logout.ts
-// Kirjaudu ulos funktio täällä.
+
+import {manageAdminLinks} from './auth.js'; // Varmista polku oikein
 
 document.addEventListener('DOMContentLoaded', () => {
   const logoutButton = document.querySelector('#logout-button');
 
   if (logoutButton) {
-    logoutButton.addEventListener('click', (e: Event) => {
-      e.preventDefault();
+    logoutButton.addEventListener('click', (e) => {
+      e.preventDefault(); // Estää oletuslinkin toiminnan
       localStorage.removeItem('token');
-      console.log('Token after removal:', localStorage.getItem('token')); // Varmista tokenin tila
+      manageAdminLinks();
       alert('Olet kirjautunut ulos.');
       window.location.href = '/';
     });

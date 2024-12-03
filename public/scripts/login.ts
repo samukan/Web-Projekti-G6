@@ -1,7 +1,16 @@
 // public/scripts/login.ts
-// Hakee login form elementin ja liittää siihen tapahtumakuuntelijan
 
-declare const bootstrap: any;
+import {manageAdminLinks, manageAuthenticatedLinks} from './auth.js'; // Varmista polku oikein
+
+// Tokenin purkaminen funktiota varten
+function parseJwt(token: string): any {
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  } catch (e) {
+    console.error('Tokenin purkaminen epäonnistui:', e);
+    return null;
+  }
+}
 
 // Hakee login form elementin ja liittää siihen tapahtumakuuntelijan
 const loginForm = document.getElementById(
@@ -47,12 +56,16 @@ if (loginForm) {
           loginModal.hide();
         }
 
+        // Päivitä navigaatiolinkit
+        manageAdminLinks();
+        manageAuthenticatedLinks();
+
         // Tarkistetaan käyttäjän rooli
-        const tokenPayload = JSON.parse(atob(data.token.split('.')[1])); // Decode JWT payload
+        const tokenPayload = parseJwt(data.token); // Decode JWT payload
         if (tokenPayload.role === 1) {
-          window.location.href = '/admin/menuAdmin';
+          window.location.href = '/admin/menuAdmin'; // Ohjataan adminille
         } else {
-          window.location.href = '/menu.html';
+          window.location.href = '/menu.html'; // Ohjataan asiakas-näkymään
         }
       } else {
         alert(data.message || 'Kirjautuminen epäonnistui.');
@@ -62,31 +75,6 @@ if (loginForm) {
       alert('Palvelinvirhe. Yritä myöhemmin uudelleen.');
     }
   });
-}
-
-// Tarkista kirjautumistila
-export function checkAuth() {
-  const token = localStorage.getItem('token');
-  const currentPath = window.location.pathname;
-
-  if (!token) {
-    // Ei kirjautunut sisään
-    if (
-      currentPath.includes('menuAdmin') ||
-      currentPath.includes('tilaukset')
-    ) {
-      alert('Sinun täytyy kirjautua sisään!');
-      window.location.href = '/';
-    }
-    return;
-  }
-
-  // Varmista rooli, jos sivu on suojattu
-  const tokenPayload = JSON.parse(atob(token.split('.')[1]));
-  if (currentPath.includes('menuAdmin') && tokenPayload.role !== 1) {
-    alert('Ei oikeuksia admin-sivulle.');
-    window.location.href = '/';
-  }
 }
 
 export {};

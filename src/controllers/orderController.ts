@@ -111,7 +111,7 @@ export const getOrders = async (
   }
 };
 
-// Tää päivittää tilauksen statuksen
+// Päivittää tilauksen statuksen
 export const updateOrderStatus = async (
   req: AuthenticatedRequest,
   res: Response,
@@ -146,6 +146,46 @@ export const updateOrderStatus = async (
     res.json({message: 'Tilauksen status päivitetty'});
   } catch (error) {
     console.error('Virhe tilauksen statuksen päivittämisessä:', error);
+    next(error);
+  }
+};
+
+// Poistaa tilauksen
+export const deleteOrder = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    // Varmistetaan, että käyttäjä on admin
+    if (req.user?.role !== 1) {
+      res.status(403).json({message: 'Ei oikeuksia poistaa tilauksia'});
+      return;
+    }
+
+    const orderId = req.params.id;
+
+    if (!orderId) {
+      res.status(400).json({message: 'Tilaus ID puuttuu'});
+      return;
+    }
+
+    // Poista tilaus OrderItems-taulusta ensin
+    await pool.query('DELETE FROM OrderItems WHERE order_id = ?', [orderId]);
+
+    // Poista tilaus Orders-taulusta
+    const [result] = await pool.query('DELETE FROM Orders WHERE order_id = ?', [
+      orderId,
+    ]);
+
+    if ((result as any).affectedRows === 0) {
+      res.status(404).json({message: 'Tilausta ei löytynyt'});
+      return;
+    }
+
+    res.json({message: 'Tilaus poistettu onnistuneesti'});
+  } catch (error) {
+    console.error('Virhe tilauksen poistamisessa:', error);
     next(error);
   }
 };
