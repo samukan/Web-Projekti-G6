@@ -1,6 +1,3 @@
-// public/scripts/checkout.ts
-// Ostoskori-yhteenveto ja tilauksen käsittely
-
 import {updateCartCount, cart} from './cart.js';
 
 interface CartItem {
@@ -9,12 +6,25 @@ interface CartItem {
   quantity: number;
 }
 
-// Funktio autentikoinnin tarkistamiseen
+function showToast(message: string, type: string = 'warning'): void {
+  const toastEl = document.getElementById('toast') as HTMLElement;
+  const toastBody = document.getElementById('toast-body') as HTMLElement;
+
+  if (toastEl && toastBody) {
+    toastBody.textContent = message;
+    toastEl.className = `toast align-items-center text-bg-${type} border-0`;
+    const toast = new bootstrap.Toast(toastEl);
+    toast.show();
+  } else {
+    console.error('Toast-elementtiä ei löytynyt');
+  }
+}
+
 async function checkAuthentication(): Promise<void> {
   const token = localStorage.getItem('token');
 
   if (!token) {
-    alert('Sinun täytyy kirjautua sisään tehdäksesi tilauksen.');
+    showToast('Sinun täytyy kirjautua sisään tehdäksesi tilauksen.', 'danger');
     window.location.href = '/login.html';
     return;
   }
@@ -31,16 +41,13 @@ async function checkAuthentication(): Promise<void> {
     if (!response.ok) {
       throw new Error('Token ei kelpaa');
     }
-
-    // Käyttäjä on autentikoitu, voit jatkaa
   } catch (error) {
     console.error('Autentikointivirhe:', error);
-    alert('Autentikointi epäonnistui. Kirjaudu uudelleen.');
+    showToast('Autentikointi epäonnistui. Kirjaudu uudelleen.', 'danger');
     window.location.href = '/login.html';
   }
 }
 
-// Ostoskorin yhteenveto
 function displayCartSummary(): void {
   const cartSummaryContainer = document.getElementById(
     'cart-summary'
@@ -58,13 +65,13 @@ function displayCartSummary(): void {
 
   const thead = document.createElement('thead');
   thead.innerHTML = `
-      <tr>
-        <th>Tuote</th>
-        <th>Määrä</th>
-        <th>Hinta</th>
-        <th>Yhteensä</th>
-      </tr>
-    `;
+    <tr>
+      <th>Tuote</th>
+      <th>Määrä</th>
+      <th>Hinta</th>
+      <th>Yhteensä</th>
+    </tr>
+  `;
   table.appendChild(thead);
 
   const tbody = document.createElement('tbody');
@@ -72,11 +79,11 @@ function displayCartSummary(): void {
   cart.forEach((item) => {
     const row = document.createElement('tr');
     row.innerHTML = `
-        <td>${item.product}</td>
-        <td>${item.quantity}</td>
-        <td>${item.price.toFixed(2)}€</td>
-        <td>${(item.price * item.quantity).toFixed(2)}€</td>
-      `;
+      <td>${item.product}</td>
+      <td>${item.quantity}</td>
+      <td>${item.price.toFixed(2)}€</td>
+      <td>${(item.price * item.quantity).toFixed(2)}€</td>
+    `;
     tbody.appendChild(row);
   });
 
@@ -86,11 +93,11 @@ function displayCartSummary(): void {
 
   const tfoot = document.createElement('tfoot');
   tfoot.innerHTML = `
-      <tr>
-        <td colspan="3" class="text-end"><strong>Kokonaissumma</strong></td>
-        <td><strong>${total.toFixed(2)}€</strong></td>
-      </tr>
-    `;
+    <tr>
+      <td colspan="3" class="text-end"><strong>Kokonaissumma</strong></td>
+      <td><strong>${total.toFixed(2)}€</strong></td>
+    </tr>
+  `;
   table.appendChild(tfoot);
 
   cartSummaryContainer.innerHTML = ''; // Tyhjennetään aiempi sisältö
@@ -105,61 +112,78 @@ function handleOrderSubmission(): void {
   const submitOrderButton = document.getElementById(
     'submit-order'
   ) as HTMLButtonElement;
+  const nameModal = document.getElementById('nameModal') as HTMLElement;
+  const customerNameInput = document.getElementById(
+    'customerName'
+  ) as HTMLInputElement;
+  const confirmNameButton = document.getElementById(
+    'confirmName'
+  ) as HTMLButtonElement;
 
-  if (!submitOrderButton) return;
+  if (
+    !submitOrderButton ||
+    !nameModal ||
+    !customerNameInput ||
+    !confirmNameButton
+  )
+    return;
 
-  submitOrderButton.addEventListener('click', async () => {
+  submitOrderButton.addEventListener('click', () => {
     if (cart.length === 0) {
-      alert('Ostoskorisi on tyhjä.');
+      showToast('Ostoskorisi on tyhjä.', 'warning');
       return;
     }
 
-    // Pyytää käyttäjältä nimen, Tää nimi menee tilaukselle.
-    const customerName = prompt('Anna nimesi:');
-    if (!customerName) {
-      alert('Nimi on pakollinen.');
-      return;
-    }
+    const nameModalInstance = bootstrap.Modal.getOrCreateInstance(nameModal);
+    nameModalInstance.show();
 
-    const token = localStorage.getItem('token');
+    confirmNameButton.addEventListener(
+      'click',
+      async () => {
+        const customerName = customerNameInput.value.trim();
 
-    // Lähetä tilaus back-endille
-    try {
-      const response = await fetch('/api/orders', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({customer: customerName, items: cart}),
-      });
-
-      if (response.ok) {
-        alert('Tilaus lähetetty!');
-        // Tyhjennetään ostoskori
-        localStorage.removeItem('cart');
-        cart.length = 0; // Tyhjentää taulukon sisällön
-        // Päivitetään sivu
-        displayCartSummary();
-        // Päivitetään ostoskorin määrä navigaatiossa
-        updateCartCount();
-      } else {
-        const errorData = await response.json();
-        if (response.status === 401 || response.status === 403) {
-          alert('Sinun täytyy kirjautua sisään tehdäksesi tilauksen.');
-          window.location.href = '/login.html';
+        if (!customerName) {
+          showToast('Nimi on pakollinen.', 'warning');
           return;
         }
-        alert('Virhe tilauksen lähettämisessä: ' + errorData.message);
-      }
-    } catch (error) {
-      console.error('Virhe tilauksen lähettämisessä:', error);
-      alert('Virhe tilauksen lähettämisessä.');
-    }
+
+        nameModalInstance.hide();
+
+        const token = localStorage.getItem('token');
+
+        try {
+          const response = await fetch('/api/orders', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({customer: customerName, items: cart}),
+          });
+
+          if (response.ok) {
+            showToast('Tilaus lähetetty!', 'success');
+            localStorage.removeItem('cart');
+            cart.length = 0;
+            displayCartSummary();
+            updateCartCount();
+          } else {
+            const errorData = await response.json();
+            showToast(
+              errorData.message || 'Virhe tilauksen lähettämisessä.',
+              'danger'
+            );
+          }
+        } catch (error) {
+          console.error('Virhe tilauksen lähettämisessä:', error);
+          showToast('Virhe tilauksen lähettämisessä.', 'danger');
+        }
+      },
+      {once: true}
+    );
   });
 }
 
-// Käynnistä kaikki, kun sivu latautuu
 document.addEventListener('DOMContentLoaded', () => {
   checkAuthentication();
   displayCartSummary();
