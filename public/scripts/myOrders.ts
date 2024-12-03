@@ -3,6 +3,7 @@
 // Funktio autentikoinnin tarkistamiseen
 async function checkAuthentication(): Promise<void> {
   const token = localStorage.getItem('token');
+  console.log('checkAuthentication: Token:', token);
 
   if (!token) {
     alert('Sinun täytyy kirjautua sisään nähdäksesi tilauksesi.');
@@ -17,11 +18,16 @@ async function checkAuthentication(): Promise<void> {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
+      body: JSON.stringify({}), // Tyhjä body, jos backend vaatii
     });
+
+    console.log('checkAuthentication: Response status:', response.status);
 
     if (!response.ok) {
       throw new Error('Token ei kelpaa');
     }
+
+    console.log('checkAuthentication: Token kelpaa');
 
     // Käyttäjä on autentikoitu, hae tilaukset
     fetchMyOrders();
@@ -49,11 +55,15 @@ interface Order {
 async function fetchMyOrders(): Promise<void> {
   try {
     const token = localStorage.getItem('token');
+    console.log('fetchMyOrders: Token:', token);
+
     const response = await fetch('/api/orders/myOrders', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
+
+    console.log('fetchMyOrders: Response status:', response.status);
 
     if (response.ok) {
       const orders: Order[] = await response.json();
@@ -117,6 +127,7 @@ function renderOrders(orders: Order[]): void {
 
 // Alustetaan kun sivu latautuu
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('myOrders.ts DOMContentLoaded');
   checkAuthentication();
 });
 

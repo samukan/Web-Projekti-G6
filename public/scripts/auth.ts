@@ -85,6 +85,12 @@ export function manageAuthenticatedLinks(): void {
   }
 }
 
+// Funktio tarkistamaan, onko käyttäjä kirjautunut sisään
+export function isAuthenticated(): boolean {
+  const token = localStorage.getItem('token');
+  return !!token;
+}
+
 // Yhdistetään kaikki linkkien hallinnointi
 export function manageNavigationLinks(): void {
   console.log('manageNavigationLinks: Päivitetään navigaatiolinkit');

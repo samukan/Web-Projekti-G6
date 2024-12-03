@@ -1,8 +1,6 @@
 // public/scripts/index.ts
 
-import {setupAddToCartButtons} from './cart.js';
-
-// Ruokalistan kohteen rajapinta koska meidän täytyy tietää mitä backend haluaa
+// Ruokalistan kohteen rajapinta
 interface MenuItem {
   item_id: number;
   name: string;
@@ -17,9 +15,12 @@ const suositutTuotteetContainer = document.getElementById(
   'suositut-tuotteet-container'
 );
 
+// Importoi setupAddToCartButtons-funktio
+import {setupAddToCartButtons} from './addToCart.js';
+
 async function fetchPopularProducts() {
   try {
-    // Yritetään hakea ruokalista backendistä ja rukoillaan että serveri herää
+    // Yritetään hakea ruokalista backendistä
     const response = await fetch('/api/menu');
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -27,7 +28,7 @@ async function fetchPopularProducts() {
 
     const menuItems: MenuItem[] = await response.json();
 
-    // Suodatetaan suositut tuotteet.
+    // Suodatetaan suositut tuotteet
     const popularItems = menuItems.filter((item) => item.popular);
 
     displayPopularProducts(popularItems);
@@ -82,7 +83,7 @@ function displayPopularProducts(popularItems: MenuItem[]) {
                 data-product="${item.name}"
                 data-price="${price}"
               >
-                Lisää ostoskoriin
+                <i class="fas fa-cart-plus"></i> Lisää ostoskoriin
               </button>
             </div>
           </div>
@@ -134,7 +135,7 @@ function displayPopularProducts(popularItems: MenuItem[]) {
 
   suositutTuotteetContainer.innerHTML = carouselHtml;
 
-  // Lisää event listenerit
+  // Aseta tapahtumankuuntelijat uusille "Lisää ostoskoriin" -napeille
   setupAddToCartButtons();
 }
 

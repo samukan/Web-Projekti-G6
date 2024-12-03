@@ -2,12 +2,7 @@
 
 // Bootstrap jutut on vähän mystisiä, joten ne pitää vaan hyväksyä näin.
 declare const bootstrap: any; // Jos tän poistaa niin tulee erroria tai ehkä ei
-import {
-  setupAddToCartButtons,
-  updateCartModal,
-  updateCartCount,
-  clearCart,
-} from './cart.js';
+import {updateCartModal, updateCartCount, clearCart} from './cart.js';
 
 // Teemakytkin
 const themeToggleBtn = document.getElementById(
@@ -35,11 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Päivitä ostoskori
   updateCartModal();
   updateCartCount();
-
-  // Aseta "Lisää ostoskoriin" -napit, jos niitä on sivulla
-  if (document.querySelectorAll('.add-to-cart').length > 0) {
-    setupAddToCartButtons();
-  }
 
   // Liitä tapahtumakuuntelija 'Tyhjennä ostoskori' -painikkeelle
   const clearCartButton = document.getElementById('clear-cart');

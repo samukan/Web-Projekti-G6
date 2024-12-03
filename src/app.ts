@@ -29,13 +29,15 @@ app.use('/api/menu', menuRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);
 
-// Palvellaan myOrders.html suojaten reitti
-import {authenticateUser} from './middleware/authMiddleware';
-
-app.get('/myOrders', authenticateUser, (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/myOrders.html'));
+// Palvellaan myOrders.html ilman autentikointia
+app.get('/myOrders', (req, res) => {
+  res.sendFile(path.join(__dirname, '../views/myOrders.html'), (err) => {
+    if (err) {
+      console.error('Error sending myOrders.html:', err);
+      res.status(500).send('Error loading page');
+    }
+  });
 });
-
 // Staattiset frontend-tiedostot
 app.use(express.static(path.join(__dirname, '../public')));
 
