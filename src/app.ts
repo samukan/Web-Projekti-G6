@@ -31,7 +31,7 @@
 
 import express from 'express';
 import path from 'path';
-import bodyParser from 'body-parser';
+const bodyParser = require('body-parser');
 import adminRoutes from './routes/adminRoutes';
 import menuRoutes from './routes/menuRoutes';
 import authRoutes from './routes/authRoutes';
