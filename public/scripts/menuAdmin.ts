@@ -91,14 +91,13 @@ function setupImagePreview(): void {
         const reader = new FileReader();
         reader.onload = function (e) {
           if (e.target && typeof e.target.result === 'string') {
-            currentImageEl.src = e.target.result;
+            currentImageEl.setAttribute('src', e.target.result);
             currentImageEl.style.display = 'block';
           }
         };
         reader.readAsDataURL(file);
       } else {
-        // Jos käyttäjä poistaa valinnan
-        currentImageEl.src = '';
+        currentImageEl.removeAttribute('src');
         currentImageEl.style.display = 'none';
       }
     });
