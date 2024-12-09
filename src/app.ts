@@ -9,6 +9,7 @@ import authRoutes from './routes/authRoutes';
 import uploadRoute from './routes/uploadRoute';
 import orderRoutes from './routes/orderRoutes';
 import adminApiRoutes from './routes/adminApiRoutes';
+import driverRoutes from './routes/driverRoutes';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -19,7 +20,6 @@ const app = express();
 app.use(bodyParser.json());
 
 // Reitit (API ja sivustot)
-// Lisää adminRoutes ensin varmistaaksesi, että ne eivät kohdistu muihin middlewareihin
 app.use('/admin', adminRoutes);
 
 // Suojattu admin API reitit
@@ -33,11 +33,22 @@ app.use('/api/orders', orderRoutes);
 // Kuvien latausreitti
 app.use('/api/upload', uploadRoute);
 
+app.use('/api/driver', driverRoutes);
+
 // Palvellaan myOrders.html ilman autentikointia
 app.get('/myOrders', (req, res) => {
   res.sendFile(path.join(__dirname, '../views/myOrders.html'), (err) => {
     if (err) {
       console.error('Error sending myOrders.html:', err);
+      res.status(500).send('Error loading page');
+    }
+  });
+});
+
+app.get('/driver/orders', (req, res) => {
+  res.sendFile(path.join(__dirname, '../views/driverOrders.html'), (err) => {
+    if (err) {
+      console.error('Error sending driverOrders.html:', err);
       res.status(500).send('Error loading page');
     }
   });

@@ -11,7 +11,7 @@ import {
 import {
   getOrders,
   updateOrderStatus,
-  deleteOrder, // Nyt oikein exportattu
+  deleteOrder,
 } from '../controllers/orderController';
 
 const router = Router();
@@ -29,8 +29,6 @@ router.delete('/menu/:id', deleteMenuItem);
 // Tilausten hallinta
 router.get('/orders', getOrders);
 router.put('/orders/:id/status', updateOrderStatus);
-router.delete('/orders/:id', deleteOrder); // Tämä toimii nyt
-
-// Lisää muita admin API -reittejä tarpeen mukaan
+router.delete('/orders/:id', deleteOrder);
 
 export default router;

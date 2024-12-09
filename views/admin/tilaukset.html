@@ -21,7 +21,7 @@
     <!-- Navigointipalkki -->
     <nav class="navbar navbar-expand-lg" id="main-navbar">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">Admin Paneeli</a>
+        <a class="navbar-brand" href="menuAdmin">Admin Paneeli</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -50,7 +50,7 @@
           <ul class="navbar-nav">
             <li class="nav-item">
               <button class="btn btn-outline-secondary" id="theme-toggle">
-                <i class="fas fa-moon"></i>
+                <i class="fas fa-moon"></i> Tumma tila
               </button>
             </li>
             <li class="nav-item">
@@ -93,31 +93,79 @@
                 <th>Asiakas</th>
                 <th>Päivämäärä</th>
                 <th>Status</th>
+                <th>Toimitustapa</th>
                 <th>Toiminnot</th>
               </tr>
             </thead>
             <tbody>
-              <!-- Tilausrivit tulee tähän JS puolelta-->
+              <!-- Tilausrivit tulee tähän JS puolelta -->
             </tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- Tilausmodal -->
+    <!-- Tilauksen status päivitys modal -->
     <div
       class="modal fade"
-      id="orderModal"
+      id="updateStatusModal"
       tabindex="-1"
-      aria-labelledby="orderModalLabel"
+      aria-labelledby="updateStatusModalLabel"
       aria-hidden="true"
     >
-      <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <form id="update-status-form">
+            <div class="modal-header">
+              <h5 class="modal-title" id="updateStatusModalLabel">
+                Päivitä Tilauksen Status
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Sulje"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <input type="hidden" id="update-order-id" />
+              <div class="mb-3">
+                <label for="new-status" class="form-label">Uusi Status</label>
+                <select class="form-select" id="new-status" required>
+                  <option value="">Valitse Status</option>
+                  <!-- Sallitut statukset lisätään dynaamisesti -->
+                </select>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Sulje
+              </button>
+              <button type="submit" class="btn btn-primary">
+                Päivitä Status
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tilauksen yksityiskohtien näyttö modal -->
+    <div
+      class="modal fade"
+      id="viewOrderModal"
+      tabindex="-1"
+      aria-labelledby="viewOrderModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="orderModalLabel">
-              Tilaus #<span id="modal-order-id"></span>
-            </h5>
+            <h5 class="modal-title">Tilauksen tiedot</h5>
             <button
               type="button"
               class="btn-close"
@@ -126,10 +174,38 @@
             ></button>
           </div>
           <div class="modal-body">
-            <!-- Tilaustiedot tulee tähän -->
-            <div id="order-details">
-              <!-- Tilaustiedot latautuu tähän -->
-            </div>
+            <p><strong>Tilaus ID:</strong> <span id="view-order-id"></span></p>
+            <p>
+              <strong>Asiakas:</strong> <span id="view-customer-name"></span>
+            </p>
+            <p>
+              <strong>Päivämäärä:</strong> <span id="view-order-date"></span>
+            </p>
+            <p><strong>Status:</strong> <span id="view-status"></span></p>
+            <p>
+              <strong>Toimitustapa:</strong>
+              <span id="view-delivery-method"></span>
+            </p>
+            <p>
+              <strong>Toimitusosoite:</strong>
+              <span id="view-delivery-address"></span>
+            </p>
+            <hr />
+            <h5>Tuotteet:</h5>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Tuote</th>
+                  <th>Määrä</th>
+                  <th>Hinta</th>
+                  <th>Erityisruokavaliot</th>
+                </tr>
+              </thead>
+              <tbody id="view-order-items"></tbody>
+            </table>
+            <p>
+              <strong>Yhteensä:</strong> <span id="view-total-price"></span> €
+            </p>
           </div>
           <div class="modal-footer">
             <button
@@ -139,29 +215,123 @@
             >
               Sulje
             </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tilauksen peruutuksen vahvistus modal -->
+    <div
+      class="modal fade"
+      id="cancelOrderModal"
+      tabindex="-1"
+      aria-labelledby="cancelOrderModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="cancelOrderModalLabel">
+              Vahvista tilauksen peruutus
+            </h5>
             <button
               type="button"
-              class="btn btn-success"
-              id="archive-order-btn"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Sulje"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>
+              Oletko varma, että haluat peruuttaa tämän tilauksen? Tämä
+              toimenpide ei ole palautettavissa.
+            </p>
+            <input type="hidden" id="cancel-order-id" />
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
             >
-              Merkitse tilaus valmiiiksi
+              Peruuta
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              id="confirm-cancel-order-btn"
+            >
+              Vahvista peruutus
             </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Toast-komponentit -->
+    <!-- Footer -->
+    <footer class="footer text-center text-lg-start">
+      <div class="container p-4">
+        <div class="row">
+          <!-- Yhteystiedot -->
+          <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+            <h5 class="text-uppercase">Yhteystiedot</h5>
+            <p>
+              Osoite: Esimerkkikatu 1, 00100 Helsinki<br />
+              Puhelin: 012 345 6789<br />
+              Sähköposti: info@ravintola.fi
+            </p>
+          </div>
+          <!-- Linkit -->
+          <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+            <h5 class="text-uppercase">Linkit</h5>
+            <ul class="list-unstyled mb-0">
+              <li>
+                <a href="index.html">Etusivu</a>
+              </li>
+              <li>
+                <a href="menu.html">Ruokalista</a>
+              </li>
+              <li>
+                <a href="contact.html">Ota yhteyttä</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- Copyright -->
+      <div class="text-center p-3 bg-dark text-white">
+        © 2024 Ravintola. Kaikki oikeudet pidätetään.
+      </div>
+    </footer>
+
+    <!-- Toast-komponentti -->
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
-      <!-- Toast-elementit lisätään dynaamisesti -->
+      <div
+        id="toast"
+        class="toast align-items-center text-bg-primary border-0"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div class="d-flex">
+          <div id="toast-body" class="toast-body">
+            <!-- Viesti tulee tänne -->
+          </div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Sulje"
+          ></button>
+        </div>
+      </div>
     </div>
 
-    <!-- Bootstrap JS -->
+    <!-- Bootstrap JS Bundle (includes Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- JavaScript-tiedostot -->
     <script type="module" src="/scripts/tilaukset.js"></script>
     <script type="module" src="/scripts/auth.js"></script>
     <script type="module" src="/scripts/script.js"></script>
-    <script type="module" src="/scripts/checkAuth.js"></script>
   </body>
 </html>

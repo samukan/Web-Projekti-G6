@@ -1,5 +1,7 @@
 import {updateCartCount, cart} from './cart.js';
 
+declare const bootstrap: any;
+
 interface CartItem {
   product: string;
   price: number;
@@ -36,6 +38,7 @@ async function checkAuthentication(): Promise<void> {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
+      body: JSON.stringify({}),
     });
 
     if (!response.ok) {
@@ -120,6 +123,18 @@ function handleOrderSubmission(): void {
     'confirmName'
   ) as HTMLButtonElement;
 
+  // Uudet elementit
+  const pickupOption = document.getElementById(
+    'pickupOption'
+  ) as HTMLInputElement;
+  const deliveryOption = document.getElementById(
+    'deliveryOption'
+  ) as HTMLInputElement;
+  const addressField = document.getElementById('addressField') as HTMLElement;
+  const deliveryAddressInput = document.getElementById(
+    'deliveryAddress'
+  ) as HTMLInputElement;
+
   if (
     !submitOrderButton ||
     !nameModal ||
@@ -128,12 +143,26 @@ function handleOrderSubmission(): void {
   )
     return;
 
+  // Näytetään/piilotetaan osoitekenttä valinnan mukaan
+  pickupOption.addEventListener('change', () => {
+    if (pickupOption.checked) {
+      addressField.style.display = 'none';
+    }
+  });
+
+  deliveryOption.addEventListener('change', () => {
+    if (deliveryOption.checked) {
+      addressField.style.display = 'block';
+    }
+  });
+
   submitOrderButton.addEventListener('click', () => {
     if (cart.length === 0) {
       showToast('Ostoskorisi on tyhjä.', 'warning');
       return;
     }
 
+    // Käytä bootstrap.Modal, ei window.Modal
     const nameModalInstance = bootstrap.Modal.getOrCreateInstance(nameModal);
     nameModalInstance.show();
 
@@ -144,6 +173,21 @@ function handleOrderSubmission(): void {
 
         if (!customerName) {
           showToast('Nimi on pakollinen.', 'warning');
+          return;
+        }
+
+        // Haetaan valittu toimitustapa
+        const deliveryMethod = deliveryOption.checked ? 'delivery' : 'pickup';
+        const deliveryAddress =
+          deliveryMethod === 'delivery'
+            ? deliveryAddressInput.value.trim()
+            : null;
+
+        if (
+          deliveryMethod === 'delivery' &&
+          (!deliveryAddress || deliveryAddress === '')
+        ) {
+          showToast('Anna toimitusosoite.', 'warning');
           return;
         }
 
@@ -158,7 +202,12 @@ function handleOrderSubmission(): void {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({customer: customerName, items: cart}),
+            body: JSON.stringify({
+              customer: customerName,
+              items: cart,
+              delivery_method: deliveryMethod,
+              delivery_address: deliveryAddress || '',
+            }),
           });
 
           if (response.ok) {

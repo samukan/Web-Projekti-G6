@@ -1,5 +1,7 @@
 // public/scripts/addToCart.ts
 
+declare const bootstrap: any;
+
 import {isAuthenticated} from './auth.js';
 import {updateCartModal, updateCartCount, cart} from './cart.js';
 
@@ -127,3 +129,5 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('addToCart.js DOMContentLoaded');
   setupAddToCartButtons();
 });
+
+export {};

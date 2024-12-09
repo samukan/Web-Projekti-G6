@@ -7,6 +7,8 @@ interface AuthRequest extends Request {
   user?: {userId: number; role: number};
 }
 
+const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
+
 export const authenticateUser = (
   req: AuthRequest,
   res: Response,
@@ -18,7 +20,7 @@ export const authenticateUser = (
     const token = authHeader.substring(7);
 
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
+      const decoded = jwt.verify(token, JWT_SECRET) as {
         userId: number;
         role: number;
       };
@@ -41,5 +43,31 @@ export const authorizeAdmin = (
     next(); // Käyttäjä on admin
   } else {
     res.status(403).json({message: 'Ei oikeuksia admin-sivuille'});
+  }
+};
+
+export const authorizeDriver = (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+): void => {
+  if (req.user && req.user.role === 3) {
+    next();
+  } else {
+    res.status(403).json({message: 'Ei oikeuksia kuljettaja-sivuille'});
+  }
+};
+
+export const authorizeAdminOrDriver = (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+): void => {
+  if (req.user && (req.user.role === 1 || req.user.role === 3)) {
+    next();
+  } else {
+    res
+      .status(403)
+      .json({message: 'Ei oikeuksia tilauksen statuksen päivittämiseen'});
   }
 };

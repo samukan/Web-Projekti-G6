@@ -10,6 +10,7 @@ interface MenuItem {
   price: number | string;
   category: string;
   image_url: string;
+  dietary_info?: string;
 }
 
 const menuContainer = document.getElementById('menu-container');
@@ -46,12 +47,17 @@ function displayMenu(menuItems: MenuItem[]) {
         <div class="card h-100 text-center shadow-sm">
           <img
             src="${item.image_url}"
-            class="card-img-top"
+            class="card-img-top product-image"
             alt="${item.name}"
           />
-          <div class="card-body">
-            <h5 class="card-title">${item.name}</h5>
-            <p class="card-text">${item.description}</p>
+          <div class="card-body d-flex flex-column">
+            <h3 class="card-title">${item.name}</h3>
+            <p class="card-text flex-grow-1">${item.description}</p>
+            ${
+              item.dietary_info
+                ? `<p class="card-text"><small class="text-muted"><i class="fas fa-leaf"></i> ${item.dietary_info}</small></p>`
+                : ''
+            }
             <p class="card-text">Hinta: ${Number(item.price).toFixed(2)}€</p>
           </div>
           <div class="card-footer">
@@ -60,7 +66,7 @@ function displayMenu(menuItems: MenuItem[]) {
               data-product="${item.name}"
               data-price="${item.price}"
             >
-              Lisää ostoskoriin
+              <i class="fas fa-cart-plus"></i> Lisää ostoskoriin
             </button>
           </div>
         </div>
@@ -69,12 +75,11 @@ function displayMenu(menuItems: MenuItem[]) {
   });
 
   menuContainer.innerHTML = `
-    <div class="row row-cols-1 row-cols-md-4 g-4">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
       ${html}
     </div>
   `;
 
-  // Lisää event listenerit ostoskoriin lisäämistä varten
   setupAddToCartButtons();
 }
 

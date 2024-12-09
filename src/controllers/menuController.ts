@@ -13,6 +13,7 @@ interface MenuItem {
   category: string;
   image_url: string;
   popular: boolean;
+  dietary_info: string | null;
 }
 
 // Hae kaikki ruokalistan kohteet
@@ -31,7 +32,8 @@ export const getMenuItems = async (
         price: parseFloat(row['price'] as string),
         category: row['category'] as string,
         image_url: row['image_url'] as string,
-        popular: Boolean(row['popular']), // Muunnetaan numero booleaniksi
+        popular: Boolean(row['popular']),
+        dietary_info: row['dietary_info'] as string | null,
       })
     );
     res.json(menuItems);
@@ -67,7 +69,8 @@ export const getMenuItemById = async (
         price: parseFloat(row['price'] as string),
         category: row['category'] as string,
         image_url: row['image_url'] as string,
-        popular: Boolean(row['popular']), // Muunnetaan numero booleaniksi
+        popular: Boolean(row['popular']),
+        dietary_info: row['dietary_info'] as string | null,
       })
     );
 
@@ -90,32 +93,35 @@ export const addMenuItem = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const {name, description, price, category, image_url, popular} = req.body;
+    const {
+      name,
+      description,
+      price,
+      category,
+      image_url,
+      popular,
+      dietary_info,
+    } = req.body;
 
-    // Varmistetaan, että pakolliset kentät ovat olemassa
     if (!name || price === undefined) {
-      res.status(400).json({message: 'Nimi ja hinta ovat pakollisia.'});
+      res.status(400).json({error: 'Nimi ja hinta ovat pakollisia kenttiä.'});
       return;
     }
 
-    // Lisää uusi ruokalistan kohde tietokantaan
-    const [result] = await pool.query(
-      'INSERT INTO MenuItems (name, description, price, category, image_url, popular) VALUES (?, ?, ?, ?, ?, ?)',
+    await pool.query(
+      'INSERT INTO MenuItems (name, description, price, category, image_url, popular, dietary_info) VALUES (?, ?, ?, ?, ?, ?, ?)',
       [
         name,
         description,
         price,
         category,
         image_url,
-        popular ? 1 : 0, // Muutetaan boolean arvo numeroksi
+        popular ? 1 : 0,
+        dietary_info || null,
       ]
     );
 
-    const insertedId = (result as any).insertId;
-
-    res
-      .status(201)
-      .json({message: 'Ruokalistan kohde lisätty.', item_id: insertedId});
+    res.status(201).json({message: 'Ruokalistan kohde lisätty.'});
   } catch (error) {
     console.error('Virhe lisättäessä ruokalistan kohdetta:', error);
     next(error);
@@ -130,38 +136,38 @@ export const updateMenuItem = async (
 ): Promise<void> => {
   try {
     const {id} = req.params;
-    const {name, description, price, category, image_url, popular} = req.body;
+    const {
+      name,
+      description,
+      price,
+      category,
+      image_url,
+      popular,
+      dietary_info,
+    } = req.body;
 
-    // Varmistetaan, että tuote-id on annettu
     if (!id) {
-      res.status(400).json({message: 'Tuote-id puuttuu.'});
+      res.status(400).json({error: 'Tuote-id puuttuu.'});
       return;
     }
 
-    // Päivitä ruokalistan kohteen tiedot
-    const [result] = await pool.query(
-      'UPDATE MenuItems SET name = ?, description = ?, price = ?, category = ?, image_url = ?, popular = ? WHERE item_id = ?',
+    await pool.query(
+      'UPDATE MenuItems SET name = ?, description = ?, price = ?, category = ?, image_url = ?, popular = ?, dietary_info = ? WHERE item_id = ?',
       [
         name,
         description,
         price,
         category,
-        image_url || null, // Salli null-arvo, jos kuvaa ei päivitetä
-        popular ? 1 : 0, // Muutetaan boolean arvo numeroksi
+        image_url,
+        popular ? 1 : 0,
+        dietary_info || null,
         id,
       ]
     );
 
-    const affectedRows = (result as any).affectedRows;
-
-    if (affectedRows === 0) {
-      res.status(404).json({message: 'Ruokalistan kohdetta ei löytynyt.'});
-      return;
-    }
-
-    res.json({message: 'Ruokalistan kohteen tiedot päivitetty.'});
+    res.json({message: 'Ruokalistan kohde päivitetty.'});
   } catch (error) {
-    console.error('Virhe päivittäessä ruokalistan kohdetta:', error);
+    console.error('Virhe päivitettäessä ruokalistan kohdetta:', error);
     next(error);
   }
 };

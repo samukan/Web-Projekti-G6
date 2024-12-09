@@ -21,7 +21,7 @@
     <!-- Navigaatiopalkki -->
     <nav class="navbar navbar-expand-lg" id="main-navbar">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">Ravintola</a>
+        <a class="navbar-brand" href="index.html">Ravintola</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -36,10 +36,10 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" href="index.html">Etusivu</a>
+              <a class="nav-link" href="index.html">Etusivu</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" aria-current="page" href="menu.html"
+              <a class="nav-link active" aria-current="page" href="menu.html"
                 >Ruokalista</a
               >
             </li>
@@ -50,6 +50,9 @@
               <a class="nav-link" href="/myOrders" style="display: none"
                 >Omat tilaukset</a
               >
+            </li>
+            <li class="nav-item" id="driver-link" style="display: none">
+              <a class="nav-link" href="/driver/orders">Kuljettajille</a>
             </li>
             <!-- Admin-linkit -->
             <li class="nav-item" id="admin-menu-link" style="display: none">
@@ -111,7 +114,7 @@
             </li>
             <li class="nav-item">
               <button class="btn btn-outline-secondary" id="theme-toggle">
-                <i class="fas fa-moon"></i>
+                <i class="fas fa-moon"></i> Tumma tila
               </button>
             </li>
           </ul>
@@ -145,13 +148,13 @@
             <h5 class="text-uppercase">Linkit</h5>
             <ul class="list-unstyled mb-0">
               <li>
-                <a href="index.html" class="text-dark">Etusivu</a>
+                <a href="index.html">Etusivu</a>
               </li>
               <li>
-                <a href="menu.html" class="text-dark">Ruokalista</a>
+                <a href="menu.html">Ruokalista</a>
               </li>
               <li>
-                <a href="contact.html" class="text-dark">Ota yhteyttä</a>
+                <a href="contact.html">Ota yhteyttä</a>
               </li>
             </ul>
           </div>

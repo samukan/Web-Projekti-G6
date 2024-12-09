@@ -2,7 +2,6 @@
 
 import {Router} from 'express';
 import path from 'path';
-// Poistetaan autentikointimiddlewaret
 
 const router = Router();
 

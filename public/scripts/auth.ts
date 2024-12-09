@@ -1,5 +1,7 @@
 // public/scripts/auth.ts
 
+declare const bootstrap: any;
+
 // Funktio tokenin purkamiseen
 export function parseJwt(token: string): any {
   try {
@@ -67,6 +69,25 @@ export function manageAdminLinks(): void {
   }
 }
 
+export function manageDriverLinks(): void {
+  const token = localStorage.getItem('token');
+  const driverLink = document.getElementById('driver-link');
+
+  if (!driverLink) return;
+
+  if (!token) {
+    driverLink.style.display = 'none';
+    return;
+  }
+
+  const tokenPayload = parseJwt(token);
+  if (tokenPayload && tokenPayload.role === 3) {
+    driverLink.style.display = 'block';
+  } else {
+    driverLink.style.display = 'none';
+  }
+}
+
 // Funktio autentikoitujen käyttäjien linkkien hallintaan
 export function manageAuthenticatedLinks(): void {
   const token = localStorage.getItem('token');
@@ -101,6 +122,7 @@ export function isAuthenticated(): boolean {
 export function manageNavigationLinks(): void {
   manageAuthenticatedLinks();
   manageAdminLinks();
+  manageDriverLinks();
 }
 
 // Funktio kirjautumisen ja uloskirjautumisen yhteydessä

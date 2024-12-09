@@ -207,6 +207,12 @@ body {
   background-color: #0056b3;
 }
 
+.product-image {
+  width: 100%;
+  height: 200px; /* Voit säätää korkeutta tarpeen mukaan */
+  object-fit: cover;
+}
+
 /* === Modaalien värit === */
 .modal-content {
   background-color: var(--nav-bg-color);
@@ -346,4 +352,40 @@ select:focus {
   .hero-banner p {
     font-size: 1rem;
   }
+}
+
+#current-image {
+  display: none;
+  max-width: 100px;
+  max-height: 100px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* Erityisruokavaliot styling */
+.card .text-muted {
+  font-size: 0.9em;
+  margin-bottom: 0.5rem;
+}
+
+.card .fa-leaf {
+  color: #28a745;
+  margin-right: 0.25rem;
+}
+
+.product-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+/* Footer link styling with theme support */
+.footer ul.list-unstyled li a {
+  color: var(--text-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer ul.list-unstyled li a:hover {
+  color: var(--link-hover-color);
 }

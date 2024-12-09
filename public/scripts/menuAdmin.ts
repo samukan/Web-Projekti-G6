@@ -1,6 +1,9 @@
 // public/scripts/menuAdmin.ts
 
-// Ruokalistan kohteen rajapinta
+declare const bootstrap: any;
+
+import {showToast} from './auth.js';
+
 interface MenuItem {
   item_id: number;
   name: string;
@@ -9,6 +12,7 @@ interface MenuItem {
   category: string;
   image_url: string;
   popular: boolean;
+  dietary_info?: string; // Lisätty erityisruokavaliot
 }
 
 // Viittaukset DOM-elementteihin
@@ -24,7 +28,10 @@ async function checkAuthentication(): Promise<void> {
   const token = localStorage.getItem('token');
 
   if (!token) {
-    alert('Sinun täytyy kirjautua sisään päästäksesi tälle sivulle.');
+    showToast(
+      'Sinun täytyy kirjautua sisään päästäksesi tälle sivulle.',
+      'warning'
+    );
     window.location.href = '/login.html';
     return;
   }
@@ -36,7 +43,7 @@ async function checkAuthentication(): Promise<void> {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({}), // Varmistetaan, että body lähetetään oikein
+      body: JSON.stringify({}),
     });
 
     if (!response.ok) {
@@ -46,15 +53,15 @@ async function checkAuthentication(): Promise<void> {
     const data = await response.json();
 
     if (!data.isAdmin) {
-      alert('Sinulla ei ole oikeuksia tälle sivulle.');
+      showToast('Sinulla ei ole oikeuksia tälle sivulle.', 'danger');
       window.location.href = '/';
     } else {
-      // Käyttäjä on autentikoitu ja on admin, jatka sivun latausta
+      // Käyttäjä on admin
       fetchMenuItems();
     }
   } catch (error) {
     console.error('Autentikointivirhe:', error);
-    alert('Autentikointi epäonnistui. Kirjaudu uudelleen.');
+    showToast('Autentikointi epäonnistui. Kirjaudu uudelleen.', 'danger');
     window.location.href = '/login.html';
   }
 }
@@ -62,10 +69,41 @@ async function checkAuthentication(): Promise<void> {
 // Alustetaan kun sivu latautuu
 document.addEventListener('DOMContentLoaded', () => {
   checkAuthentication();
+  setupImagePreview();
 });
 
 // Lisää uuden tuotteen
 addProductForm.addEventListener('submit', addProductHandler);
+
+// Lisää kuvan esikatselu
+function setupImagePreview(): void {
+  const imageInput = document.getElementById(
+    'product-image'
+  ) as HTMLInputElement;
+  const currentImageEl = document.getElementById(
+    'current-image'
+  ) as HTMLImageElement;
+
+  if (imageInput && currentImageEl) {
+    imageInput.addEventListener('change', () => {
+      const file = imageInput.files && imageInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          if (e.target && typeof e.target.result === 'string') {
+            currentImageEl.src = e.target.result;
+            currentImageEl.style.display = 'block';
+          }
+        };
+        reader.readAsDataURL(file);
+      } else {
+        // Jos käyttäjä poistaa valinnan
+        currentImageEl.src = '';
+        currentImageEl.style.display = 'none';
+      }
+    });
+  }
+}
 
 // Käsittelee uuden tuotteen lisäämisen
 async function addProductHandler(e: Event): Promise<void> {
@@ -85,42 +123,58 @@ async function addProductHandler(e: Event): Promise<void> {
   const popular = (
     document.getElementById('product-popular') as HTMLInputElement
   ).checked;
+  const dietaryInfo = (
+    document.getElementById('product-dietary-info') as HTMLInputElement
+  ).value; // Lisätty
 
   const imageInput = document.getElementById(
     'product-image'
   ) as HTMLInputElement;
-  if (!imageInput.files || imageInput.files.length === 0) {
-    alert('Valitse kuva ennen tuotteen lisäämistä.');
-    return;
-  }
+  const existingImageUrlInput = document.getElementById(
+    'existing-image-url'
+  ) as HTMLInputElement;
+  let image_url = existingImageUrlInput.value; // Ota nykyinen kuva URL
 
   const token = localStorage.getItem('token');
   if (!token) {
-    alert('Sinun täytyy kirjautua sisään lisätäksesi tuotteita.');
+    showToast(
+      'Sinun täytyy kirjautua sisään lisätäksesi tuotteita.',
+      'warning'
+    );
     window.location.href = '/login.html';
     return;
   }
 
-  const file = imageInput.files[0];
-  const formData = new FormData();
-  formData.append('image', file);
+  // Tarkista, onko käyttäjä valinnut uuden kuvan
+  if (imageInput.files && imageInput.files.length > 0) {
+    const file = imageInput.files[0];
+    const formData = new FormData();
+    formData.append('image', file);
 
-  try {
-    // Upload the image
-    const uploadResponse = await fetch('/api/upload/upload', {
-      method: 'POST',
-      body: formData,
-    });
+    try {
+      // Lataa kuva
+      const uploadResponse = await fetch('/api/upload/upload', {
+        method: 'POST',
+        body: formData,
+      });
 
-    if (!uploadResponse.ok) {
-      const errorData = await uploadResponse.json();
-      alert('Virhe kuvan lataamisessa: ' + errorData.message);
+      if (!uploadResponse.ok) {
+        const errorData = await uploadResponse.json();
+        showToast('Virhe kuvan lataamisessa: ' + errorData.message, 'danger');
+        return;
+      }
+
+      const {imageUrl} = await uploadResponse.json();
+      image_url = imageUrl; // Päivitä kuvan URL
+    } catch (error) {
+      console.error('Virhe kuvan lataamisessa:', error);
+      showToast('Virhe kuvan lataamisessa.', 'danger');
       return;
     }
+  }
 
-    const {imageUrl} = await uploadResponse.json();
-
-    // Add the product with the uploaded image URL
+  try {
+    // Lisää tuote
     const response = await fetch('/api/admin/menu', {
       method: 'POST',
       headers: {
@@ -132,22 +186,33 @@ async function addProductHandler(e: Event): Promise<void> {
         description,
         price,
         category,
-        image_url: imageUrl,
+        image_url,
         popular,
+        dietary_info: dietaryInfo,
       }),
     });
 
     if (response.ok) {
-      alert('Ruokalistan kohde lisätty onnistuneesti!');
+      showToast('Ruokalistan kohde lisätty onnistuneesti!', 'success');
       addProductForm.reset();
+      const currentImageEl = document.getElementById(
+        'current-image'
+      ) as HTMLImageElement;
+      if (currentImageEl) {
+        currentImageEl.src = '';
+        currentImageEl.style.display = 'none';
+      }
       fetchMenuItems();
     } else {
       const errorData = await response.json();
-      alert('Virhe lisättäessä ruokalistan kohdetta: ' + errorData.message);
+      showToast(
+        'Virhe lisättäessä ruokalistan kohdetta: ' + errorData.message,
+        'danger'
+      );
     }
   } catch (error) {
     console.error('Virhe lisättäessä tuotetta:', error);
-    alert('Tuntematon virhe lisättäessä tuotetta.');
+    showToast('Tuntematon virhe lisättäessä tuotetta.', 'danger');
   }
 }
 
@@ -157,7 +222,6 @@ async function fetchMenuItems(): Promise<void> {
 
   try {
     const response = await fetch('/api/admin/menu', {
-      // Käytä admin API -reitit
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -166,22 +230,25 @@ async function fetchMenuItems(): Promise<void> {
     if (response.ok) {
       const menuItems: MenuItem[] = await response.json();
       renderProductTable(menuItems);
+      showToast('Ruokalista ladattu onnistuneesti!', 'success');
     } else {
       if (response.status === 401 || response.status === 403) {
-        alert('Autentikointi epäonnistui. Kirjaudu uudelleen.');
+        showToast('Autentikointi epäonnistui. Kirjaudu uudelleen.', 'warning');
         window.location.href = '/login.html';
         return;
       }
       const errorData = await response.json();
-      alert('Virhe haettaessa ruokalistan kohteita: ' + errorData.message);
+      showToast(
+        'Virhe haettaessa ruokalistan kohteita: ' + errorData.message,
+        'danger'
+      );
     }
   } catch (error) {
     console.error('Virhe haettaessa ruokalistan kohteita:', error);
-    alert('Virhe haettaessa ruokalistan kohteita.');
+    showToast('Virhe haettaessa ruokalistan kohteita.', 'danger');
   }
 }
 
-// Renderöi tuotelista taulukkoon
 function renderProductTable(menuItems: MenuItem[]): void {
   productTableBody.innerHTML = '';
 
@@ -193,6 +260,7 @@ function renderProductTable(menuItems: MenuItem[]): void {
       <td>${item.description}</td>
       <td>${Number(item.price).toFixed(2)}</td>
       <td>${item.category}</td>
+      <td>${item.dietary_info || '-'}</td> <!-- Lisätty -->
       <td>
         ${
           item.image_url
@@ -201,7 +269,6 @@ function renderProductTable(menuItems: MenuItem[]): void {
         }
       </td>
       <td>
-        <!-- Lisätään Popular-painike -->
         <button class="btn btn-sm ${
           item.popular ? 'btn-success' : 'btn-secondary'
         } toggle-popular-button" data-id="${item.item_id}">
@@ -221,7 +288,6 @@ function renderProductTable(menuItems: MenuItem[]): void {
     productTableBody.appendChild(row);
   });
 
-  // Lisää event listenerit muokkaus, poisto ja popular-painikkeille
   const editButtons = document.querySelectorAll('.edit-button');
   const deleteButtons = document.querySelectorAll('.delete-button');
   const togglePopularButtons = document.querySelectorAll(
@@ -260,7 +326,6 @@ async function deleteMenuItem(id: string | null): Promise<void> {
 
   try {
     const response = await fetch(`/api/admin/menu/${id}`, {
-      // Käytä admin API -reitit
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -268,28 +333,28 @@ async function deleteMenuItem(id: string | null): Promise<void> {
     });
 
     if (response.ok) {
-      alert('Ruokalistan kohde poistettu.');
-      fetchMenuItems(); // Päivitä taulukko
+      showToast('Ruokalistan kohde poistettu.', 'success');
+      fetchMenuItems();
     } else {
       const errorData = await response.json();
-      alert('Virhe poistettaessa ruokalistan kohdetta: ' + errorData.message);
+      showToast(
+        'Virhe poistettaessa ruokalistan kohdetta: ' + errorData.message,
+        'danger'
+      );
     }
   } catch (error) {
     console.error('Virhe poistettaessa ruokalistan kohdetta:', error);
-    alert('Virhe poistettaessa ruokalistan kohdetta.');
+    showToast('Virhe poistettaessa ruokalistan kohdetta.', 'danger');
   }
 }
 
-// Muokkaa tuote
 async function editMenuItem(id: string | null): Promise<void> {
   if (!id) return;
 
   const token = localStorage.getItem('token');
 
   try {
-    // Hae tuotteen tiedot yksittäisen id:n perusteella
-    const response = await fetch(`/api/admin/menu/${id}`, {
-      // Käytä admin API -reitit
+    const response = await fetch(`/api/menu/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -298,7 +363,6 @@ async function editMenuItem(id: string | null): Promise<void> {
     if (response.ok) {
       const item: MenuItem = await response.json();
 
-      // Täytä lomake tuotteen tiedoilla
       (document.getElementById('product-name') as HTMLInputElement).value =
         item.name;
       (
@@ -308,44 +372,69 @@ async function editMenuItem(id: string | null): Promise<void> {
         item.price.toString();
       (document.getElementById('product-category') as HTMLSelectElement).value =
         item.category;
-      (document.getElementById('product-image') as HTMLInputElement).value =
-        item.image_url;
+      (
+        document.getElementById('product-dietary-info') as HTMLInputElement
+      ).value = item.dietary_info || ''; // Lisätty
+
+      // Näytä nykyinen kuva
+      const currentImageEl = document.getElementById(
+        'current-image'
+      ) as HTMLImageElement;
+      if (currentImageEl) {
+        currentImageEl.src = item.image_url;
+        currentImageEl.style.display = 'block';
+      }
+
+      // Tallenna nykyinen kuva URL piilotettuun kenttään
+      const existingImageUrlEl = document.getElementById(
+        'existing-image-url'
+      ) as HTMLInputElement;
+      if (existingImageUrlEl) {
+        existingImageUrlEl.value = item.image_url;
+      }
+
       (document.getElementById('product-popular') as HTMLInputElement).checked =
         item.popular;
 
-      // Muuta lomakkeen toiminnallisuutta päivitykseen
+      // Muokkaa lomakkeen lähettämistä päivitykseen
       addProductForm.removeEventListener('submit', addProductHandler);
       const updateHandler = async (e: Event) => {
         e.preventDefault();
         await updateProductHandler(id);
-        // Palautetaan lomakkeen toiminnallisuus
         addProductForm.removeEventListener('submit', updateHandler);
         addProductForm.addEventListener('submit', addProductHandler);
-        // Palautetaan painikkeen teksti ja tyhjennetään lomake
         const submitButton = addProductForm.querySelector(
           'button[type="submit"]'
         ) as HTMLButtonElement;
         submitButton.textContent = 'Lisää tuote';
         addProductForm.reset();
+        const currentImageEl = document.getElementById(
+          'current-image'
+        ) as HTMLImageElement;
+        if (currentImageEl) {
+          currentImageEl.src = '';
+          currentImageEl.style.display = 'none';
+        }
       };
       addProductForm.addEventListener('submit', updateHandler);
 
-      // Muuta painikkeen tekstiä
       const submitButton = addProductForm.querySelector(
         'button[type="submit"]'
       ) as HTMLButtonElement;
       submitButton.textContent = 'Päivitä tuote';
     } else {
       const errorData = await response.json();
-      alert('Virhe haettaessa ruokalistan kohdetta: ' + errorData.message);
+      showToast(
+        'Virhe haettaessa ruokalistan kohdetta: ' + errorData.message,
+        'danger'
+      );
     }
   } catch (error) {
     console.error('Virhe haettaessa ruokalistan kohdetta:', error);
-    alert('Virhe haettaessa ruokalistan kohdetta.');
+    showToast('Virhe haettaessa ruokalistan kohdetta.', 'danger');
   }
 }
 
-// Käsittelee tuotteen päivityksen
 async function updateProductHandler(id: string | null): Promise<void> {
   if (!id) return;
 
@@ -360,18 +449,53 @@ async function updateProductHandler(id: string | null): Promise<void> {
   const category = (
     document.getElementById('product-category') as HTMLSelectElement
   ).value;
-  const image_url = (
-    document.getElementById('product-image') as HTMLInputElement
-  ).value;
   const popular = (
     document.getElementById('product-popular') as HTMLInputElement
   ).checked;
+  const dietaryInfo = (
+    document.getElementById('product-dietary-info') as HTMLInputElement
+  ).value; // Lisätty
+
+  const existingImageUrl = (
+    document.getElementById('existing-image-url') as HTMLInputElement
+  ).value;
+  const imageInput = document.getElementById(
+    'product-image'
+  ) as HTMLInputElement;
+
+  let image_url = existingImageUrl;
+
+  // Tarkista, onko käyttäjä valinnut uuden kuvan
+  if (imageInput.files && imageInput.files.length > 0) {
+    const file = imageInput.files[0];
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+      const uploadResponse = await fetch('/api/upload/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!uploadResponse.ok) {
+        const errorData = await uploadResponse.json();
+        showToast('Virhe kuvan lataamisessa: ' + errorData.message, 'danger');
+        return;
+      }
+
+      const {imageUrl} = await uploadResponse.json();
+      image_url = imageUrl; // Päivitä kuvan URL
+    } catch (error) {
+      console.error('Virhe kuvan lataamisessa:', error);
+      showToast('Virhe kuvan lataamisessa.', 'danger');
+      return;
+    }
+  }
 
   const token = localStorage.getItem('token');
 
   try {
     const response = await fetch(`/api/admin/menu/${id}`, {
-      // Käytä admin API -reitit
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -384,33 +508,41 @@ async function updateProductHandler(id: string | null): Promise<void> {
         category,
         image_url,
         popular,
+        dietary_info: dietaryInfo,
       }),
     });
 
     if (response.ok) {
-      alert('Ruokalistan kohteen tiedot päivitetty.');
+      showToast('Ruokalistan kohteen tiedot päivitetty.', 'success');
       addProductForm.reset();
+      const currentImageEl = document.getElementById(
+        'current-image'
+      ) as HTMLImageElement;
+      if (currentImageEl) {
+        currentImageEl.src = '';
+        currentImageEl.style.display = 'none';
+      }
       fetchMenuItems();
     } else {
       const errorData = await response.json();
-      alert('Virhe päivittäessä ruokalistan kohdetta: ' + errorData.message);
+      showToast(
+        'Virhe päivittäessä ruokalistan kohdetta: ' + errorData.message,
+        'danger'
+      );
     }
   } catch (error) {
     console.error('Virhe päivittäessä ruokalistan kohdetta:', error);
-    alert('Virhe päivittäessä ruokalistan kohdetta.');
+    showToast('Virhe päivittäessä ruokalistan kohdetta.', 'danger');
   }
 }
 
-// Toggle popular status
 async function togglePopularStatus(id: string | null): Promise<void> {
   if (!id) return;
 
   const token = localStorage.getItem('token');
 
   try {
-    // Hae nykyinen tuotteen tiedot
-    const response = await fetch(`/api/admin/menu/${id}`, {
-      // Käytä admin API -reitit
+    const response = await fetch(`/api/menu/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -418,13 +550,9 @@ async function togglePopularStatus(id: string | null): Promise<void> {
 
     if (response.ok) {
       const item: MenuItem = await response.json();
-
-      // Vaihda popular status
       const updatedItem = {...item, popular: !item.popular};
 
-      // Päivitä tuote backendiin
       const updateResponse = await fetch(`/api/admin/menu/${id}`, {
-        // Käytä admin API -reitit
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -434,18 +562,25 @@ async function togglePopularStatus(id: string | null): Promise<void> {
       });
 
       if (updateResponse.ok) {
+        showToast('Tuotteen suosikkistatusta päivitetty.', 'success');
         fetchMenuItems();
       } else {
         const errorData = await updateResponse.json();
-        alert('Virhe päivittäessä ruokalistan kohdetta: ' + errorData.message);
+        showToast(
+          'Virhe päivittäessä ruokalistan kohdetta: ' + errorData.message,
+          'danger'
+        );
       }
     } else {
       const errorData = await response.json();
-      alert('Virhe haettaessa ruokalistan kohdetta: ' + errorData.message);
+      showToast(
+        'Virhe haettaessa ruokalistan kohdetta: ' + errorData.message,
+        'danger'
+      );
     }
   } catch (error) {
     console.error('Virhe popular-statuksen päivittämisessä:', error);
-    alert('Virhe popular-statuksen päivittämisessä.');
+    showToast('Virhe popular-statuksen päivittämisessä.', 'danger');
   }
 }
 

@@ -9,6 +9,7 @@ interface MenuItem {
   category: string;
   image_url: string;
   popular: boolean; // Onko tämä tuote niin suosittu, että se saa hitti-ilmiön?
+  dietary_info?: string;
 }
 
 const suositutTuotteetContainer = document.getElementById(
@@ -42,7 +43,7 @@ async function fetchPopularProducts() {
 }
 
 function displayPopularProducts(popularItems: MenuItem[]) {
-  if (!suositutTuotteetContainer) return; // Jos kenttiä ei löydy niin tästä tulee surullinen
+  if (!suositutTuotteetContainer) return;
 
   const itemsPerSlide = 4; // Tuotteiden määrä per slaidi
   const slides: MenuItem[][] = [];
@@ -56,11 +57,10 @@ function displayPopularProducts(popularItems: MenuItem[]) {
   slides.forEach((slideItems, index) => {
     let slideHtml = `
       <div class="carousel-item${index === 0 ? ' active' : ''}">
-        <div class="row row-cols-1 row-cols-md-4 g-4">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">
     `;
 
     slideItems.forEach((item) => {
-      // Varmistetaan, että price on numero ennen toFixed-kutsua ettei tuu "Hinta: NaN€"
       const price =
         typeof item.price === 'string' ? parseFloat(item.price) : item.price;
 
@@ -69,12 +69,17 @@ function displayPopularProducts(popularItems: MenuItem[]) {
           <div class="card h-100 text-center shadow-sm">
             <img
               src="${item.image_url}"
-              class="card-img-top"
+              class="card-img-top product-image"
               alt="${item.name}"
             />
-            <div class="card-body">
-              <h5 class="card-title">${item.name}</h5>
-              <p class="card-text">${item.description}</p>
+            <div class="card-body d-flex flex-column">
+              <h3 class="card-title">${item.name}</h3>
+              <p class="card-text flex-grow-1">${item.description}</p>
+              ${
+                item.dietary_info
+                  ? `<p class="card-text"><small class="text-muted"><i class="fas fa-leaf"></i> ${item.dietary_info}</small></p>`
+                  : ''
+              }
               <p class="card-text">Hinta: ${price.toFixed(2)}€</p>
             </div>
             <div class="card-footer">

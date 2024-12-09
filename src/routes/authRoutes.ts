@@ -7,6 +7,6 @@ const router = Router();
 
 router.post('/login', login);
 router.post('/register', register);
-router.post('/verify', verifyToken); // Varmistaminen
+router.post('/verify', verifyToken);
 
 export default router;

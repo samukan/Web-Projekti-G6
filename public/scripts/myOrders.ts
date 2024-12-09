@@ -31,6 +31,7 @@ async function checkAuthentication(): Promise<void> {
 
     // Käyttäjä on autentikoitu, hae tilaukset
     fetchMyOrders();
+    setupPolling();
   } catch (error) {
     console.error('Autentikointivirhe:', error);
     alert('Autentikointi epäonnistui. Kirjaudu uudelleen.');
@@ -46,9 +47,13 @@ interface OrderItem {
 
 interface Order {
   order_id: number;
+  customer_name: string;
   order_date: string;
   status: string;
+  delivery_method: string;
+  delivery_address: string | null;
   items: OrderItem[];
+  is_archived?: number;
 }
 
 // Hakee asiakkaan tilaukset
@@ -59,6 +64,7 @@ async function fetchMyOrders(): Promise<void> {
 
     const response = await fetch('/api/orders/myOrders', {
       headers: {
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     });
@@ -67,6 +73,7 @@ async function fetchMyOrders(): Promise<void> {
 
     if (response.ok) {
       const orders: Order[] = await response.json();
+      console.log('fetchMyOrders: Fetched Orders:', orders);
       renderOrders(orders);
     } else {
       if (response.status === 401 || response.status === 403) {
@@ -86,14 +93,14 @@ async function fetchMyOrders(): Promise<void> {
 // Renderöi tilaukset sivulle
 function renderOrders(orders: Order[]): void {
   const ordersTableBody = document.querySelector(
-    '#orders-table tbody'
+    '#customer-orders-table tbody'
   ) as HTMLTableSectionElement;
   ordersTableBody.innerHTML = '';
 
   if (orders.length === 0) {
     const row = document.createElement('tr');
     const cell = document.createElement('td');
-    cell.colSpan = 5;
+    cell.colSpan = 7;
     cell.textContent = 'Ei tilauksia.';
     cell.classList.add('text-center');
     row.appendChild(cell);
@@ -111,12 +118,14 @@ function renderOrders(orders: Order[]): void {
 
     const itemsList = order.items
       .map((item) => `${item.quantity} x ${item.product}`)
-      .join(', ');
+      .join('<br>');
 
     row.innerHTML = `
         <td>${order.order_id}</td>
         <td>${new Date(order.order_date).toLocaleString()}</td>
         <td>${order.status}</td>
+        <td>${order.delivery_method}</td>
+        <td>${order.delivery_address || '-'}</td>
         <td>${itemsList}</td>
         <td>${total.toFixed(2)} €</td>
       `;
@@ -125,10 +134,16 @@ function renderOrders(orders: Order[]): void {
   });
 }
 
+// Polling-funktio tilauksien päivitysten hakemiseen
+function setupPolling(interval: number = 30000): void {
+  // 30 sekuntia
+  setInterval(() => {
+    fetchMyOrders();
+  }, interval);
+}
+
 // Alustetaan kun sivu latautuu
 document.addEventListener('DOMContentLoaded', () => {
   console.log('myOrders.ts DOMContentLoaded');
   checkAuthentication();
 });
-
-export {};

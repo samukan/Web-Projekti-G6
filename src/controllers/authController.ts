@@ -31,14 +31,14 @@ export const login = async (
     const user = rows[0]; // Otetaan ensimmäinen löytynyt käyttäjä
 
     if (!user) {
-      res.status(401).json({message: 'Invalid email or password'});
+      res.status(401).json({message: 'Virheellinen sähköposti tai salasana'});
       return;
     }
 
     // Vahvista salasana
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      res.status(401).json({message: 'Invalid email or password'});
+      res.status(401).json({message: 'Virheellinen sähköposti tai salasana'});
       return;
     }
 
@@ -107,7 +107,7 @@ export const register = async (
     // Lisää uusi käyttäjä tietokantaan
     await pool.execute(
       'INSERT INTO Users (email, password, role_id) VALUES (?, ?, ?)',
-      [email, hashedPassword, 2] // Oletetaan, että rooli 2 on 'asiakas'
+      [email, hashedPassword, 2]
     );
 
     res.status(201).json({message: 'Rekisteröityminen onnistui!'});

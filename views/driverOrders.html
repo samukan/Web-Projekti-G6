@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="fi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kuljettajan tilaukset</title>
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
+    />
+    <!-- Oma CSS -->
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <!-- Navigaatiopalkki -->
+    <nav class="navbar navbar-expand-lg" id="main-navbar">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/index.html">Ravintola</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+          aria-expanded="false"
+          aria-label="Valikko"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="/index.html">Etusivu</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/menu.html">Ruokalista</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/contact.html">Ota yhteyttä</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/myOrders" style="display: none"
+                >Omat tilaukset</a
+              >
+            </li>
+            <!-- Admin-linkit -->
+            <li class="nav-item" id="admin-menu-link" style="display: none">
+              <a class="nav-link" href="/admin/menuAdmin">Admin menu</a>
+            </li>
+            <li
+              class="nav-item"
+              id="admin-tilaukset-link"
+              style="display: none"
+            >
+              <a class="nav-link" href="/admin/tilaukset">Admin tilaukset</a>
+            </li>
+            <!-- Kuljettajalinkki -->
+            <li class="nav-item" id="driver-link" style="display: none">
+              <a class="nav-link active" href="/driver/orders">Kuljettajille</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav">
+            <li class="nav-item" id="cart-link" style="display: none">
+              <a
+                class="nav-link position-relative"
+                href="#"
+                data-bs-toggle="modal"
+                data-bs-target="#cartModal"
+              >
+                <!-- Badge-elementti -->
+                <span
+                  id="cart-count"
+                  class="position-absolute top-0 start-0 badge rounded-pill bg-danger"
+                  style="transform: translate(-50%, -30%)"
+                >
+                  0
+                  <span class="visually-hidden">tuotteita ostoskorissa</span>
+                </span>
+                <i class="fas fa-shopping-cart"></i> Ostoskori
+              </a>
+            </li>
+            <li class="nav-item" id="login-link">
+              <a
+                class="nav-link"
+                href="#"
+                data-bs-toggle="modal"
+                data-bs-target="#loginModal"
+              >
+                <i class="fas fa-user"></i> Kirjaudu sisään
+              </a>
+            </li>
+            <li class="nav-item" id="register-link" style="display: none">
+              <a
+                class="nav-link"
+                href="#"
+                data-bs-toggle="modal"
+                data-bs-target="#registerModal"
+              >
+                Rekisteröidy
+              </a>
+            </li>
+            <li class="nav-item" id="logout-button" style="display: none">
+              <a class="nav-link" href="#" role="button">
+                <i class="fas fa-sign-out-alt"></i> Kirjaudu ulos
+              </a>
+            </li>
+            <li class="nav-item">
+              <button class="btn btn-outline-secondary" id="theme-toggle">
+                <i class="fas fa-moon"></i> Tumma tila
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Kuljettajan tilaukset -->
+    <div class="container my-5">
+      <h2 class="text-center mb-4">Kuljettajan tilaukset</h2>
+      <div id="driver-orders-container">
+        <!-- Kuljettajan tilaukset latautuvat tähän JavaScriptin kautta -->
+      </div>
+    </div>
+
+    <!-- Tilauksen merkitse toimitetuksi modal -->
+    <div
+      class="modal fade"
+      id="markDeliveredModal"
+      tabindex="-1"
+      aria-labelledby="markDeliveredModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <form id="mark-delivered-form">
+            <div class="modal-header">
+              <h5 class="modal-title" id="markDeliveredModalLabel">
+                Merkitse Tilauksen Toimitetuksi
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Sulje"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <p>Tilaus ID: <span id="delivered-order-id-display"></span></p>
+              <input type="hidden" id="delivered-order-id" />
+              <p>Haluatko varmasti merkitä tämän tilauksen toimitetuksi?</p>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Peruuta
+              </button>
+              <button type="submit" class="btn btn-primary">
+                Merkitse Toimitetuksi
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer text-center text-lg-start">
+      <div class="container p-4">
+        <div class="row">
+          <!-- Yhteystiedot -->
+          <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+            <h5 class="text-uppercase">Yhteystiedot</h5>
+            <p>
+              Osoite: Esimerkkikatu 1, 00100 Helsinki<br />
+              Puhelin: 012 345 6789<br />
+              Sähköposti: info@ravintola.fi
+            </p>
+          </div>
+          <!-- Linkit -->
+          <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+            <h5 class="text-uppercase">Linkit</h5>
+            <ul class="list-unstyled mb-0">
+              <li>
+                <a href="index.html">Etusivu</a>
+              </li>
+              <li>
+                <a href="menu.html">Ruokalista</a>
+              </li>
+              <li>
+                <a href="contact.html">Ota yhteyttä</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- Copyright -->
+      <div class="text-center p-3 bg-dark text-white">
+        © 2024 Ravintola. Kaikki oikeudet pidätetään.
+      </div>
+    </footer>
+
+    <!-- Toast-komponentti -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      <div
+        id="toast"
+        class="toast align-items-center text-bg-primary border-0"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div class="d-flex">
+          <div id="toast-body" class="toast-body">
+            <!-- Viesti tulee tänne -->
+          </div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Sulje"
+          ></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- JavaScript-tiedostot -->
+    <script type="module" src="/scripts/driverOrders.js"></script>
+    <script type="module" src="/scripts/auth.js"></script>
+    <script type="module" src="/scripts/script.js"></script>
+  </body>
+</html>

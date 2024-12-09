@@ -20,7 +20,7 @@
     <!-- Navigointipalkki -->
     <nav class="navbar navbar-expand-lg" id="main-navbar">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">Admin Paneeli</a>
+        <a class="navbar-brand" href="menuAdmin">Admin Paneeli</a>
         <button
           class="navbar-toggler"
           type="button"
@@ -49,7 +49,7 @@
           <ul class="navbar-nav">
             <li class="nav-item">
               <button class="btn btn-outline-secondary" id="theme-toggle">
-                <i class="fas fa-moon"></i>
+                <i class="fas fa-moon"></i> Tumma tila
               </button>
             </li>
             <li class="nav-item">
@@ -93,6 +93,18 @@
                 rows="3"
               ></textarea>
             </div>
+            <!-- Erityisruokavaliot -->
+            <div class="mb-3">
+              <label for="product-dietary-info" class="form-label"
+                >Erityisruokavaliot</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="product-dietary-info"
+              />
+              <div class="form-text">Esimerkiksi: Gluteeniton, Laktoositon</div>
+            </div>
             <div class="mb-3">
               <label for="product-price" class="form-label">Hinta (€)</label>
               <input
@@ -123,6 +135,16 @@
                 accept="image/*"
                 required
               />
+              <!-- Näytetään nykyinen kuva -->
+              <img
+                id="current-image"
+                src=""
+                alt="Nykyinen tuotekuva"
+                width="100"
+                style="display: none; margin-top: 10px"
+              />
+              <!-- Piilotettu kenttä nykyisen kuvan URL:lle -->
+              <input type="hidden" id="existing-image-url" value="" />
             </div>
             <div class="mb-3 form-check">
               <input
@@ -165,6 +187,42 @@
       </div>
     </div>
 
+    <!-- Footer -->
+    <footer class="footer text-center text-lg-start">
+      <div class="container p-4">
+        <div class="row">
+          <!-- Yhteystiedot -->
+          <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+            <h5 class="text-uppercase">Yhteystiedot</h5>
+            <p>
+              Osoite: Esimerkkikatu 1, 00100 Helsinki<br />
+              Puhelin: 012 345 6789<br />
+              Sähköposti: info@ravintola.fi
+            </p>
+          </div>
+          <!-- Linkit -->
+          <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+            <h5 class="text-uppercase">Linkit</h5>
+            <ul class="list-unstyled mb-0">
+              <li>
+                <a href="index.html">Etusivu</a>
+              </li>
+              <li>
+                <a href="menu.html">Ruokalista</a>
+              </li>
+              <li>
+                <a href="contact.html">Ota yhteyttä</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- Copyright -->
+      <div class="text-center p-3 bg-dark text-white">
+        © 2024 Ravintola. Kaikki oikeudet pidätetään.
+      </div>
+    </footer>
+
     <!-- Toast-komponentit -->
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
       <!-- Toast-elementit lisätään dynaamisesti -->
@@ -176,6 +234,5 @@
     <script type="module" src="/scripts/auth.js"></script>
     <script type="module" src="/scripts/menuAdmin.js"></script>
     <script type="module" src="/scripts/script.js"></script>
-    <script type="module" src="/scripts/checkAuth.js"></script>
   </body>
 </html>
