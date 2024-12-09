@@ -85,6 +85,8 @@ Generate documentation:
 npm run apidoc
 ```
 
+Open http://localhost:3000/docs
+
 ## View the app
 
 Open http://localhost:3000
