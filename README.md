@@ -1,6 +1,35 @@
-# 🛠️ Asennusohjeet
+# 🍽️ Restaurant Management System
 
-## Luo projektin juurikansioon .env-tiedosto seuraavalla sisällöllä:
+Full-stack web application for restaurant order management, including menu administration, order processing, and delivery tracking.
+
+## ✨ Features
+
+- 🔐 User authentication (Admin, Staff, Drivers)
+- 📋 Menu management with image upload
+- 🛒 Online ordering system
+- 📦 Order status tracking
+- 🚗 Delivery management
+- 📱 Responsive design for mobile/desktop
+
+## 🛠️ Technologies
+
+- Frontend: HTML, CSS, TypeScript
+- Backend: Node.js, Express
+- Database: MySQL
+- Testing: Playwright
+- Documentation: ApiDoc
+
+## 📋 Prerequisites
+
+- Node.js (v18+)
+- MySQL
+- Git
+
+## ⚙️ Installation
+
+1. Clone repository:
+
+2. Create ⚙️.env file :
 
 ```bash
 DB_HOST=localhost
@@ -10,33 +39,26 @@ DB_NAME=ravintola_db
 JWT_SECRET=your-secret-key
 ```
 
-Korvaa your-database-user, your-database-password ja your-secret-key omilla arvoillasi.
+Make sure to replace your-database-user, your-database-password and your-secret-key with your own credentials.
 
-## Tietokannan luominen
+## Set up database
 
 ```bash
 source path/to/create-database.sql;
+node hashPasswords.js
 ```
 
-create-user.sql tiedostossa esimerkki käyttäjän luomisesta.
-
-## Riippuvuuksien asentaminen
+## Install dependencies:
 
 ```bash
 npm install
 ```
 
-## Käynnistäminen
+## Running the app
 
 ```bash
 npm run build
 npm start
-```
-
-## hashPasswords.js skriptin avulla Hashataan käyttäjien salasanat tietokannassa
-
-```bash
-node hashPasswords.js
 ```
 
 ## Sovelluksen käyttö
