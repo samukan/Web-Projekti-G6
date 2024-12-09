@@ -91,9 +91,11 @@ Open http://localhost:3000
 
 Default test accounts:
 
-Role, Email, Password
-Admin admin@example.com 123
-Driver driver@example.com 123
+| Role   | Email              | Password |
+| ------ | ------------------ | -------- |
+| Admin  | admin@example.com  | 123      |
+| Driver | driver@example.com | 321      |
+| User   | maija@example.com  | 1234     |
 
 ## 👏 Acknowledgments
 
