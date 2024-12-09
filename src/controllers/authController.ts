@@ -1,5 +1,62 @@
 // src/controllers/authController.ts
 
+/**
+ * @api {post} /api/auth/login User Login
+ * @apiName Login
+ * @apiGroup Authentication
+ *
+ * @apiBody {String} email User's email
+ * @apiBody {String} password User's password
+ *
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *       "email": "user@example.com",
+ *       "password": "userpassword"
+ *     }
+ *
+ * @apiSuccess {String} token JWT authentication token
+ * @apiSuccess {Object} user User information
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "token": "eyJhbGciOiJIUzI1...",
+ *       "user": {
+ *         "id": 1,
+ *         "email": "user@example.com",
+ *         "role": "user"
+ *       }
+ *     }
+ *
+ * @apiError (401) InvalidCredentials Email or password incorrect
+ */
+
+/**
+ * @api {post} /api/auth/verify Verify Token
+ * @apiName VerifyToken
+ * @apiGroup Authentication
+ *
+ * @apiHeader {String} Authorization Bearer token
+ *
+ * @apiSuccess {Object} user Decoded user information
+ *
+ * @apiError (401) InvalidToken Token is invalid or expired
+ */
+
+/**
+ * @api {post} /api/auth/register Register User
+ * @apiName Register
+ * @apiGroup Authentication
+ *
+ * @apiBody {String} email User's email
+ * @apiBody {String} password User's password
+ *
+ * @apiSuccess {String} message Registration success message
+ *
+ * @apiError (409) Conflict Email already registered
+ * @apiError (400) ValidationError Invalid input data
+ */
+
 import {Request, Response, NextFunction} from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';

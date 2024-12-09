@@ -1,5 +1,34 @@
 // src/app.ts
 
+/**
+ * @apiDefine AdminAuth Admin authentication required
+ * @apiHeader {String} Authorization Bearer token for admin authentication
+ * @apiError (401) {Object} Unauthorized Authentication token missing or invalid
+ * @apiError (403) {Object} Forbidden User is not an admin
+ */
+
+/**
+ * @apiDefine UserAuth User authentication required
+ * @apiHeader {String} Authorization Bearer token for user authentication
+ * @apiError (401) {Object} Unauthorized Authentication token missing or invalid
+ */
+
+/**
+ * @api {general} /api API Routes Overview
+ * @apiName ApiRoutes
+ * @apiGroup Application
+ * @apiVersion 1.0.0
+ *
+ * @apiDescription Main application routes configuration
+ *
+ * - `/admin/*` - Admin page routes
+ * - `/api/admin/*` - Protected admin API routes
+ * - `/api/menu/*` - Public menu routes
+ * - `/api/auth/*` - Authentication routes
+ * - `/api/orders/*` - Order management routes
+ * - `/api/driver/*` - Driver routes
+ */
+
 import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
@@ -34,6 +63,8 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/upload', uploadRoute);
 
 app.use('/api/driver', driverRoutes);
+
+app.use('/docs', express.static('docs'));
 
 // Palvellaan myOrders.html ilman autentikointia
 app.get('/myOrders', (req, res) => {

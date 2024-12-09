@@ -1,5 +1,70 @@
 // src/controllers/orderController.ts
 
+/**
+ * @api {post} /api/orders Place Order
+ * @apiName PlaceOrder
+ * @apiGroup Order Controller
+ * @apiUse UserAuth
+ *
+ * @apiBody {Object[]} items Order items
+ * @apiBody {Number} items.product_id Product ID
+ * @apiBody {Number} items.quantity Quantity
+ * @apiBody {String} delivery_method "pickup" or "delivery"
+ * @apiBody {String} [delivery_address] Required for delivery
+ *
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *       "items": [
+ *         {
+ *           "product_id": 1,
+ *           "quantity": 2
+ *         }
+ *       ],
+ *       "delivery_method": "delivery",
+ *       "delivery_address": "Example Street 123"
+ *     }
+ *
+ * @apiSuccess {Object} order Created order
+ * @apiSuccess {Number} order.id Order ID
+ * @apiSuccess {String} order.status Initial status
+ *
+ * @apiError (400) ValidationError Invalid input data
+ * @apiError (401) Unauthorized Not authenticated
+ * @apiError (500) DatabaseError Order creation failed
+ */
+
+/**
+ * @api {get} /api/orders Get Orders
+ * @apiName GetOrders
+ * @apiGroup Order Controller
+ * @apiUse AdminAuth
+ *
+ * @apiSuccess {Object[]} orders List of orders
+ * @apiSuccess {Number} orders.id Order ID
+ * @apiSuccess {String} orders.status Status
+ * @apiSuccess {Object[]} orders.items Order items
+ *
+ * @apiError (401) Unauthorized Admin access required
+ * @apiError (500) DatabaseError Query failed
+ */
+
+/**
+ * @api {put} /api/orders/:id/status Update Order Status
+ * @apiName UpdateOrderStatus
+ * @apiGroup Order Controller
+ * @apiUse AdminAuth
+ *
+ * @apiParam {Number} id Order ID
+ * @apiBody {String} status New status
+ *
+ * @apiSuccess {Object} response Update result
+ * @apiSuccess {String} response.message Success message
+ * @apiSuccess {String} response.newStatus Updated status
+ *
+ * @apiError (400) InvalidStatus Invalid status transition
+ * @apiError (404) NotFound Order not found
+ */
+
 import {Request, Response, NextFunction} from 'express';
 import pool from '../utils/db';
 

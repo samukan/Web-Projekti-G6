@@ -1,5 +1,32 @@
 // src/middleware/upload.ts
 
+/**
+ * @api {post} /api/upload Upload File
+ * @apiName FileUpload
+ * @apiGroup Upload
+ * @apiUse AdminAuth
+ *
+ * @apiDescription Upload image file middleware configuration
+ *
+ * @apiBody {File} image Image file to upload
+ * @apiBody {String} [filename] Optional custom filename
+ *
+ * @apiSuccess {Object} response Upload result
+ * @apiSuccess {String} response.filename Saved filename
+ * @apiSuccess {String} response.path File path
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "filename": "image-1234567890.jpg",
+ *       "path": "/images/image-1234567890.jpg"
+ *     }
+ *
+ * @apiError (400) FileTypeError Only jpeg, jpg, png, gif files allowed
+ * @apiError (413) FileSizeError File size exceeds 5MB limit
+ * @apiError (500) UploadError File upload failed
+ */
+
 import multer from 'multer';
 import path from 'path';
 

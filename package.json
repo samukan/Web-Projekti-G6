@@ -8,6 +8,7 @@
     "build": "npm run build:backend && npm run build:frontend",
     "start": "node dist/server.js",
     "dev": "concurrently \"tsc -p tsconfig.frontend.json -w\" \"tsc -p tsconfig.backend.json -w & nodemon dist/server.js\"",
+    "apidoc": "apidoc -i src/ -o docs/",
     "lint": "eslint . --ext .ts"
   },
   "keywords": [],
@@ -25,6 +26,7 @@
     "@types/node": "^22.10.1",
     "@typescript-eslint/eslint-plugin": "^8.14.0",
     "@typescript-eslint/parser": "^8.14.0",
+    "apidoc": "^1.2.0",
     "concurrently": "^9.1.0",
     "eslint": "^9.15.0",
     "nodemon": "^3.1.7",

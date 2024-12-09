@@ -1,5 +1,29 @@
 // src/middleware/authMiddleware.ts
 
+/**
+ * @apiDefine AuthHeader
+ * @apiHeader {String} Authorization Bearer token
+ */
+
+/**
+ * @api {middleware} authenticateUser Authentication Middleware
+ * @apiName AuthenticateUser
+ * @apiGroup Middleware
+ * @apiUse AuthHeader
+ *
+ * @apiError (401) Unauthorized No token provided
+ * @apiError (403) InvalidToken Token validation failed
+ */
+
+/**
+ * @api {middleware} authorizeAdmin Admin Authorization
+ * @apiName AuthorizeAdmin
+ * @apiGroup Middleware
+ * @apiUse AuthHeader
+ *
+ * @apiError (403) Forbidden User is not an admin
+ */
+
 import {Request, Response, NextFunction} from 'express';
 import jwt from 'jsonwebtoken';
 

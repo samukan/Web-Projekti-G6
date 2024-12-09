@@ -1,5 +1,46 @@
 // src/controllers/driverController.ts
 
+/**
+ * @api {get} /api/driver/orders Get Driver Orders
+ * @apiName GetDriverOrders
+ * @apiGroup Driver Controller
+ * @apiUse DriverAuth
+ *
+ * @apiSuccess {Object[]} orders List of delivery orders
+ * @apiSuccess {Number} orders.id Order ID
+ * @apiSuccess {String} orders.status Order status
+ * @apiSuccess {String} orders.delivery_address Delivery address
+ * @apiSuccess {String} orders.customer_name Customer name
+ * @apiSuccess {Object[]} orders.items Order items
+ *
+ * @apiError (401) Unauthorized Driver authentication required
+ * @apiError (403) Forbidden User is not a driver
+ * @apiError (500) DatabaseError Failed to fetch orders
+ */
+
+/**
+ * @api {put} /api/driver/orders/:id/update-status Update Delivery Status
+ * @apiName UpdateDeliveryStatus
+ * @apiGroup Driver Controller
+ * @apiUse DriverAuth
+ *
+ * @apiParam {Number} id Order's ID
+ * @apiBody {String} status New status ("Kuljetettu perille")
+ *
+ * @apiSuccess {Object} order Updated order details
+ * @apiSuccess {String} order.status New status
+ * @apiSuccess {String} order.updated_at Update timestamp
+ *
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *       "status": "Kuljetettu perille"
+ *     }
+ *
+ * @apiError (400) InvalidStatus Invalid status transition
+ * @apiError (404) NotFound Order not found
+ * @apiError (500) DatabaseError Update failed
+ */
+
 import {Request, Response, NextFunction} from 'express';
 import pool from '../utils/db';
 

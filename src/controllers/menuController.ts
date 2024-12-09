@@ -1,5 +1,89 @@
 // src/controllers/menuController.ts
 
+/**
+ * @api {get} /api/menu Get Menu Items
+ * @apiName GetMenuItems
+ * @apiGroup Menu Controller
+ *
+ * @apiSuccess {Object[]} items Array of menu items
+ * @apiSuccess {Number} items.id Item ID
+ * @apiSuccess {String} items.name Item name
+ * @apiSuccess {String} items.description Item description
+ * @apiSuccess {Number} items.price Price
+ * @apiSuccess {String} items.category Category
+ * @apiSuccess {String} items.image_url Image URL
+ *
+ * @apiError (500) DatabaseError Database query failed
+ */
+
+/**
+ * @api {get} /api/menu/:id Get Menu Item by ID
+ * @apiName GetMenuItemById
+ * @apiGroup Menu Controller
+ *
+ * @apiParam {Number} id Item ID
+ *
+ * @apiSuccess {Object} item Menu item details
+ *
+ * @apiError (404) NotFound Item not found
+ * @apiError (500) DatabaseError Database query failed
+ */
+
+/**
+ * @api {post} /api/menu Create Menu Item
+ * @apiName CreateMenuItem
+ * @apiGroup Menu Controller
+ * @apiUse AdminAuth
+ *
+ * @apiBody {String} name Item name
+ * @apiBody {String} description Description
+ * @apiBody {Number} price Price
+ * @apiBody {String} category Category
+ * @apiBody {Boolean} [popular] Is item popular
+ * @apiBody {String} [dietary_info] Dietary information
+ * @apiBody {File} image Image file
+ *
+ * @apiSuccess {Object} item Created item
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 201 Created
+ *     {
+ *       "message": "Ruokalistan kohde lisätty."
+ *     }
+ *
+ * @apiError (400) ValidationError Invalid input
+ */
+
+/**
+ * @api {put} /api/menu/:id Update Menu Item
+ * @apiName UpdateMenuItem
+ * @apiGroup Menu Controller
+ * @apiUse AdminAuth
+ *
+ * @apiParam {Number} id Item ID
+ * @apiBody {String} name Item name
+ * @apiBody {String} description Description
+ * @apiBody {Number} price Price
+ * @apiBody {String} category Category
+ * @apiBody {String} [image_url] Image URL
+ * @apiBody {Boolean} [popular] Is item popular
+ * @apiBody {String} [dietary_info] Dietary information
+ *
+ * @apiSuccess {Object} message Success message
+ * @apiError (404) NotFound Item not found
+ */
+
+/**
+ * @api {delete} /api/menu/:id Delete Menu Item
+ * @apiName DeleteMenuItem
+ * @apiGroup Menu Controller
+ * @apiUse AdminAuth
+ *
+ * @apiParam {Number} id Item ID
+ *
+ * @apiSuccess {Object} message Success message
+ * @apiError (404) NotFound Item not found
+ */
+
 import {Request, Response, NextFunction} from 'express';
 import pool from '../utils/db';
 import {RowDataPacket} from 'mysql2';

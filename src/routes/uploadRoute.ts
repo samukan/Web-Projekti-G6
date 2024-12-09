@@ -1,5 +1,32 @@
 // src/routes/uploadRoute.ts
 
+/**
+ * @api {post} /api/upload Upload Image
+ * @apiName UploadImage
+ * @apiGroup Upload
+ * @apiUse AdminAuth
+ *
+ * @apiDescription Upload product image for menu items
+ *
+ * @apiBody {File} image Image file
+ * @apiBody {String} [filename] Optional filename
+ *
+ * @apiSuccess {Object} response Upload result
+ * @apiSuccess {String} response.filename Saved filename
+ * @apiSuccess {String} response.path File path
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "filename": "product-123.jpg",
+ *       "path": "/uploads/product-123.jpg"
+ *     }
+ *
+ * @apiError (400) InvalidFile No file uploaded or invalid file type
+ * @apiError (413) FileTooLarge File size exceeds limit
+ * @apiError (500) UploadError File upload failed
+ */
+
 import express, {Request, Response, NextFunction} from 'express';
 import upload from '../middleware/upload';
 

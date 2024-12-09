@@ -1,0 +1,8 @@
+{
+  "name": "restaurant-api",
+  "version": "1.0.0",
+  "description": "Restaurant API Documentation",
+  "title": "Restaurant API",
+  "url": "http://localhost:3000",
+  "order": ["Authentication", "Menu", "Orders", "Users"]
+}
