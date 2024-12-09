@@ -48,6 +48,8 @@ source path/to/create-database.sql;
 node hashPasswords.js
 ```
 
+When registering new users trough the application password hashing happens automatically. hashPasswords.js is only for hashing the test user passwords that are added when creating the database.
+
 ## Install dependencies:
 
 ```bash
