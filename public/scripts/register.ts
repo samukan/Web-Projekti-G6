@@ -2,6 +2,37 @@
 
 declare const bootstrap: any;
 
+// lisää toasti
+function showToast(message: string, type: 'success' | 'danger' = 'success') {
+  const toastContainer =
+    document.getElementById('toast-container') || createToastContainer();
+
+  const toastElement = document.createElement('div');
+  toastElement.className = `toast align-items-center text-white bg-${type} border-0`;
+  toastElement.setAttribute('role', 'alert');
+  toastElement.innerHTML = `
+    <div class="d-flex">
+      <div class="toast-body">
+        ${message}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  `;
+
+  toastContainer.appendChild(toastElement);
+  const toast = new bootstrap.Toast(toastElement);
+  toast.show();
+}
+
+// Luo toast containerin, jos sitä ei ole vielä olemassa
+function createToastContainer(): HTMLDivElement {
+  const container = document.createElement('div');
+  container.id = 'toast-container';
+  container.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+  document.body.appendChild(container);
+  return container;
+}
+
 const registerForm = document.getElementById(
   'register-form'
 ) as HTMLFormElement | null;
@@ -21,12 +52,12 @@ if (registerForm) {
     )?.value;
 
     if (!email || !password || !passwordConfirm) {
-      alert('Täytä kaikki kentät.');
+      showToast('Täytä kaikki kentät.', 'danger');
       return;
     }
 
     if (password !== passwordConfirm) {
-      alert('Salasanat eivät täsmää.');
+      showToast('Salasanat eivät täsmää.', 'danger');
       return;
     }
 
@@ -40,7 +71,10 @@ if (registerForm) {
       const data = await response.json();
 
       if (response.ok) {
-        alert('Rekisteröityminen onnistui! Voit nyt kirjautua sisään.');
+        showToast(
+          'Rekisteröityminen onnistui! Voit nyt kirjautua sisään.',
+          'success'
+        );
 
         // Piilota rekisteröitymisikkuna
         const registerModalElement = document.getElementById('registerModal');
@@ -60,11 +94,11 @@ if (registerForm) {
           loginModal.show();
         }
       } else {
-        alert(data.message || 'Rekisteröityminen epäonnistui.');
+        showToast(data.message || 'Rekisteröityminen epäonnistui.', 'danger');
       }
     } catch (error) {
       console.error(error);
-      alert('Palvelinvirhe.');
+      showToast('Palvelinvirhe.', 'danger');
     }
   });
 }
