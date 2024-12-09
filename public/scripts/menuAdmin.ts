@@ -256,34 +256,34 @@ function renderProductTable(menuItems: MenuItem[]): void {
     const row = document.createElement('tr');
 
     row.innerHTML = `
-      <td>${item.name}</td>
-      <td>${item.description}</td>
-      <td>${Number(item.price).toFixed(2)}</td>
-      <td>${item.category}</td>
-      <td>${item.dietary_info || '-'}</td> <!-- Lisätty -->
-      <td>
-        ${
-          item.image_url
-            ? `<img src="${item.image_url}" alt="${item.name}" width="50">`
-            : 'Ei kuvaa'
-        }
-      </td>
-      <td>
-        <button class="btn btn-sm ${
-          item.popular ? 'btn-success' : 'btn-secondary'
-        } toggle-popular-button" data-id="${item.item_id}">
-          ${item.popular ? 'Poista suosikeista' : 'Lisää suosikkeihin'}
-        </button>
-      </td>
-      <td>
-        <button class="btn btn-sm btn-warning me-2 edit-button" data-id="${
-          item.item_id
-        }">Muokkaa</button>
-        <button class="btn btn-sm btn-danger delete-button" data-id="${
-          item.item_id
-        }">Poista</button>
-      </td>
-    `;
+    <td>${item.name}</td>
+    <td>${item.description}</td>
+    <td>${Number(item.price).toFixed(2)}</td>
+    <td>${item.category}</td>
+    <td>${item.dietary_info || '-'}</td>
+    <td>
+      ${
+        item.image_url
+          ? `<img src="${item.image_url}" alt="${item.name}" width="50">`
+          : 'Ei kuvaa'
+      }
+    </td>
+    <td>
+      <button class="btn btn-sm ${
+        item.popular ? 'btn-success' : 'btn-secondary'
+      } toggle-popular-button" data-id="${item.item_id}">
+        ${item.popular ? 'Poista suosikeista' : 'Lisää suosikkeihin'}
+      </button>
+    </td>
+    <td>
+      <button class="btn btn-sm btn-warning me-2 edit-button" data-id="${
+        item.item_id
+      }">Muokkaa</button>
+      <button class="btn btn-sm btn-danger delete-button" data-id="${
+        item.item_id
+      }">Poista</button>
+    </td>
+  `;
 
     productTableBody.appendChild(row);
   });
@@ -454,8 +454,9 @@ async function updateProductHandler(id: string | null): Promise<void> {
   ).checked;
   const dietaryInfo = (
     document.getElementById('product-dietary-info') as HTMLInputElement
-  ).value; // Lisätty
+  ).value;
 
+  // Get existing image URL
   const existingImageUrl = (
     document.getElementById('existing-image-url') as HTMLInputElement
   ).value;
@@ -463,9 +464,9 @@ async function updateProductHandler(id: string | null): Promise<void> {
     'product-image'
   ) as HTMLInputElement;
 
-  let image_url = existingImageUrl;
+  let image_url = existingImageUrl; // Default to existing image
 
-  // Tarkista, onko käyttäjä valinnut uuden kuvan
+  // Only handle new image if one was selected
   if (imageInput.files && imageInput.files.length > 0) {
     const file = imageInput.files[0];
     const formData = new FormData();
@@ -484,7 +485,7 @@ async function updateProductHandler(id: string | null): Promise<void> {
       }
 
       const {imageUrl} = await uploadResponse.json();
-      image_url = imageUrl; // Päivitä kuvan URL
+      image_url = imageUrl; // Only update image_url if upload successful
     } catch (error) {
       console.error('Virhe kuvan lataamisessa:', error);
       showToast('Virhe kuvan lataamisessa.', 'danger');
