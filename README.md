@@ -61,6 +61,42 @@ npm run build
 npm start
 ```
 
-## Sovelluksen käyttö
+## 🧪 Testing
 
-Avaa http://localhost:3000 selaimessa.
+Run
+
+```bash
+npx playwright test
+```
+
+Update test snapshots:
+
+```bash
+npx playwright test --update-snapshots
+```
+
+## 📚 API Documentation
+
+Generate documentation:
+
+```bash
+npm run apidoc
+```
+
+## View the app
+
+Open http://localhost:3000
+
+## 👥 User Roles & Credentials
+
+Default test accounts:
+
+Role, Email, Password
+Admin admin@example.com 123
+Driver driver@example.com 123
+
+## 👏 Acknowledgments
+
+Bootstrap for UI components
+Font Awesome for icons
+HSL for map integration
