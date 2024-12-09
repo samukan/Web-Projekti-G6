@@ -99,6 +99,6 @@ Default test accounts:
 
 ## 👏 Acknowledgments
 
-Bootstrap for UI components
-Font Awesome for icons
-HSL for map integration
+- Bootstrap for UI components
+- Font Awesome for icons
+- HSL for map integration
