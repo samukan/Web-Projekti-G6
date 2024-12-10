@@ -78,11 +78,10 @@ const statusTransitions: {[key: string]: string[]} = {
     'Tilaus on noudettavissa ravintolasta',
     'Tilaus on kuljetuksessa',
   ],
-  Noudettavissa: ['Asiakas noutanut tilauksen'],
+  'Tilaus on noudettavissa ravintolasta': ['Asiakas noutanut tilauksen'],
+  'Tilaus on kuljetuksessa': ['Kuljetettu perille'],
   'Asiakas noutanut tilauksen': [], // Arkistointi tapahtuu automaattisesti
-  Kuljetuksessa: ['Kuljetettu perille'],
   'Kuljetettu perille': [], // Arkistointi tapahtuu automaattisesti
-  Toimitettu: [],
 };
 
 export const placeOrder = async (
@@ -233,85 +232,75 @@ export const updateOrderStatus = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const {status} = req.body;
     const orderId = req.params.id;
+    const {status} = req.body;
+    const userRole = req.user?.role;
 
-    // Luodaan lista sallituista statuksista statusTransitions-objektista
-    const allowedStatuses = Array.from(
-      new Set([
-        ...Object.keys(statusTransitions),
-        ...Object.values(statusTransitions).flat(),
-      ])
-    );
-
-    if (!allowedStatuses.includes(status)) {
-      res.status(400).json({message: 'Virheellinen status arvo'});
-      return;
-    }
-
-    // Haetaan tilauksen nykyinen status ja toimitustapa
-    const [currentOrder]: any[] = await pool.query(
-      'SELECT status, delivery_method FROM Orders WHERE order_id = ? AND is_archived = 0',
+    // Hae nykyinen tila
+    const [currentOrderRows] = await pool.query(
+      'SELECT status FROM Orders WHERE order_id = ?',
       [orderId]
     );
+    const currentOrder = (currentOrderRows as any)[0];
 
-    if (currentOrder.length === 0) {
-      res.status(404).json({message: 'Tilausta ei löytynyt'});
+    if (!currentOrder) {
+      res.status(404).json({message: 'Tilausta ei löytynyt.'});
       return;
     }
 
-    const currentStatus = currentOrder[0].status;
-    const deliveryMethod = currentOrder[0].delivery_method;
+    const currentStatus = currentOrder.status;
 
-    // Tarkistetaan, että siirtymä on sallittu
-    if (!statusTransitions[currentStatus]?.includes(status)) {
-      res.status(400).json({
-        message: `Tilauksen tila ei voi muuttua tilasta "${currentStatus}" tilaan "${status}"`,
+    // Määritä sallitut tilasiirtymät roolin perusteella
+    let allowedTransitions: string[] = [];
+
+    if (userRole === 1) {
+      // Admin-käyttäjä: sallitut tilasiirtymät
+      allowedTransitions = statusTransitions[currentStatus] || [];
+    } else if (userRole === 3) {
+      // Kuljettaja: sallitaan vain siirtymä 'Tilaus on kuljetuksessa' -> 'Kuljetettu perille'
+      if (
+        currentStatus === 'Tilaus on kuljetuksessa' &&
+        status === 'Kuljetettu perille'
+      ) {
+        allowedTransitions = ['Kuljetettu perille'];
+      } else {
+        res.status(403).json({
+          message: 'Sinulla ei ole oikeutta muuttaa tilausta tähän tilaan.',
+        });
+        return;
+      }
+    } else {
+      // Muut roolit: kielletty
+      res.status(403).json({
+        message: 'Sinulla ei ole oikeutta päivittää tilausta.',
       });
       return;
     }
 
-    // Tarkistetaan käyttäjän rooli tilamuutoksen perusteella
-    if (status === 'Asiakas noutanut tilauksen') {
-      if (req.user?.role !== 1) {
-        res
-          .status(403)
-          .json({message: 'Ei oikeuksia päivittää tilauksen statusta'});
-        return;
-      }
-    }
-
-    if (status === 'Kuljetettu perille') {
-      if (req.user?.role !== 3) {
-        res
-          .status(403)
-          .json({message: 'Ei oikeuksia päivittää tilauksen statusta'});
-        return;
-      }
-    }
-
-    // Arkistointi tarvittaessa
-    let isArchived = false;
-    if (
-      status === 'Asiakas noutanut tilauksen' ||
-      status === 'Kuljetettu perille'
-    ) {
-      isArchived = true;
-    }
-
-    const [result] = await pool.query(
-      'UPDATE Orders SET status = ?, is_archived = ? WHERE order_id = ?',
-      [status, isArchived ? 1 : 0, orderId]
-    );
-
-    if ((result as any).affectedRows === 0) {
-      res.status(404).json({message: 'Tilausta ei löytynyt'});
+    if (!allowedTransitions.includes(status)) {
+      res.status(400).json({
+        message: `Tilauksen tila ei voi muuttua tilasta "${currentStatus}" tilaan "${status}".`,
+      });
       return;
     }
 
-    res.json({message: 'Tilauksen status päivitetty', newStatus: status});
+    // Päivitä tilauksen status ja arkistointi tarvittaessa
+    const isArchived =
+      status === 'Kuljetettu perille' || status === 'Asiakas noutanut tilauksen'
+        ? 1
+        : 0;
+
+    await pool.query(
+      'UPDATE Orders SET status = ?, is_archived = ? WHERE order_id = ?',
+      [status, isArchived, orderId]
+    );
+
+    res.json({
+      message: 'Tilauksen tila päivitetty onnistuneesti.',
+      newStatus: status,
+    });
   } catch (error) {
-    console.error('Virhe tilauksen statuksen päivittämisessä:', error);
+    console.error('Virhe tilauksen statusta päivitettäessä:', error);
     next(error);
   }
 };

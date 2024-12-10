@@ -51,6 +51,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     await fetchDriverOrders();
+
+    // Kiinnitä tapahtumakuuntelija lomakkeelle
+    const markDeliveredForm = document.getElementById('mark-delivered-form');
+    if (markDeliveredForm) {
+      markDeliveredForm.addEventListener('submit', handleMarkDelivered);
+    } else {
+      console.error('mark-delivered-form ei löytynyt.');
+    }
   } catch (error) {
     console.error('Virhe sivun latauksessa:', error);
     showToast('Virhe sivun latauksessa.', 'danger');
@@ -69,7 +77,7 @@ async function fetchDriverOrders(): Promise<void> {
   }
 
   try {
-    const response = await fetch('/api/orders/driver/orders', {
+    const response = await fetch('/api/driver/orders', {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
@@ -163,8 +171,13 @@ function openMarkDeliveredModal(orderId: string | null): void {
     'delivered-order-id'
   ) as HTMLInputElement;
 
-  deliveredOrderIdDisplay.textContent = orderId;
-  deliveredOrderIdInput.value = orderId;
+  if (deliveredOrderIdDisplay && deliveredOrderIdInput) {
+    deliveredOrderIdDisplay.textContent = orderId;
+    deliveredOrderIdInput.value = orderId;
+  } else {
+    console.error('Modalin elementtejä ei löytynyt.');
+    return;
+  }
 
   // Avaa modal
   const markDeliveredModalElement =
@@ -172,15 +185,24 @@ function openMarkDeliveredModal(orderId: string | null): void {
   if (markDeliveredModalElement) {
     const modalInstance = new bootstrap.Modal(markDeliveredModalElement);
     modalInstance.show();
+  } else {
+    console.error('markDeliveredModal elementtiä ei löytynyt.');
   }
 }
 
 async function handleMarkDelivered(event: Event): Promise<void> {
   event.preventDefault();
 
-  const orderId = (
-    document.getElementById('delivered-order-id') as HTMLInputElement
-  ).value;
+  const orderIdInput = document.getElementById(
+    'delivered-order-id'
+  ) as HTMLInputElement;
+
+  if (!orderIdInput) {
+    showToast('Tilaus ID puuttuu.', 'warning');
+    return;
+  }
+
+  const orderId = orderIdInput.value;
 
   if (!orderId) {
     showToast('Tilaus ID puuttuu.', 'warning');
@@ -188,7 +210,7 @@ async function handleMarkDelivered(event: Event): Promise<void> {
   }
 
   try {
-    const response = await fetch(`/api/orders/${orderId}/status`, {
+    const response = await fetch(`/api/driver/orders/${orderId}/status`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -200,7 +222,8 @@ async function handleMarkDelivered(event: Event): Promise<void> {
     if (response.ok) {
       const data = await response.json();
       showToast(data.message || 'Tilauksen status päivitetty.', 'success');
-      fetchDriverOrders(); // Päivitä toimitettavat tilaukset
+      await fetchDriverOrders(); // Päivitä tilaukset näkymässä
+
       // Sulje modal
       const markDeliveredModalElement =
         document.getElementById('markDeliveredModal');

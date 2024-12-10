@@ -29,10 +29,9 @@ const statusTransitions: {[key: string]: string[]} = {
     'Tilaus on kuljetuksessa',
   ],
   'Tilaus on noudettavissa ravintolasta': ['Asiakas noutanut tilauksen'],
-  'Asiakas noutanut tilauksen': [], // Arkistointi tapahtuu automaattisesti
   'Tilaus on kuljetuksessa': ['Kuljetettu perille'],
-  'Kuljetettu perille': [], // Arkistointi tapahtuu automaattisesti
-  Toimitettu: [],
+  'Kuljetettu perille': [],
+  'Asiakas noutanut tilauksen': [],
 };
 
 let orders: Order[] = [];

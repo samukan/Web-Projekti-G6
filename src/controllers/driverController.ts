@@ -41,6 +41,8 @@
  * @apiError (500) DatabaseError Update failed
  */
 
+// src/controllers/driverController.ts
+
 import {Request, Response, NextFunction} from 'express';
 import pool from '../utils/db';
 
@@ -56,12 +58,19 @@ export const getDriverOrders = async (
   try {
     const [orders] = await pool.query(
       `SELECT o.order_id, o.customer_name, o.order_date, o.status,
-              o.delivery_method, o.delivery_address,
-              GROUP_CONCAT(JSON_OBJECT('product', m.name, 'quantity', oi.quantity, 'price', oi.price)) AS items
+              o.delivery_method, o.delivery_address, o.is_archived,
+              GROUP_CONCAT(
+                JSON_OBJECT(
+                  'product', m.name,
+                  'quantity', oi.quantity,
+                  'price', oi.price,
+                  'dietary_info', m.dietary_info
+                )
+              ) AS items
        FROM Orders o
        JOIN OrderItems oi ON o.order_id = oi.order_id
        JOIN MenuItems m ON oi.item_id = m.item_id
-       WHERE o.status = 'Kuljetuksessa' AND o.is_archived = 0
+       WHERE o.status = 'Tilaus on kuljetuksessa' AND o.is_archived = 0
        GROUP BY o.order_id
        ORDER BY o.order_date DESC`
     );
@@ -73,12 +82,13 @@ export const getDriverOrders = async (
       status: order.status,
       delivery_method: order.delivery_method,
       delivery_address: order.delivery_address,
+      is_archived: order.is_archived,
       items: JSON.parse(`[${order.items}]`),
     }));
 
     res.json(formattedOrders);
   } catch (error) {
-    console.error('Virhe kuljettajan tilausten haussa:', error);
-    next(error);
+    console.error('Error fetching driver orders:', error);
+    res.status(500).json({message: 'Error fetching driver orders'});
   }
 };
