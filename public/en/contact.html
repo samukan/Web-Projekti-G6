@@ -280,6 +280,74 @@
       </div>
     </div>
 
+    <!-- Rekisteröitymismodaali -->
+    <div
+      class="modal fade"
+      id="registerModal"
+      tabindex="-1"
+      aria-labelledby="registerModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form id="register-form">
+            <div class="modal-header">
+              <h5 class="modal-title" id="registerModalLabel">Register</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Sulje"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="register-email" class="form-label">E-mail</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="register-email"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="register-password" class="form-label"
+                  >Password</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="register-password"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="register-password-confirm" class="form-label"
+                  >Confirm password</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="register-password-confirm"
+                  required
+                />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <button type="submit" class="btn btn-primary">Register</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <!-- Ostoskori -modaali -->
     <div
       class="modal fade"
