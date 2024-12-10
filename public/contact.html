@@ -284,6 +284,78 @@
       </div>
     </div>
 
+    <!-- Rekisteröitymismodaali -->
+    <div
+      class="modal fade"
+      id="registerModal"
+      tabindex="-1"
+      aria-labelledby="registerModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form id="register-form">
+            <div class="modal-header">
+              <h5 class="modal-title" id="registerModalLabel">Rekisteröidy</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Sulje"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="register-email" class="form-label"
+                  >Sähköposti</label
+                >
+                <input
+                  type="email"
+                  class="form-control"
+                  id="register-email"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="register-password" class="form-label"
+                  >Salasana</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="register-password"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="register-password-confirm" class="form-label"
+                  >Vahvista salasana</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="register-password-confirm"
+                  required
+                />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Sulje
+              </button>
+              <button type="submit" class="btn btn-primary">
+                Rekisteröidy
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <!-- Ostoskori -modaali -->
     <div
       class="modal fade"
@@ -370,5 +442,6 @@
     <script type="module" src="/scripts/cart.js"></script>
     <script type="module" src="/scripts/script.js"></script>
     <script type="module" src="/scripts/login.js"></script>
+    <script type="module" src="/scripts/register.js"></script>
   </body>
 </html>
