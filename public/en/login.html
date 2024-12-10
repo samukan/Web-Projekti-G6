@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fi">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kirjaudu sisään</title>
+    <title>Log in</title>
     <!-- Bootstrap CSS -->
     <link
       rel="stylesheet"
@@ -15,12 +15,12 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
     />
     <!-- Oma CSS -->
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="/styles.css" />
   </head>
   <button data-bs-toggle="modal" data-bs-target="#loginModal"></button>
   <li class="nav-item">
     <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal"
-      ><i class="fas fa-user"></i> Kirjaudu sisään</a
+      ><i class="fas fa-user"></i> Sign In</a
     >
   </li>
   <body>
@@ -42,17 +42,17 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link" href="index.html">Etusivu</a>
+              <a class="nav-link" href="index.html">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="menu.html">Ruokalista</a>
+              <a class="nav-link" href="menu.html">Menu</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="contact.html">Ota yhteyttä</a>
+              <a class="nav-link" href="contact.html">Contact</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/myOrders" style="display: none"
-                >Omat tilaukset</a
+                >My orders</a
               >
             </li>
             <!-- Admin-linkit -->
@@ -95,7 +95,7 @@
                 data-bs-toggle="modal"
                 data-bs-target="#loginModal"
               >
-                <i class="fas fa-user"></i> Kirjaudu sisään
+                <i class="fas fa-user"></i> Sign in
               </a>
             </li>
             <li class="nav-item" id="register-link" style="display: none">
@@ -105,12 +105,12 @@
                 data-bs-toggle="modal"
                 data-bs-target="#registerModal"
               >
-                Rekisteröidy
+                Register
               </a>
             </li>
             <li class="nav-item" id="logout-button" style="display: none">
               <a class="nav-link" href="#" role="button">
-                <i class="fas fa-sign-out-alt"></i> Kirjaudu ulos
+                <i class="fas fa-sign-out-alt"></i> Sign out
               </a>
             </li>
             <li class="nav-item">
@@ -134,7 +134,7 @@
         <div class="modal-content">
           <form id="login-form">
             <div class="modal-header">
-              <h5 class="modal-title" id="loginModalLabel">Kirjaudu sisään</h5>
+              <h5 class="modal-title" id="loginModalLabel">Sign in</h5>
               <button
                 type="button"
                 class="btn-close"
@@ -144,7 +144,7 @@
             </div>
             <div class="modal-body">
               <div class="mb-3">
-                <label for="login-email" class="form-label">Sähköposti</label>
+                <label for="login-email" class="form-label">E-mail</label>
                 <input
                   type="email"
                   class="form-control"
@@ -153,7 +153,7 @@
                 />
               </div>
               <div class="mb-3">
-                <label for="login-password" class="form-label">Salasana</label>
+                <label for="login-password" class="form-label">Password</label>
                 <input
                   type="password"
                   class="form-control"
@@ -162,12 +162,12 @@
                 />
               </div>
               <p>
-                Ei tiliä?
+                No account?
                 <a
                   href="#"
                   data-bs-toggle="modal"
                   data-bs-target="#registerModal"
-                  >Rekisteröidy tästä</a
+                  >Register from here</a
                 >
               </p>
             </div>
@@ -177,9 +177,9 @@
                 class="btn btn-secondary"
                 data-bs-dismiss="modal"
               >
-                Sulje
+                Close
               </button>
-              <button type="submit" class="btn btn-primary">Kirjaudu</button>
+              <button type="submit" class="btn btn-primary">Sign in</button>
             </div>
           </form>
         </div>
@@ -220,7 +220,7 @@
               </div>
               <div class="mb-3">
                 <label for="register-password" class="form-label"
-                  >Salasana</label
+                  >Password</label
                 >
                 <input
                   type="password"
@@ -231,7 +231,7 @@
               </div>
               <div class="mb-3">
                 <label for="register-password-confirm" class="form-label"
-                  >Vahvista salasana</label
+                  >Confirm password</label
                 >
                 <input
                   type="password"
@@ -247,11 +247,9 @@
                 class="btn btn-secondary"
                 data-bs-dismiss="modal"
               >
-                Sulje
+                Close
               </button>
-              <button type="submit" class="btn btn-primary">
-                Rekisteröidy
-              </button>
+              <button type="submit" class="btn btn-primary">Register</button>
             </div>
           </form>
         </div>
@@ -264,11 +262,11 @@
         <div class="row">
           <!-- Yhteystiedot -->
           <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
-            <h5 class="text-uppercase">Yhteystiedot</h5>
+            <h5 class="text-uppercase">Contact Information</h5>
             <p>
-              Osoite: Esimerkkikatu 1, 00100 Helsinki<br />
-              Puhelin: 012 345 6789<br />
-              Sähköposti: info@ravintola.fi
+              Address: Esimerkkikatu 1, 00100 Helsinki<br />
+              Phone: 012 345 6789<br />
+              E-mail: info@ravintola.fi
             </p>
           </div>
           <!-- Linkit -->
@@ -276,13 +274,13 @@
             <h5 class="text-uppercase">Linkit</h5>
             <ul class="list-unstyled mb-0">
               <li>
-                <a href="index.html">Etusivu</a>
+                <a href="index.html">Home</a>
               </li>
               <li>
-                <a href="menu.html">Ruokalista</a>
+                <a href="menu.html">Menu</a>
               </li>
               <li>
-                <a href="contact.html">Ota yhteyttä</a>
+                <a href="contact.html">Contact</a>
               </li>
             </ul>
           </div>
@@ -290,7 +288,7 @@
       </div>
       <!-- Copyright -->
       <div class="text-center p-3 bg-dark text-white">
-        © 2024 Ravintola. Kaikki oikeudet pidätetään.
+        © 2024 Ravintola. All rights reserved.
       </div>
     </footer>
 
