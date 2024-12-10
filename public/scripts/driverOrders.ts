@@ -23,20 +23,47 @@ interface Order {
 async function checkDriverRole(): Promise<boolean> {
   const token = localStorage.getItem('token');
   if (!token) {
+    showToast('Sinun täytyy kirjautua sisään.', 'warning');
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    window.location.href = '/login.html';
     return false;
   }
 
-  // Tarkista rooli tokenista
   const payload = parseJwt(token);
   console.log('Token payload:', payload);
-  if (!payload) return false;
+  if (!payload) {
+    showToast('Virheellinen token.', 'danger');
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    window.location.href = '/login.html';
+    return false;
+  }
   return payload.role === 3;
 }
+
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const isDriver = await checkDriverRole();
+    if (!isDriver) {
+      showToast('Sinulla ei ole oikeuksia tälle sivulle.', 'danger');
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      window.location.href = '/login.html';
+      return;
+    }
+
+    await fetchDriverOrders();
+  } catch (error) {
+    console.error('Virhe sivun latauksessa:', error);
+    showToast('Virhe sivun latauksessa.', 'danger');
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    window.location.href = '/login.html';
+  }
+});
 
 async function fetchDriverOrders(): Promise<void> {
   const token = localStorage.getItem('token');
   if (!token) {
-    showToast('Sinun täytyy kirjautua sisään.', 'danger');
+    showToast('Sinun täytyy kirjautua sisään.', 'warning');
+    await new Promise((resolve) => setTimeout(resolve, 1500));
     window.location.href = '/login.html';
     return;
   }
@@ -51,12 +78,12 @@ async function fetchDriverOrders(): Promise<void> {
 
     if (response.ok) {
       const orders: Order[] = await response.json();
-      console.log('Driver orders fetched:', orders);
       renderDriverOrders(orders);
     } else {
       const errorData = await response.json();
       showToast(errorData.message || 'Virhe tilausten haussa.', 'danger');
       if (response.status === 401 || response.status === 403) {
+        await new Promise((resolve) => setTimeout(resolve, 1500));
         window.location.href = '/login.html';
       }
     }
@@ -195,21 +222,3 @@ async function handleMarkDelivered(event: Event): Promise<void> {
     showToast('Virhe tilauksen statusta päivittäessä.', 'danger');
   }
 }
-
-// Lisää tapahtumakuuntelija tilauksen statuksen päivityslomakkeelle
-document
-  .getElementById('mark-delivered-form')
-  ?.addEventListener('submit', handleMarkDelivered);
-
-// Alustetaan kuljettajan näkymä
-document.addEventListener('DOMContentLoaded', async () => {
-  const isDriver = await checkDriverRole();
-  if (!isDriver) {
-    showToast('Sinulla ei ole oikeuksia tälle sivulle.', 'danger');
-    window.location.href = '/login.html';
-    return;
-  }
-
-  // Nyt kun tiedetään että käyttäjä on kuljettaja, haetaan tilaukset
-  fetchDriverOrders();
-});

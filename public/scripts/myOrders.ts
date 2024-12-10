@@ -1,13 +1,20 @@
 // public/scripts/myOrders.ts
 
+import {showToast} from './auth.js';
+
 // Funktio autentikoinnin tarkistamiseen
 async function checkAuthentication(): Promise<void> {
   const token = localStorage.getItem('token');
   console.log('checkAuthentication: Token:', token);
 
   if (!token) {
-    alert('Sinun täytyy kirjautua sisään nähdäksesi tilauksesi.');
-    window.location.href = '/login.html';
+    showToast(
+      'Sinun täytyy kirjautua sisään nähdäksesi tilauksesi.',
+      'warning'
+    );
+    setTimeout(() => {
+      window.location.href = '/login.html';
+    }, 1500);
     return;
   }
 
@@ -18,24 +25,21 @@ async function checkAuthentication(): Promise<void> {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({}), // Tyhjä body, jos backend vaatii
+      body: JSON.stringify({}),
     });
-
-    console.log('checkAuthentication: Response status:', response.status);
 
     if (!response.ok) {
       throw new Error('Token ei kelpaa');
     }
 
-    console.log('checkAuthentication: Token kelpaa');
-
-    // Käyttäjä on autentikoitu, hae tilaukset
     fetchMyOrders();
     setupPolling();
   } catch (error) {
     console.error('Autentikointivirhe:', error);
-    alert('Autentikointi epäonnistui. Kirjaudu uudelleen.');
-    window.location.href = '/login.html';
+    showToast('Autentikointi epäonnistui. Kirjaudu uudelleen.', 'danger');
+    setTimeout(() => {
+      window.location.href = '/login.html';
+    }, 1500);
   }
 }
 

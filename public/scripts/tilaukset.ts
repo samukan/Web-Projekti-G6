@@ -427,10 +427,19 @@ async function handleUpdateStatus(event: Event): Promise<void> {
 // Funktio tilausten hakemiseen adminille
 async function fetchActiveOrders(): Promise<void> {
   try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      showToast('Sinun täytyy kirjautua sisään.', 'warning');
+      setTimeout(() => {
+        window.location.href = '/login.html';
+      }, 1500);
+      return;
+    }
+
     const response = await fetch('/api/orders', {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -445,11 +454,13 @@ async function fetchActiveOrders(): Promise<void> {
           'Sinun täytyy kirjautua sisään admin-tunnuksilla.',
           'warning'
         );
-        window.location.href = '/login.html';
-      } else {
-        const errorData = await response.json();
-        showToast('Virhe tilauksia haettaessa: ' + errorData.message, 'danger');
+        setTimeout(() => {
+          window.location.href = '/login.html';
+        }, 1500);
+        return;
       }
+      const errorData = await response.json();
+      showToast('Virhe tilauksia haettaessa: ' + errorData.message, 'danger');
     }
   } catch (error) {
     console.error('Virhe tilauksia haettaessa:', error);
@@ -463,16 +474,24 @@ async function fetchActiveOrders(): Promise<void> {
 // Funktio arkistoitujen tilausten hakemiseen adminille
 async function fetchArchivedOrders(): Promise<void> {
   try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      showToast('Sinun täytyy kirjautua sisään.', 'warning');
+      setTimeout(() => {
+        window.location.href = '/login.html';
+      }, 1500);
+      return;
+    }
+
     const response = await fetch('/api/orders/archived', {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
     if (response.ok) {
       const fetchedArchivedOrders: Order[] = await response.json();
-      // Yhdistetään arkistoidut tilaukset päätilauslistaan
       orders = orders
         .filter((order) => order.is_archived === 0)
         .concat(fetchedArchivedOrders);
@@ -484,14 +503,16 @@ async function fetchArchivedOrders(): Promise<void> {
           'Sinun täytyy kirjautua sisään admin-tunnuksilla.',
           'warning'
         );
-        window.location.href = '/login.html';
-      } else {
-        const errorData = await response.json();
-        showToast(
-          'Virhe arkistoituja tilauksia haettaessa: ' + errorData.message,
-          'danger'
-        );
+        setTimeout(() => {
+          window.location.href = '/login.html';
+        }, 1500);
+        return;
       }
+      const errorData = await response.json();
+      showToast(
+        'Virhe arkistoituja tilauksia haettaessa: ' + errorData.message,
+        'danger'
+      );
     }
   } catch (error) {
     console.error('Virhe arkistoituja tilauksia haettaessa:', error);

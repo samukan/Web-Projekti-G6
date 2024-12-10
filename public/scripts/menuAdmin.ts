@@ -32,7 +32,9 @@ async function checkAuthentication(): Promise<void> {
       'Sinun täytyy kirjautua sisään päästäksesi tälle sivulle.',
       'warning'
     );
-    window.location.href = '/login.html';
+    setTimeout(() => {
+      window.location.href = '/login.html';
+    }, 1500);
     return;
   }
 
@@ -54,7 +56,9 @@ async function checkAuthentication(): Promise<void> {
 
     if (!data.isAdmin) {
       showToast('Sinulla ei ole oikeuksia tälle sivulle.', 'danger');
-      window.location.href = '/';
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 1500);
     } else {
       // Käyttäjä on admin
       fetchMenuItems();
@@ -62,10 +66,11 @@ async function checkAuthentication(): Promise<void> {
   } catch (error) {
     console.error('Autentikointivirhe:', error);
     showToast('Autentikointi epäonnistui. Kirjaudu uudelleen.', 'danger');
-    window.location.href = '/login.html';
+    setTimeout(() => {
+      window.location.href = '/login.html';
+    }, 1500);
   }
 }
-
 // Alustetaan kun sivu latautuu
 document.addEventListener('DOMContentLoaded', () => {
   checkAuthentication();
@@ -233,7 +238,9 @@ async function fetchMenuItems(): Promise<void> {
     } else {
       if (response.status === 401 || response.status === 403) {
         showToast('Autentikointi epäonnistui. Kirjaudu uudelleen.', 'warning');
-        window.location.href = '/login.html';
+        setTimeout(() => {
+          window.location.href = '/login.html';
+        }, 1500);
         return;
       }
       const errorData = await response.json();
