@@ -106,3 +106,13 @@ Default test accounts:
 - Bootstrap for UI components
 - Font Awesome for icons
 - HSL for map integration
+
+## Technical Testing and Validation
+
+The website has been thoroughly tested using:
+
+- Google Lighthouse (Performance, Accessibility, Best Practices, SEO)
+- WAVE (Web Accessibility Evaluation Tool)
+- axe DevTools (Web Accessibility Testing)
+- W3C Markup Validation Service (HTML)
+- W3C CSS Validation Service (CSS)
